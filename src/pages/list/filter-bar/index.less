@@ -1,0 +1,42 @@
+/* stylelint-disable selector-pseudo-class-no-unknown */
+.filter-bar-root {
+  height: 42px;
+  min-height: 42px;
+  width: 100%;
+  display: flex;
+  padding: 0 32px;
+  background: white;
+
+  .left-box {
+    flex: 1;
+    display: flex;
+
+    :global {
+      .ant-tabs-nav {
+        margin: 0;
+        height: 42px;
+
+        .ant-tabs-ink-bar {
+          display: none;
+        }
+
+        // .ant-tabs-ink-bar {
+        //   border-style: none solid solid;
+        //   border-color: transparent transparent #0065ff;
+        // }
+      }
+
+      .ant-tabs-nav::before {
+        border: none;
+      }
+    }
+  }
+
+  .right-box {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: rgb(0 0 0 / 50%);
+  }
+}

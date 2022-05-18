@@ -1,9 +1,10 @@
 import React, { Suspense } from 'react'
+import { Navigate } from 'react-router-dom'
 import Loading from '@/pages/loading'
 
 // 静态路由
 import Layout from '@/layouts/index'
-import Home from '@/pages/home'
+import LoginLayout from '@/layouts/login-layout'
 import Login from '@/pages/login'
 
 const lazy = (path) => {
@@ -16,8 +17,7 @@ const lazy = (path) => {
 }
 
 // 动态路由
-const testList = lazy('/test/list')
-const testDetail = lazy('/test/detail')
+const list = lazy('/list')
 
 export interface RouteItem {
     type:'page'|'menu'|'index'|'layout'
@@ -46,45 +46,39 @@ const routeList:RouteItem[] = [
     element: <Layout />,
     children: [
       {
-        type: 'index',
-        // path:'/',
-        key: '/home',
-        index: true,
-        element: <Home />,
-      },
-      {
         type: 'page',
         path: 'loading',
         key: '/loading',
         element: <Loading />,
       },
       {
-        type: 'menu',
-        path: 'test',
-        key: '/test',
-        children: [
-          {
-            type: 'index',
-            // path:'/test',
-            index: true,
-            key: '/test-home',
-            element: testList,
-          },
-          {
-            type: 'page',
-            path: ':testId',
-            key: '/home/:testId',
-            element: testDetail,
-          },
-        ],
+        type: 'page',
+        path: 'list',
+        key: '/list',
+        element: list,
+      },
+      {
+        type: 'page',
+        path: '',
+        key: '/',
+        element: <Navigate to="list" />,
       },
     ],
   },
   {
-    type: 'page',
-    path: 'login',
-    key: '/login',
-    element: <Login />,
+    type: 'layout',
+    path: '/login',
+    key: 'unlogin',
+    element: <LoginLayout />,
+    children: [
+      {
+        type: 'index',
+        // path:'/',
+        key: '/login',
+        index: true,
+        element: <Login />,
+      },
+    ],
   },
 ]
 

@@ -3,7 +3,7 @@
 .user-layout-root {
   display: flex;
   width: 100%;
-  min-width: 1240px;
+  min-width: 1440px;
   flex-direction: column;
 
   .head-box {
@@ -12,14 +12,8 @@
   }
 
   .body-box {
-    display: flex;
-
-    .menu {
-      display: flex;
-      flex-direction: column;
-      width: 200px;
-      border: 1px #eee solid;
-      min-height: 100vh;
-    }
+    flex: 1;
+    min-height: calc(100vh - 64px);
+    background: #fafafa;
   }
 }

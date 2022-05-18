@@ -1,0 +1,63 @@
+.source-card-root {
+  border-radius: 10px;
+  width: 332px;
+  height: 258px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  transition: 0.3s all;
+  box-shadow: -1px -1px 1px #eee, 1px 1px 1px #eee;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 3px 3px 3px #eee, -3px -3px 3px #eee;
+  }
+
+  .img-box {
+    height: 206px;
+    background: black;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .desc-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    flex: 1;
+
+    .desc-text-box {
+      display: flex;
+      flex-direction: column;
+
+      .desc-title {
+        font-size: 14px;
+        line-height: 18px;
+        color: black;
+        cursor: text;
+      }
+
+      .desc-other {
+        font-size: 12px;
+        line-height: 16px;
+        color: rgb(0 0 0 / 50%);
+        cursor: text;
+      }
+    }
+
+    .action-box {
+      button {
+        border: none;
+        padding: 0;
+        margin: 0;
+        height: 24px;
+        width: 24px;
+
+        > img {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+}

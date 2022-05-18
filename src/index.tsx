@@ -1,13 +1,14 @@
 import { createRoot } from 'react-dom/client'
-import { IntlProvider } from 'react-intl'
 import { ConfigProvider } from 'antd';
 import { getLanguage } from '@/utils/utils';
-import LocaleProvider, { getLocale } from './locales/LocaleProvider';
+import antdCN from 'antd/es/locale/zh_CN';
+import antdEN from 'antd/es/locale/en_US';
+
 import store from './store'
 import App from './app'
 
 const lang = getLanguage() || 'zh-CN'
-const appLocale = getLocale(lang)
+
 const rootName = `${process.env.ROOT_NAME}`
 
 // // 传递给子应用主色
@@ -16,28 +17,17 @@ const rootName = `${process.env.ROOT_NAME}`
 // });
 // // 设置主色
 // ConfigProvider.config({
-//   prefixCls: 'industry-common',
+//   // prefixCls: 'industry-common',
 //   theme: {
-//     primaryColor: '#194BFB',
+//     primaryColor: 'red',
 //   },
 // });
 
 const root = createRoot(document.getElementById(rootName))
 root.render(
-  <LocaleProvider
-    locale={{
-      locale: lang,
-      messages: {
-        ...appLocale.locale,
-      },
-    }}
-  >
-    <IntlProvider locale={lang} messages={appLocale.locale}>
-      <ConfigProvider locale={appLocale.antLocal}>
-        <store.Provider>
-          <App />
-        </store.Provider>
-      </ConfigProvider>
-    </IntlProvider>
-  </LocaleProvider>,
+  <ConfigProvider locale={lang === 'zh-CN' ? antdCN : antdEN}>
+    <store.Provider>
+      <App />
+    </store.Provider>
+  </ConfigProvider>,
 )

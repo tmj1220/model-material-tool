@@ -19,7 +19,7 @@ const cssLoader = [
     loader: 'css-loader',
     options: {
       // importLoaders: 1,
-      // esModule: true,
+      esModule: false,
       // url: true,
       // import: true,
     },
@@ -75,6 +75,7 @@ const config = merge(baseConfig, {
           options: {
             limit: 8196,
             name: 'static/images/[name].[ext]',
+            esModule: false,
           },
         }],
       },

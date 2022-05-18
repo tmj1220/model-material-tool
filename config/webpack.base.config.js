@@ -16,7 +16,7 @@ const htmlCfg = {
   favicon: resolveApp('public/favicon.ico'),
   template: resolveApp('public/index.ejs'),
   templateParameters: {
-    title: `中后台通用业务模版-${packageName}`,
+    title: '3D素材管理工具',
     rootId: rootID,
   },
   minify: {
@@ -61,7 +61,7 @@ module.exports = {
         // eslint-disable-next-line
         test: /[\\\/]icons[\\\/].*\.svg(\?v=\d+\.\d+\.\d+)?$/,
         include: resolveApp('src'),
-        loader: 'svg-inline-loader',
+        loader: 'svg-url-loader',
       },
       {
         // eslint-disable-next-line

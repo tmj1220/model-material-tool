@@ -1,8 +1,9 @@
 import React from 'react'
-import { useOutlet, useNavigate, NavLink } from 'react-router-dom'
-import { Button } from 'antd'
+import { useOutlet, useNavigate } from 'react-router-dom'
 import { getToken } from '@/utils/utils';
 import { useModelDispatchers } from '@/store';
+
+import Header from '@/components/header'
 import s from './index.less'
 
 interface UserLayoutProps {
@@ -21,40 +22,10 @@ const UserLayout: React.FC<UserLayoutProps> = () => {
   }
   return (
     <div className={s['user-layout-root']}>
-      <div className={s['head-box']}>
-        我是userLayout
-
-        <Button onClick={() => {
-          logout().finally(() => {
-            navigate('/login')
-          })
-        }}
-        >
-          退出登录
-        </Button>
-
-      </div>
+      <Header />
       <div className={s['body-box']}>
-        <div className={s.menu}>
-          <NavLink to="/test">test list</NavLink>
-          <NavLink to="/test/234">test detail</NavLink>
-        </div>
-
         {outlet}
       </div>
-      {/* <div className={s.menu}>
-            <MenuList />
-          </div>
-          <div className={s.rightBox}>
-            <div className={s.headeBox}>
-              <Header />
-            </div>
-            <div className={s.content}> */}
-      {/* {outlet} */}
-
-      {/* </div>
-          </div> */}
-
     </div>
   )
 };
