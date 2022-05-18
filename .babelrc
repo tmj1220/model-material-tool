@@ -1,0 +1,47 @@
+{
+  "env":{
+    "development":{
+      "plugins": [
+        "react-refresh/babel",
+        ["@babel/plugin-proposal-decorators",{ "legacy": true }]
+      ]
+    },
+    "production":{
+      "plugins": [
+        ["@babel/plugin-proposal-decorators",{ "legacy": true }]
+      ]
+    }
+  },
+  "presets": [
+    ["@babel/preset-env", {
+      "useBuiltIns": "usage",
+      "corejs": {
+        "version": 3,
+        "proposals": false
+      },
+      "targets": {
+        "node": "current"
+      }
+    }],
+    ["@babel/preset-react",{
+      "runtime":"automatic"
+    }],
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": false
+      }
+    ],
+    "@babel/plugin-proposal-class-properties",
+    // "@babel/plugin-syntax-dynamic-import",
+    "./auto-css-modules.js",
+    ["import", {
+      "libraryName": "antd",
+      "libraryDirectory": "es",
+      "style": true
+    }]
+  ]
+}

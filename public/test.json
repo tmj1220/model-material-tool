@@ -1,0 +1,9 @@
+{
+  "code": 1,
+  "msg": "成功",
+  "timestamp": 1652252135559,
+  "uuid": "2F4AE4D6BCE64F569BCC3BF250DC58AC",
+  "data": {
+    "strongPwdHit": "ok"
+  }
+}

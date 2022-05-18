@@ -1,0 +1,10 @@
+{
+  "importStatement": "import { I18N } from '@common/I18N';",
+  "callStatement": "I18N.get",
+  "targetDir": "i18n-messages",
+  "exclude": [
+    "**/locales/*.{ts}"
+  ],
+  "callExpression": false,
+  "autoZhKey": true
+}
