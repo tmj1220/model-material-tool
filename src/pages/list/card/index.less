@@ -6,16 +6,25 @@
   display: flex;
   flex-direction: column;
   transition: 0.3s all;
-  box-shadow: -1px -1px 1px #eee, 1px 1px 1px #eee;
+  box-shadow:
+    1px 0 1px rgb(0 0 0 / 10%),
+    -1px 0 1px rgb(0 0 0 / 10%),
+    0 1px 1px rgb(0 0 0 / 10%),
+    0 -1px 1px rgb(0 0 0 / 10%);
   cursor: pointer;
 
   &:hover {
-    box-shadow: 3px 3px 3px #eee, -3px -3px 3px #eee;
+    box-shadow:
+      5px 0 5px 1px rgb(0 0 0 / 10%),
+      -5px 0 5px 1px rgb(0 0 0 / 10%),
+      0 5px 5px 1px rgb(0 0 0 / 10%),
+      0 -5px 5px 1px rgb(0 0 0 / 10%);
   }
 
   .img-box {
     height: 206px;
-    background: black;
+    // background: black;
+    overflow: hidden;
     border-radius: 10px 10px 0 0;
   }
 

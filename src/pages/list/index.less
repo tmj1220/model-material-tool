@@ -1,3 +1,4 @@
+/* stylelint-disable selector-pseudo-class-no-unknown */
 .list-root {
   background: transparent;
 
@@ -7,5 +8,11 @@
     padding: 10px 32px;
     height: calc(100vh - 104px);
     overflow: auto;
+
+    :global {
+      .ant-row {
+        margin: 5px 0 0 !important;
+      }
+    }
   }
 }

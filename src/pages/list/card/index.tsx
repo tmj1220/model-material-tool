@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react'
-import { Image, Button } from 'antd'
+import React, { useRef } from 'react'
+import { Button } from 'antd'
+import Image from '@/components/image'
+
 import downloadSvg from '@/assets/images/icons/download.svg'
 import { typeToName } from '../constants'
 import s from './index.less'
@@ -9,11 +11,15 @@ interface SourceCardProps extends BaseSource{}
 const SourceCard: React.FC<SourceCardProps> = ({
   id, name, tags, link, type,
 }) => {
-  useEffect(() => {}, [])
+  const containerRef = useRef<HTMLDivElement>()
+
   return (
     <div className={s['source-card-root']} key={id}>
-      <div className={s['img-box']}>
-        <Image preview={false} alt={name} src={link} width={332} />
+      <div
+        ref={containerRef}
+        className={s['img-box']}
+      >
+        <Image alt={name} src={link} width={332} />
       </div>
       <div className={s['desc-box']}>
         <div className={s['desc-text-box']}>

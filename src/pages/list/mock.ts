@@ -33,10 +33,10 @@ export const tags = [
   },
 ]
 
-const mockUrl1 = 'http://localhost:3011/mock1.png'
-const mockUrl2 = 'http://localhost:3011/mock2.png'
-const mockUrl3 = 'http://localhost:3011/mock3.png'
-const mockUrl4 = 'http://localhost:3011/mock4.png'
+const mockUrl1 = 'http://10.90.0.49:3011/mock1.png'
+const mockUrl2 = 'http://10.90.0.49:3011/mock2.png'
+const mockUrl3 = 'http://10.90.0.49:3011/mock3.png'
+const mockUrl4 = 'http://10.90.0.49:3011/mock4.png'
 
 export const baselist:BaseSource[] = [
   {
