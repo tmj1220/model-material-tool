@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import {
   Form, Input, Button,
 } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import { MailOutlined } from '@ant-design/icons'
+import { getParameterByName, getToken } from '@/utils/utils'
 import { useModelDispatchers, useModelEffectsLoading } from '@/store'
 import logo from '@/assets/images/icons/logo.svg'
 import s from './index.less'
@@ -11,12 +13,33 @@ interface LoginProps { }
 
 const Login: React.FC<LoginProps> = () => {
   const { login } = useModelDispatchers('login')
+  const navigate = useNavigate()
   const { login: isLoading } = useModelEffectsLoading('login')
+
+  useEffect(() => {
+    if (getToken()) {
+      navigate(getParameterByName('redirect') || '/')
+    }
+  }, [])
+
+  const onLogin = useCallback(
+    async (data) => {
+      try {
+        await login(data)
+        setTimeout(() => {
+          navigate(getParameterByName('redirect') || '/')
+        }, 0);
+      } catch (error) {
+        console.log('onLogin --error', error);
+      }
+    },
+    [],
+  )
 
   return (
     <div className={s['login-root']}>
-      <aside />
-      <section>
+      {/* <aside /> */}
+      <section className={s['login-form-box']}>
         <header>
           <img src={logo} alt="" />
           <h1>Logo</h1>
@@ -24,7 +47,7 @@ const Login: React.FC<LoginProps> = () => {
         <section>
           <Form
             name="login"
-            onFinish={login}
+            onFinish={onLogin}
             labelCol={{ flex: '120px' }}
             labelAlign="left"
             labelWrap

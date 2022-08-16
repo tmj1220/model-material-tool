@@ -21,6 +21,7 @@ module.exports = {
   plugins: [
     'react',
     'import',
+    '@typescript-eslint',
   ],
   rules: {
     semi: 'off',
@@ -41,6 +42,8 @@ module.exports = {
       },
     ],
     'import/no-extraneous-dependencies': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
 
   },
   settings: {

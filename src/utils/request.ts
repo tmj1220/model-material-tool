@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios'
-import { notification } from 'antd'
-import store from '@/store'
-import { getLanguage, getToken } from './utils'
+import { notification, Modal } from 'antd'
+import { getLanguage, getToken, redirectLogin } from './utils'
 import { getTips } from './tips'
 
 // 请求不需要带上token的接口
@@ -31,7 +30,7 @@ const instance = axios.create({
       window.location.href = '/exception/403'
     }
     if (status === 401) {
-      store.dispatch.login.redirectLogin()
+      redirectLogin()
     }
     return status >= 200 && status < 300; // 默认值
   },
@@ -75,8 +74,14 @@ instance.interceptors.response.use((response) => {
   ) {
     if (data.code === 1) {
       return data.data
+    } if (data.code === 10002) {
+      Modal.warn({
+        title: getTips('login.invalid'),
+        onOk: redirectLogin,
+      })
+      throw new Error('loginInvalid')
     }
-    return Promise.reject(new Error(data.msg))
+    throw new Error(data.msg)
   }
 
   /**
@@ -91,7 +96,7 @@ instance.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
-const request = (url, options:AxiosRequestConfig = {}) => instance.request({
+const request = (url, options:AxiosRequestConfig = {}):any => instance.request({
   url,
   ...options,
 }).catch((err) => {
