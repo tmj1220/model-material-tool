@@ -72,7 +72,7 @@ instance.interceptors.response.use((response) => {
     && (data instanceof Object)
     // && hasOwnProperties(data, BusinessJsonKeys)
   ) {
-    if (data.code === 1) {
+    if (data.code === 200) {
       return data.data
     } if (data.code === 10002) {
       Modal.warn({
@@ -96,7 +96,7 @@ instance.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
-const request = (url, options:AxiosRequestConfig = {}):any => instance.request({
+const request = (url, options: AxiosRequestConfig = {}): any => instance.request({
   url,
   ...options,
 }).catch((err) => {

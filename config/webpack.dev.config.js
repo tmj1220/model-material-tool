@@ -104,17 +104,18 @@ const config = merge(baseConfig, {
       'Access-Control-Allow-Headers': '*',
       'Access-Control-Expose-Headers': '*',
     },
-    port: 3011,
-    host: '0.0.0.0',
+    port: 3000,
+    host: '10.90.0.76',
     compress: true,
     hot: true,
     open: true,
     historyApiFallback: true,
     proxy: {
       '/api': {
-        target: 'https://custom-test.rokid-inc.com', // 开发环境
+        target: 'http://10.90.0.80:8080', // 开发环境
         secure: false,
         changeOrigin: true,
+        pathRewrite: { '^/api': '' },
       },
     },
   },

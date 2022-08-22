@@ -19,8 +19,7 @@ const stores = {
       console.log('login payload', payload);
       try {
         // const { companyInfo } = rootState.common
-        const { accessToken } = await login({
-        })
+        const { accessToken } = await login(payload)
         setToken(accessToken)
 
         // await Promise.all([dispatch.user.getUserInfo(), dispatch.common.getMenuList()])

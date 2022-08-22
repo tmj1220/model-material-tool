@@ -10,14 +10,10 @@ export async function getRouters() {
   return request(`${UPMS_SUFFIX}/getRouters`);
 }
 
-export async function login(params) {
-  const APP_KEY = 'app';
-  return request('/auth/oauth/token', {
+export async function login(data) {
+  return request('/auth', {
     method: 'POST',
-    data: { ...params, appKey: APP_KEY },
-    headers: {
-      Authorization: `Basic ${btoa(`${APP_KEY}:`)} `,
-    },
+    data,
   });
 }
 

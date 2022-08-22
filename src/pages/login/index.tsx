@@ -24,6 +24,7 @@ const Login: React.FC<LoginProps> = () => {
 
   const onLogin = useCallback(
     async (data) => {
+      console.log(data)
       try {
         await login(data)
         setTimeout(() => {
@@ -52,7 +53,6 @@ const Login: React.FC<LoginProps> = () => {
             labelAlign="left"
             labelWrap
             wrapperCol={{ flex: 1 }}
-          // colon={false}
             requiredMark={false}
           >
             <Form.Item
@@ -72,7 +72,6 @@ const Login: React.FC<LoginProps> = () => {
               <Input prefix={<MailOutlined />} placeholder="邮箱" />
             </Form.Item>
             <Form.Item
-              // label={intl.formatMessage({ id: 'login.form.password' })}
               name="password"
               rules={[
                 {
@@ -86,7 +85,11 @@ const Login: React.FC<LoginProps> = () => {
                 },
               ]}
             >
-              <Input prefix={<MailOutlined />} placeholder="密码" />
+              <Input
+                type="password"
+                prefix={<MailOutlined />}
+                placeholder="密码"
+              />
             </Form.Item>
             <Form.Item>
               <Button type="primary" block size="large" loading={isLoading} htmlType="submit">
