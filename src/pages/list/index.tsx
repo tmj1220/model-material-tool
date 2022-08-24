@@ -84,7 +84,9 @@ const SourceList: React.FC<ListProps> = () => {
         >
           <List
             dataSource={list}
-            grid={{ gutter: 16, column: 4 }}
+            grid={{
+              gutter: 16, column: 4, xl: 4, xxl: 6,
+            }}
             renderItem={(item) => (
               <List.Item key={item.id}>
                 <Card {...item} />

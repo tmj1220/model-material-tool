@@ -19,7 +19,7 @@ const SourceCard: React.FC<SourceCardProps> = ({
         ref={containerRef}
         className={s['img-box']}
       >
-        <Image alt={name} src={link} width={332} />
+        <Image alt={name} src={link} />
       </div>
       <div className={s['desc-box']}>
         <div className={s['desc-text-box']}>

@@ -1,15 +1,20 @@
 import React, { useEffect } from 'react'
 import { Tabs, Input, Button } from 'antd'
+import { useModelDispatchers } from '@/store'
 import searchSvg from '@/assets/images/icons/search.svg'
-
 import logo from '@/assets/images/icons/logo.svg'
 import { menuOptions } from './constant'
-
 import s from './index.less'
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
+  const { getMaterialCategory } = useModelDispatchers('list')
+  const onTabChange = (key) => {
+    getMaterialCategory()
+    console.log(key);
+  }
+
   useEffect(() => {}, [])
   return (
     <div className={s['header-root']}>
@@ -19,7 +24,7 @@ const Header: React.FC<HeaderProps> = () => {
           Logo
         </h1>
         <div className={s['menu-box']}>
-          <Tabs>
+          <Tabs onChange={onTabChange}>
             {menuOptions.map(({ key, title }) => <Tabs.TabPane key={key} tab={title} />)}
           </Tabs>
         </div>
