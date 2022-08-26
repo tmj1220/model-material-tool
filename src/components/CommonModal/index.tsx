@@ -8,7 +8,7 @@ import { Modal } from 'antd';
 import type { ModalProps } from 'antd/es/modal';
 import CloseSvg from '@/assets/images/anticons/close.svg';
 import Icon from '@ant-design/icons';
-import s from './index.less';
+import './index.less';
 
 interface IProps extends ModalProps {
   title?: string;
@@ -27,18 +27,16 @@ const commonModal = (
   ref: React.Ref<unknown>,
 ) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-
   const changeModalVisible = (payload: boolean) => {
     setModalVisible(payload);
   };
   useImperativeHandle(ref, () => ({
     changeModalVisible,
   }));
-
   return (
     <Modal
-      centered
-      className={s['common-modal']}
+      style={{ top: 64, overflow: 'hidden' }}
+      className="common-modal"
       maskClosable={false}
       keyboard={false}
       destroyOnClose
@@ -52,8 +50,8 @@ const commonModal = (
       }}
       {...rest}
     >
-      <div className={s['content-box']}>
-        <Icon className={s.close} style={{ fontSize: 36 }} component={CloseSvg} />
+      <div className="content-box">
+        <Icon className="modal-close" style={{ fontSize: 26 }} component={CloseSvg} />
         {children}
       </div>
     </Modal>

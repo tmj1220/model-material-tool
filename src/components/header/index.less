@@ -1,4 +1,6 @@
 /* stylelint-disable selector-pseudo-class-no-unknown */
+@import "../../assets/style/theme.less";
+
 .header-root {
   height: 64px;
   min-height: 64px;
@@ -19,8 +21,8 @@
       height: 100%;
 
       img {
-        width: 40px;
-        height: 40px;
+        width: 140px;
+        height: 42px;
         margin-right: 16px;
       }
     }
@@ -103,7 +105,7 @@
       .avtar {
         height: 42px;
         width: 42px;
-        background: #0065ff;
+        background: @i-primary-color;
         border-radius: 50%;
         display: flex;
         justify-content: center;
@@ -113,8 +115,4 @@
       }
     }
   }
-}
-
-.upload-model {
-  width: calc(100vw);
 }

@@ -8,8 +8,6 @@ import UploadSvg from '@/assets/images/anticons/upload.svg';
 import logo from '@/assets/images/icons/logo.svg';
 import { menuOptions } from './constant';
 import s from './index.less';
-import CommonModal from '../CommonModal';
-import Add from './Add';
 
 interface HeaderProps { }
 
@@ -66,7 +64,6 @@ const Header: React.FC<HeaderProps> = () => {
       <div className={s['left-box']}>
         <h1 className={s['logo-box']}>
           <img src={logo} alt="" />
-          Logo
         </h1>
         <div className={s['menu-box']}>
           <Tabs activeKey={String(curCategory)} onChange={onTabChange}>
@@ -108,9 +105,6 @@ const Header: React.FC<HeaderProps> = () => {
           Annndy
         </div>
       </div>
-      <CommonModal width="100%">
-        <Add />
-      </CommonModal>
     </div>
   );
 };

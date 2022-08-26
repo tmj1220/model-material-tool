@@ -5,7 +5,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { getParameterByName, getToken } from '@/utils/utils';
 import { useModelDispatchers, useModelEffectsLoading } from '@/store';
-import logo from '@/assets/images/icons/logo.svg';
+import logo from '@/assets/images/icons/login-logo.svg';
 import EmailSvg from '@/assets/images/anticons/email.svg';
 import PasswordSvg from '@/assets/images/anticons/password.svg';
 import s from './index.less';
