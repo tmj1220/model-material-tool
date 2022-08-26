@@ -1,0 +1,36 @@
+.upload-model {
+  width: 1028px;
+  min-height: 1099px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 12px 0 rgb(0 101 255 / 10%);
+  display: flex;
+  justify-content: center;
+  margin: 24px auto 0;
+  padding: 45px 0;
+  /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+  :global {
+    .ant-form-item-label > label {
+      /* 类型 */
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 18px;
+      letter-spacing: 0;
+      color: rgb(0 0 0 / 50%);
+    }
+
+    .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+      display: inline-flex;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #ff4949;
+      content: "";
+    }
+
+    .ant-upload.ant-upload-select-picture-card {
+      width: 332px;
+      height: 206px;
+    }
+  }
+}
