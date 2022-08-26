@@ -1,16 +1,17 @@
 /* eslint-disable no-unused-vars */
-declare interface BaseSource{
-  id:string
-  name:string
-  type:'material'|'model'
-  tags:{label:string, value:string}[]
-  link:string
+declare interface BaseSource {
+  categoryName: string
+  resourceId: string
+  resourceName: string
+  resourceThumbFileId: string
+  resourceThumbUrl: string
+  resourceType: number
 }
 
-declare interface Model extends BaseSource{
+declare interface Model extends BaseSource {
 
 }
 
-declare interface Material extends BaseSource{
+declare interface Material extends BaseSource {
 
 }

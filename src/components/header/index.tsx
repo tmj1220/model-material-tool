@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import {
   Tabs, Input, Button,
 } from 'antd';
-import { useModelDispatchers } from '@/store'
+import { useModelDispatchers, useModelState } from '@/store'
 import searchSvg from '@/assets/images/icons/search.svg';
 import UploadSvg from '@/assets/images/anticons/upload.svg';
 import logo from '@/assets/images/icons/logo.svg';
 import { menuOptions } from './constant';
-
 import s from './index.less';
 import CommonModal from '../CommonModal';
 import Add from './Add';
@@ -15,10 +14,29 @@ import Add from './Add';
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
-  const { getMaterialCategory } = useModelDispatchers('list')
-  const onTabChange = (key) => {
-    getMaterialCategory()
-    console.log(key);
+  const {
+    getMaterialCategory, updateCurCategory, updateMaterialCategory, getResourceList,
+  } = useModelDispatchers('list')
+  const { requestParams } = useModelState('list')
+  const onTabChange = async (key) => {
+    updateCurCategory(key)
+    // 点击材质请求材质下分类
+    if (key === 2) {
+      await getMaterialCategory()
+      await getResourceList({
+        pageNum: 1,
+        pageSize: requestParams.pageSize,
+        resourceType: key,
+        materialCategoryId: '',
+      })
+    } else {
+      getResourceList({
+        pageNum: 1,
+        pageSize: requestParams.pageSize,
+        resourceType: key,
+      })
+      updateMaterialCategory([])
+    }
   }
   useEffect(() => {}, []);
   return (

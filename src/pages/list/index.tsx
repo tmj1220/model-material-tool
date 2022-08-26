@@ -6,27 +6,26 @@ import {
   List, Skeleton, Divider,
 } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useModelDispatchers, useModelState, useModelEffectsLoading } from '@/store'
 import FilterBar from './filter-bar'
 import Card from './card'
 import s from './index.less'
-
 import { baselist } from './mock'
 
 interface ListProps {}
 
 const SourceList: React.FC<ListProps> = () => {
-  const [loading, setLoading] = useState(false)
+  const { getResourceList } = useModelDispatchers('list')
+  const { requestParams, curCategory, resources } = useModelState('list')
+  const { getResourceList: isLoading } = useModelEffectsLoading('list');
   const [list, setlist] = useState(baselist)
   const containerRef = useRef<HTMLDivElement>()
   const listRef = useRef<any>()
 
   const loadMoreData = () => {
-    // console.log('loadMoreData', loadMoreData, loading);
-
-    if (loading) {
+    if (isLoading) {
       return;
     }
-    setLoading(true);
     setTimeout(() => {
       setlist((pre) => [
         ...pre,
@@ -34,9 +33,8 @@ const SourceList: React.FC<ListProps> = () => {
           .slice(-5)
           .map((i) => ({
             ...i,
-            id: String(Number(i.id) + 4),
+            id: String(Number(i.resourceId) + 4),
           }))])
-      setLoading(false);
     }, 300);
   };
   useLayoutEffect(() => {
@@ -57,10 +55,13 @@ const SourceList: React.FC<ListProps> = () => {
 
     };
   }, [list])
-  // console.log('loading', loading, list);
 
   useEffect(() => {
-    loadMoreData();
+    // loadMoreData();
+    getResourceList({
+      ...requestParams,
+      resourceType: curCategory,
+    })
   }, []);
 
   return (
@@ -73,9 +74,9 @@ const SourceList: React.FC<ListProps> = () => {
       >
         <InfiniteScroll
           ref={listRef}
-          dataLength={list.length}
+          dataLength={resources.length}
           next={loadMoreData}
-          hasMore={list.length <= 100}
+          hasMore={resources.length <= 100}
           hasChildren
           scrollThreshold={0.1}
           loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
@@ -83,12 +84,12 @@ const SourceList: React.FC<ListProps> = () => {
           scrollableTarget="scrollableDiv"
         >
           <List
-            dataSource={list}
+            dataSource={resources}
             grid={{
               gutter: 16, column: 4, xl: 4, xxl: 6,
             }}
             renderItem={(item) => (
-              <List.Item key={item.id}>
+              <List.Item key={item.resourceId}>
                 <Card {...item} />
               </List.Item>
             )}
