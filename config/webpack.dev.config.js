@@ -105,7 +105,7 @@ const config = merge(baseConfig, {
       'Access-Control-Expose-Headers': '*',
     },
     port: 3000,
-    host: '10.90.0.76',
+    host: '0.0.0.0',
     compress: true,
     hot: true,
     open: true,

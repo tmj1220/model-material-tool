@@ -1,10 +1,10 @@
 export const menuOptions = [
   {
-    key: 'model',
+    key: 1,
     title: '模型',
   },
   {
-    key: 'material',
+    key: 2,
     title: '材质',
   },
 ]

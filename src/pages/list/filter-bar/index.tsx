@@ -1,20 +1,31 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Select, Tabs } from 'antd'
-
+import { useModelDispatchers, useModelState } from '@/store'
 import { fitlerOptions } from '../constants'
 import s from './index.less'
 
-import { tags } from '../mock'
-
-interface FilterBarProps {}
+interface FilterBarProps { }
 
 const FilterBar: React.FC<FilterBarProps> = () => {
-  useEffect(() => {}, [])
+  const { materialCategory, requestParams } = useModelState('list')
+  const { getResourceList } = useModelDispatchers('list')
+
+  const onTabChange = (key) => {
+    getResourceList({
+      ...requestParams,
+      materialCategoryId: key,
+    })
+  }
+
   return (
     <div className={s['filter-bar-root']}>
       <div className={s['left-box']}>
-        <Tabs animated={false}>
-          {tags.map(({ label, value }) => <Tabs.TabPane key={value} tab={label} />)}
+        <Tabs animated={false} onChange={onTabChange}>
+          {
+            materialCategory.map(({
+              categoryId, categoryName,
+            }) => <Tabs.TabPane key={categoryId} tab={categoryName} />)
+          }
         </Tabs>
       </div>
       <div className={s['right-box']}>

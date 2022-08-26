@@ -2,16 +2,40 @@ import React, { useEffect } from 'react';
 import {
   Tabs, Input, Button,
 } from 'antd';
+import { useModelDispatchers, useModelState } from '@/store'
 import searchSvg from '@/assets/images/icons/search.svg';
 import UploadSvg from '@/assets/images/anticons/upload.svg';
 import logo from '@/assets/images/icons/logo.svg';
 import { menuOptions } from './constant';
-
 import s from './index.less';
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
+  const {
+    getMaterialCategory, updateCurCategory, updateMaterialCategory, getResourceList,
+  } = useModelDispatchers('list')
+  const { requestParams } = useModelState('list')
+  const onTabChange = async (key) => {
+    updateCurCategory(key)
+    // 点击材质请求材质下分类
+    if (key === 2) {
+      await getMaterialCategory()
+      await getResourceList({
+        pageNum: 1,
+        pageSize: requestParams.pageSize,
+        resourceType: key,
+        materialCategoryId: '',
+      })
+    } else {
+      getResourceList({
+        pageNum: 1,
+        pageSize: requestParams.pageSize,
+        resourceType: key,
+      })
+      updateMaterialCategory([])
+    }
+  }
   useEffect(() => {}, []);
   return (
     <div className={s['header-root']}>
@@ -20,7 +44,7 @@ const Header: React.FC<HeaderProps> = () => {
           <img src={logo} alt="" />
         </h1>
         <div className={s['menu-box']}>
-          <Tabs>
+          <Tabs onChange={onTabChange}>
             {menuOptions.map(({ key, title }) => (
               <Tabs.TabPane key={key} tab={title} />
             ))}
