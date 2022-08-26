@@ -1,6 +1,6 @@
 /* eslint-disable no-unsafe-optional-chaining */
 import React, {
-  useEffect, useState, useRef, useLayoutEffect,
+  useEffect, useRef, useLayoutEffect,
 } from 'react'
 import {
   List, Skeleton, Divider,
@@ -10,33 +10,23 @@ import { useModelDispatchers, useModelState, useModelEffectsLoading } from '@/st
 import FilterBar from './filter-bar'
 import Card from './card'
 import s from './index.less'
-import { baselist } from './mock'
 
-interface ListProps {}
+interface ListProps { }
 
 const SourceList: React.FC<ListProps> = () => {
   const { getResourceList } = useModelDispatchers('list')
   const { requestParams, curCategory, resources } = useModelState('list')
   const { getResourceList: isLoading } = useModelEffectsLoading('list');
-  const [list, setlist] = useState(baselist)
   const containerRef = useRef<HTMLDivElement>()
   const listRef = useRef<any>()
 
-  const loadMoreData = () => {
-    if (isLoading) {
-      return;
-    }
-    setTimeout(() => {
-      setlist((pre) => [
-        ...pre,
-        ...pre
-          .slice(-5)
-          .map((i) => ({
-            ...i,
-            id: String(Number(i.resourceId) + 4),
-          }))])
-    }, 300);
-  };
+  // const loadMoreData = () => {
+  //   getResourceList({
+  //     ...requestParams,
+  //     pageNum: requestParams.pageNum + 1,
+  //   })
+  // }
+
   useLayoutEffect(() => {
     if (containerRef.current && containerRef.current.children[0]) {
       try {
@@ -44,7 +34,7 @@ const SourceList: React.FC<ListProps> = () => {
         // eslint-disable-next-line no-underscore-dangle
         const { height: listHeight } = containerRef.current.children[0].getBoundingClientRect()
         if (listHeight < height) {
-          loadMoreData();
+          // loadMoreData()
         }
       } catch (error) {
         console.log('useLayoutEffect -error', error);
@@ -54,10 +44,9 @@ const SourceList: React.FC<ListProps> = () => {
     return () => {
 
     };
-  }, [list])
+  }, [resources])
 
   useEffect(() => {
-    // loadMoreData();
     getResourceList({
       ...requestParams,
       resourceType: curCategory,
@@ -75,7 +64,7 @@ const SourceList: React.FC<ListProps> = () => {
         <InfiniteScroll
           ref={listRef}
           dataLength={resources.length}
-          next={loadMoreData}
+          next={() => {}}
           hasMore={resources.length <= 100}
           hasChildren
           scrollThreshold={0.1}
@@ -84,6 +73,7 @@ const SourceList: React.FC<ListProps> = () => {
           scrollableTarget="scrollableDiv"
         >
           <List
+            loading={isLoading}
             dataSource={resources}
             grid={{
               gutter: 16, column: 4, xl: 4, xxl: 6,

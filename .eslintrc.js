@@ -43,6 +43,7 @@ module.exports = {
     ],
     'import/no-extraneous-dependencies': 'off',
     'no-unused-vars': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
 
   },

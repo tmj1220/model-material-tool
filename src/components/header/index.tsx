@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Tabs, Input, Button,
 } from 'antd';
@@ -11,23 +11,25 @@ import s from './index.less';
 import CommonModal from '../CommonModal';
 import Add from './Add';
 
-interface HeaderProps {}
+interface HeaderProps { }
 
 const Header: React.FC<HeaderProps> = () => {
   const {
-    getMaterialCategory, updateCurCategory, updateMaterialCategory, getResourceList,
+    getMaterialCategory, updateCurCategory, updateMaterialCategory,
+    getResourceList, getResourceByKeyword, updateSearchKeyword,
   } = useModelDispatchers('list')
-  const { requestParams } = useModelState('list')
+  const { requestParams, curCategory } = useModelState('list')
+  // 切换tab
   const onTabChange = async (key) => {
     updateCurCategory(key)
-    // 点击材质请求材质下分类
-    if (key === 2) {
+    if (key === '2') {
+      // 点击材质请求材质下分类
       await getMaterialCategory()
       await getResourceList({
         pageNum: 1,
         pageSize: requestParams.pageSize,
         resourceType: key,
-        materialCategoryId: '',
+        materialCategoryId: null,
       })
     } else {
       getResourceList({
@@ -38,7 +40,27 @@ const Header: React.FC<HeaderProps> = () => {
       updateMaterialCategory([])
     }
   }
-  useEffect(() => {}, []);
+  // 关键字检索
+  const onSearch = (value) => {
+    if (value) {
+      updateCurCategory(null)
+      getResourceByKeyword({
+        pageNum: 1,
+        pageSize: requestParams.pageSize,
+        resourceType: null,
+        keyword: value,
+      })
+    } else {
+      updateCurCategory(menuOptions[0].key)
+      getResourceList({
+        pageNum: 1,
+        pageSize: requestParams.pageSize,
+        resourceType: menuOptions[0].key as any,
+      })
+    }
+    updateSearchKeyword(value)
+    updateMaterialCategory([])
+  }
   return (
     <div className={s['header-root']}>
       <div className={s['left-box']}>
@@ -47,7 +69,7 @@ const Header: React.FC<HeaderProps> = () => {
           Logo
         </h1>
         <div className={s['menu-box']}>
-          <Tabs onChange={onTabChange}>
+          <Tabs activeKey={String(curCategory)} onChange={onTabChange}>
             {menuOptions.map(({ key, title }) => (
               <Tabs.TabPane key={key} tab={title} />
             ))}
@@ -56,8 +78,9 @@ const Header: React.FC<HeaderProps> = () => {
       </div>
       <div className={s['right-box']}>
         <div className={s['input-box']}>
-          <Input
+          <Input.Search
             placeholder="搜索"
+            onSearch={onSearch}
             prefix={(
               <img
                 src={searchSvg}
