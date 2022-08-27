@@ -20,12 +20,12 @@ const SourceList: React.FC<ListProps> = () => {
   const containerRef = useRef<HTMLDivElement>()
   const listRef = useRef<any>()
 
-  // const loadMoreData = () => {
-  //   getResourceList({
-  //     ...requestParams,
-  //     pageNum: requestParams.pageNum + 1,
-  //   })
-  // }
+  const loadMoreData = () => {
+    getResourceList({
+      ...requestParams,
+      pageNum: requestParams.pageNum + 1,
+    })
+  }
 
   useLayoutEffect(() => {
     if (containerRef.current && containerRef.current.children[0]) {
@@ -34,7 +34,7 @@ const SourceList: React.FC<ListProps> = () => {
         // eslint-disable-next-line no-underscore-dangle
         const { height: listHeight } = containerRef.current.children[0].getBoundingClientRect()
         if (listHeight < height) {
-          // loadMoreData()
+          loadMoreData()
         }
       } catch (error) {
         console.log('useLayoutEffect -error', error);
@@ -64,7 +64,7 @@ const SourceList: React.FC<ListProps> = () => {
         <InfiniteScroll
           ref={listRef}
           dataLength={resources.length}
-          next={() => {}}
+          next={loadMoreData}
           hasMore={resources.length <= 100}
           hasChildren
           scrollThreshold={0.1}

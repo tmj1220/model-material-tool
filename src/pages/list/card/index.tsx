@@ -1,26 +1,32 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useRef } from 'react'
+import { useModelState } from '@/store'
 import Image from '@/components/image'
 import downloadSvg from '@/assets/images/icons/download.svg'
 import { menuOptions } from '@/components/header/constant';
-import { getResourceDetail } from '@/services/list'
+import Tag from '@/components/tag/index'
 import CardDetail from '../cardDetail/index'
-// import { typeToName } from '../constants'
 import s from './index.less'
 
 interface SourceCardProps extends BaseSource { }
 
 const SourceCard: React.FC<SourceCardProps> = ({
-  resourceId, resourceName, resourceThumbUrl, resourceType, categoryName,
+  resourceId, resourceName, resourceThumbUrl, resourceType, categoryName, tagInfoList,
 }) => {
+  const { searchKeyword } = useModelState('list')
   const containerRef = useRef<HTMLDivElement>()
   const cardDetailRef = useRef(null)
 
   // 查看详情
-  const toDetail = async () => {
-    console.log(22);
-    const res = await getResourceDetail(resourceId)
-    cardDetailRef.current.onShowDrawer(res)
+  const toDetail = () => {
+    cardDetailRef.current.onShowDrawer(resourceId)
+  }
+  // 搜索关键字名称高亮
+  const highlightName = () => {
+    if (searchKeyword) {
+      return resourceName.replace(searchKeyword, `<span class='${s['high-light']}'>${searchKeyword}</span>`)
+    }
+    return resourceName
   }
 
   return (
@@ -38,7 +44,12 @@ const SourceCard: React.FC<SourceCardProps> = ({
         </div>
         <div className={s['desc-box']}>
           <div className={s['desc-text-box']}>
-            <div className={s['desc-title']}>{resourceName}</div>
+            <div
+              className={s['desc-title']}
+              dangerouslySetInnerHTML={{
+                __html: highlightName(),
+              }}
+            />
             <div className={s['desc-other']}>
               {menuOptions.find((m) => m.key === resourceType).title}
               {
@@ -52,9 +63,10 @@ const SourceCard: React.FC<SourceCardProps> = ({
               </span>
               )
             }
-              {/* {typeToName[type]}
-            /
-            {tags.map((i) => i.label).join(',')} */}
+              {
+              tagInfoList && tagInfoList.length > 0
+              && tagInfoList.map((item) => <Tag key={item.tagId} tagName={item.tagName} />)
+            }
             </div>
           </div>
           <div className={s['action-box']}>

@@ -32,7 +32,7 @@ const Header: React.FC<HeaderProps> = () => {
   const onTabChange = async (key) => {
     updateCurCategory(key);
     // 点击材质请求材质下分类
-    if (key === 2) {
+    if (key === '2') {
       await getMaterialCategory();
       await getResourceList({
         pageNum: 1,
