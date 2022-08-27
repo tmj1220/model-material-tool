@@ -1,46 +1,76 @@
 import React, { useEffect } from 'react';
 import {
-  Tabs, Input, Button,
+  Tabs, Input, Button, Menu, Dropdown, Space, MenuProps,
 } from 'antd';
-import { useModelDispatchers, useModelState } from '@/store'
+import { useModelDispatchers, useModelState } from '@/store';
 import searchSvg from '@/assets/images/icons/search.svg';
 import UploadSvg from '@/assets/images/anticons/upload.svg';
 import logo from '@/assets/images/icons/logo.svg';
+import { useNavigate } from 'react-router-dom';
+import Icon, { DownOutlined } from '@ant-design/icons';
+import SignoutSvg from '@/assets/images/anticons/signout.svg';
+
+import { redirectLogin } from '@/utils/utils';
 import { menuOptions } from './constant';
 import s from './index.less';
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
+  const navigate = useNavigate();
   const {
-    getMaterialCategory, updateCurCategory, updateMaterialCategory, getResourceList,
-  } = useModelDispatchers('list')
-  const { requestParams } = useModelState('list')
+    getMaterialCategory,
+    updateCurCategory,
+    updateMaterialCategory,
+    getResourceList,
+  } = useModelDispatchers('list');
+  const { requestParams } = useModelState('list');
+  const { name } = useModelState('user');
   const onTabChange = async (key) => {
-    updateCurCategory(key)
+    updateCurCategory(key);
     // 点击材质请求材质下分类
     if (key === 2) {
-      await getMaterialCategory()
+      await getMaterialCategory();
       await getResourceList({
         pageNum: 1,
         pageSize: requestParams.pageSize,
         resourceType: key,
         materialCategoryId: '',
-      })
+      });
     } else {
       getResourceList({
         pageNum: 1,
         pageSize: requestParams.pageSize,
         resourceType: key,
-      })
-      updateMaterialCategory([])
+      });
+      updateMaterialCategory([]);
     }
-  }
+  };
+  const onClick: MenuProps['onClick'] = () => {
+    redirectLogin()
+  };
+  const menu = (
+    <Menu
+      onClick={onClick}
+      items={[
+        {
+          label: <div style={{ marginLeft: 35 }}>退出</div>,
+          key: '1',
+          icon: <Icon style={{ fontSize: 14, marginLeft: 6 }} component={SignoutSvg} />,
+        },
+      ]}
+    />
+  );
   useEffect(() => {}, []);
   return (
     <div className={s['header-root']}>
       <div className={s['left-box']}>
-        <h1 className={s['logo-box']}>
+        <h1
+          onClick={() => {
+            navigate('/list');
+          }}
+          className={s['logo-box']}
+        >
           <img src={logo} alt="" />
         </h1>
         <div className={s['menu-box']}>
@@ -73,13 +103,21 @@ const Header: React.FC<HeaderProps> = () => {
               alignItems: 'center',
               borderRadius: 100,
             }}
+            onClick={() => {
+              navigate('/addmodel');
+            }}
           >
             上传
           </Button>
         </div>
         <div className={s['user-info-box']}>
-          <div className={s.avtar}>A</div>
-          Annndy
+          <Dropdown placement="bottomLeft" overlay={menu}>
+            <Space>
+              <div className={s.avtar}>A</div>
+              <span>{name}</span>
+              <DownOutlined style={{ color: '#333333', fontSize: 12 }} />
+            </Space>
+          </Dropdown>
         </div>
       </div>
     </div>

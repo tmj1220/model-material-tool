@@ -4,7 +4,7 @@ import jsCookie from 'js-cookie'
 export const hasOwnProperties = (
   obj:Object,
   keys:Array<string|number>,
-) => !keys.some((key) => !Object.prototype.hasOwnProperty.call(obj, key))
+) => !keys.some((key) => !Object.prototype.hasOwnProperty?.call(obj, key))
 
 export const getLanguage = () => {
   const lang = localStorage.getItem('language') || window.navigator.language;

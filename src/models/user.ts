@@ -1,3 +1,4 @@
+import { getUserInfoService } from '@/services/api';
 import { message } from 'antd';
 
 interface UserInfo {
@@ -5,15 +6,6 @@ interface UserInfo {
   avtar?: string
   token: string
 }
-const getUserInfoService = () => new Promise<UserInfo>((res) => {
-  setTimeout(() => {
-    res({
-      name: '张三',
-      token: '3234kfjas;lkfjlkasjflkdasjklf',
-    })
-  }, 1000);
-})
-
 const defaultState: UserInfo = {
   name: '',
   avtar: '',
@@ -30,8 +22,8 @@ const stores = {
   effects: () => ({
     async getUserInfo() {
       try {
-        const info = await getUserInfoService()
-        this.setState(info)
+        const name = await getUserInfoService()
+        this.setState({ name })
       } catch (error) {
         message.error(error?.message)
       }
