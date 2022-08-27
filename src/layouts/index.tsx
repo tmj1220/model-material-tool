@@ -3,6 +3,7 @@ import { useOutlet, useNavigate, useLocation } from 'react-router-dom'
 import { getToken } from '@/utils/utils';
 import { useModelDispatchers } from '@/store';
 import Header from '@/components/header'
+import jsCookie from 'js-cookie'
 import s from './index.less'
 
 interface UserLayoutProps {
@@ -26,7 +27,9 @@ const UserLayout: React.FC<UserLayoutProps> = () => {
     [location],
   )
   useEffect(() => {
-    getUserInfo()
+    if (jsCookie.get('Admin-Token')) {
+      getUserInfo()
+    }
   }, [])
 
   return (

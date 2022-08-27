@@ -3,11 +3,11 @@ import {
   Form,
   Input,
   Radio,
-  Select,
 } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import DraggerUpload from './DraggerUpload';
 import s from './index.less'
+import TagInput from './TagInput';
 
 export interface Addmodelfrom {
   resourceCategoryId?: string;
@@ -71,9 +71,7 @@ const Add = () => {
             { required: true, message: '请选择标签' },
           ]}
         >
-          <Select placeholder="请选择">
-            <Select.Option value="demo">Demo</Select.Option>
-          </Select>
+          <TagInput />
         </Form.Item>
         <Form.Item
           name="resources"

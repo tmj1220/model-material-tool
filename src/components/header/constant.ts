@@ -7,4 +7,8 @@ export const menuOptions = [
     key: 2,
     title: '材质',
   },
+  {
+    key: 3,
+    title: '关于',
+  },
 ]
