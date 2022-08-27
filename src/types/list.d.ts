@@ -7,6 +7,10 @@ declare interface IResourceParams {
   materialCategoryId?: string // 材质分类
   tagId?: string // 标签id
 }
+declare interface ITagInfo {
+  tagId: string
+  tagName: string
+}
 
 declare interface BaseSource {
   categoryName: string
@@ -15,8 +19,10 @@ declare interface BaseSource {
   resourceThumbFileId: string
   resourceThumbUrl: string
   resourceType: number
-  tagIdList?: any
-  tagInfoList?: any
+  tagInfo?: any
+  resourceDescription?: string
+  tagIdList?: string
+  tagInfoList?: ITagInfo[]
 }
 
 declare interface Material {

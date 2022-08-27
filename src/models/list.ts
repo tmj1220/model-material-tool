@@ -68,9 +68,11 @@ const stores = {
           this.clearResources()
         }
         const res = await getResource(params)
-        if (res.rows && res.rows.length > 0) {
-          this.updateRequestParams(params)
+        if (res.rows) {
           this.updateResources(res.rows)
+          if (res.rows.length > 0) {
+            this.updateRequestParams(params)
+          }
         }
       } catch (error) {
         message.error(error?.message)
@@ -83,9 +85,11 @@ const stores = {
           this.clearResources()
         }
         const res = await getResourceByKeyword(params)
-        if (res.rows && res.rows.length > 0) {
-          this.updateRequestParams(params)
+        if (res.rows) {
           this.updateResources(res.rows)
+          if (res.rows.length > 0) {
+            this.updateRequestParams(params)
+          }
         }
       } catch (error) {
         message.error(error?.message)
