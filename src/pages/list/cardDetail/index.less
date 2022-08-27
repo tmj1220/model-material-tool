@@ -1,0 +1,35 @@
+/* stylelint-disable selector-pseudo-class-no-unknown */
+.card-detail-drawer {
+  .drawer-content {
+    display: flex;
+
+    .img-box {
+      flex: 1;
+
+      img {
+        object-fit: cover;
+        height: calc(100vh - 264px);
+      }
+    }
+
+    .detail-box {
+      width: 344px;
+    }
+  }
+
+  :global {
+    .ant-drawer-content-wrapper {
+      height: calc(100vh - 64px) !important;
+
+      .ant-drawer-content {
+        border-radius: 16px;
+
+        .ant-drawer-wrapper-body {
+          .ant-drawer-body {
+            padding: 48px;
+          }
+        }
+      }
+    }
+  }
+}

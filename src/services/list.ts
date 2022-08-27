@@ -18,3 +18,7 @@ export async function getResourceByKeyword(params: IResourceParams) {
     params,
   });
 }
+// 获取资源详情
+export async function getResourceDetail(id: string) {
+  return request(`/resource/detail/${id}`);
+}

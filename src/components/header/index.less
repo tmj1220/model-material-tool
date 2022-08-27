@@ -74,10 +74,22 @@
       .input {
         width: 410px;
         margin-right: 15px;
-        background: #f2f2f2;
 
-        > input {
-          background: #f2f2f2;
+        :global {
+          .ant-input-wrapper {
+            .ant-input-affix-wrapper {
+              background: #f2f2f2;
+              border: none;
+
+              > input {
+                background: #f2f2f2;
+              }
+            }
+
+            .ant-input-group-addon {
+              display: none;
+            }
+          }
         }
       }
     }
