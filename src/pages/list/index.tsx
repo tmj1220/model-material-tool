@@ -15,7 +15,10 @@ interface ListProps { }
 
 const SourceList: React.FC<ListProps> = () => {
   const { getResourceList } = useModelDispatchers('list')
-  const { requestParams, curCategory, resources } = useModelState('list')
+  const {
+    requestParams, curCategory, resources, isGetMoreResources,
+  } = useModelState('list')
+  const { getResourceByKeyword: isKeywordLoading } = useModelEffectsLoading('list');
   const { getResourceList: isLoading } = useModelEffectsLoading('list');
   const containerRef = useRef<HTMLDivElement>()
   const listRef = useRef<any>()
@@ -28,7 +31,7 @@ const SourceList: React.FC<ListProps> = () => {
   }
 
   useLayoutEffect(() => {
-    if (containerRef.current && containerRef.current.children[0]) {
+    if (containerRef.current && containerRef.current.children[0] && resources.length > 0) {
       try {
         const { height } = containerRef.current.getBoundingClientRect()
         // eslint-disable-next-line no-underscore-dangle
@@ -44,7 +47,7 @@ const SourceList: React.FC<ListProps> = () => {
     return () => {
 
     };
-  }, [resources])
+  }, [])
 
   useEffect(() => {
     getResourceList({
@@ -65,15 +68,15 @@ const SourceList: React.FC<ListProps> = () => {
           ref={listRef}
           dataLength={resources.length}
           next={loadMoreData}
-          hasMore={resources.length <= 100}
+          hasMore={isGetMoreResources}
           hasChildren
           scrollThreshold={0.1}
-          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+          loader={(isLoading || isKeywordLoading)
+            ? <Skeleton avatar paragraph={{ rows: 1 }} active /> : null}
           endMessage={<Divider plain>所有的都在这儿了🤐</Divider>}
           scrollableTarget="scrollableDiv"
         >
           <List
-            loading={isLoading}
             dataSource={resources}
             grid={{
               gutter: 16, column: 4, xl: 4, xxl: 6,
