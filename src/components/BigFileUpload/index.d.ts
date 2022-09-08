@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-06 18:02:22
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-07 17:35:12
+ * @LastEditTime: 2022-09-08 21:21:40
  * @FilePath: /model-material-tool/src/components/BigFileUpload/index.d.ts
  * @Description:
  *
@@ -50,9 +50,13 @@ export interface RCFile extends File {
   previewUrl?: string;
   status: Status;
   percent?: number;
+  modelType?:string;
   [prop: string]: any;
 }
-
+export interface ModelResourceFile{
+  resourceFileId:string;
+  modelType:string;
+}
 export interface Requests {
   [prop: string]: { abort: Function };
 }

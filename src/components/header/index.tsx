@@ -158,8 +158,8 @@ const Header: React.FC<HeaderProps> = () => {
         <div className={s['user-info-box']}>
           <Dropdown placement="bottomLeft" overlay={menu}>
             <Space>
-              <div className={s.avtar}>A</div>
-              <span>{name}</span>
+              <div className={s.avtar}>{name.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</div>
+              <div style={{ minWidth: 40 }}>{name}</div>
               <DownOutlined style={{ color: '#333333', fontSize: 12 }} />
             </Space>
           </Dropdown>
@@ -184,7 +184,10 @@ const Header: React.FC<HeaderProps> = () => {
             style={{ fontSize: 36, color: '#fff' }}
           />
         </div>
-        <AddModel />
+        <AddModel onAdd={() => {
+          setaddModelVisible(false);
+        }}
+        />
       </Drawer>
     </div>
   );

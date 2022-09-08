@@ -158,7 +158,10 @@ export const calculateChunks = (file, size) => {
   let cur = 0
   // console.log(file);
   if (file.size <= size) {
-    return [file]
+    return [{
+      index: cur,
+      file
+    }]
   }
   while (cur < file.size) {
     chunks.push({

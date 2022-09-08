@@ -55,7 +55,7 @@ export interface CoreProps {
   accepts: Accept[]; // 可以上传的文件后缀集合 默认为['.png', '.jpg', '.jpeg', '.mp4']
   limit: number; // 允许上传的文件数量上限 默认为 5
   // eslint-disable-next-line no-unused-vars
-  beforeUpload?: (file: RCFile, files: RCFile[]) => Promise<void>; // 上传前的钩子函数
+  beforeUpload?: (file: RCFile, files: RCFile[]) => Promise<string>; // 上传前的钩子函数
   children?: React.ReactNode; // 文件上传按钮
   uploadLimitInfo?: { max: number; min?: number; hintText?: string }; // 上传文件的限制信息
 }
@@ -70,7 +70,7 @@ interface OnlyCoreProps {
 
 export type CoreUploadProps = CoreProps & OnlyCoreProps;
 
-const CoreUpload: React.FC<CoreUploadProps> = (
+const CoreUpload = (
   {
     request,
     concurrentQuantity,
@@ -83,13 +83,12 @@ const CoreUpload: React.FC<CoreUploadProps> = (
     beforeUpload,
     children,
     limit,
-
     getFileItem,
     updateFileStatus,
     onFileChange,
     uploadLimitInfo,
-  },
-  ref,
+  }:CoreUploadProps,
+  ref: React.Ref<unknown>,
 ) => {
   if (limit < 1) {
     console.error('Limit should be greater than 1');
@@ -233,7 +232,7 @@ const CoreUpload: React.FC<CoreUploadProps> = (
               fileSize: file.size,
               fragmentCount: chunks.length,
               fragmentSize: chunkSize,
-              fileContentType: file.type,
+              fileContentType: file.name.substring(file.name.lastIndexOf(".")),
             },
             cancelToken: new CancelToken((c) => {
               requestsRef.current[checkFileUrlCancelKey] = { abort: c };
@@ -408,8 +407,12 @@ const CoreUpload: React.FC<CoreUploadProps> = (
 
   const coreBeforeUpload = useCallback(
     async (file, files) => {
+      let modelType = '';
       try {
-        await beforeUpload(file, files);
+        modelType =  await beforeUpload(file, files);
+        if(modelType){
+          file.modelType = modelType;
+        }
       } catch (error) {
         return Promise.reject();
       }

@@ -2,50 +2,78 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-08 10:49:29
+ * @LastEditTime: 2022-09-09 01:58:41
  * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
  */
-import React, {
-  useState, useImperativeHandle, forwardRef,
-} from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import Icon from '@ant-design/icons';
-import closeSvg from '@/assets/images/anticons/close.svg'
-import downloadSvg from '@/assets/images/anticons/download.svg'
-import type { ForwardRefRenderFunction } from 'react'
+import closeSvg from '@/assets/images/anticons/close.svg';
+import downloadSvg from '@/assets/images/anticons/download.svg';
+import type { ForwardRefRenderFunction } from 'react';
 import {
-  Drawer, Skeleton, Avatar, Button,
-} from 'antd'
-import Tag from '@/components/tag/index'
-import { getResourceDetail } from '@/services/list'
+  Drawer, Skeleton, Avatar, Button, Progress,
+} from 'antd';
+import Tag from '@/components/tag/index';
+import { getResourceDetail } from '@/services/list';
 import moment from 'moment';
-import s from './index.less'
-import Model from './Model';
+import ModelViewer from '@/components/ModelViewer';
+import axios from 'axios';
+import s from './index.less';
 
-interface IndexProps {
-
-}
-
-const CardDetail: ForwardRefRenderFunction<{
-  onShowDrawer: (data) => void,
-}, IndexProps> = (props, ref) => {
-  const [loading, setLoading] = useState<boolean>(false)
-  const [visible, setVisible] = useState<boolean>(false)
-  const [cardDetail, setCardDetail] = useState<BaseSource>(null)
-
+interface IndexProps {}
+type ShowType = 'model'|'img'
+const CardDetail: ForwardRefRenderFunction<
+  {
+    onShowDrawer: (data) => void;
+  },
+  IndexProps
+> = (props, ref) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [cardDetail, setCardDetail] = useState<BaseSource>(null);
+  const [modelFile, setModelFile] = useState<File>(null);
+  const [showType, setShowType] = useState<ShowType>(null);
+  const [percent, setpercent] = useState<number>(0)
   const onShowDrawer = async (resourceId) => {
-    setVisible(true)
-    setLoading(true)
-    const res:BaseSource = await getResourceDetail(resourceId)
-    setCardDetail(res)
-    setLoading(false)
-  }
+    let showModelData:InfoForDownload = null;
+    setVisible(true);
+    setLoading(true);
+    const res: BaseSource = await getResourceDetail(resourceId);
+    setCardDetail(res);
+    setLoading(false);
+    const { infoForDownload } = res;
+    Object.keys(infoForDownload).forEach((key) => {
+      const {
+        modelType,
+      } = infoForDownload[key];
+      if (['.gltf', '.glb'].includes(modelType.substring(modelType.lastIndexOf('.')))) {
+        showModelData = infoForDownload[key]
+      }
+    });
+    if (showModelData) {
+      setShowType('model')
+      axios(showModelData.resourceFileUrl, {
+        responseType: 'blob',
+        onDownloadProgress(progressEvent) {
+          setpercent(Number(((progressEvent.loaded / progressEvent.total) * 100).toFixed(0)))
+        },
+      }).then(({ data }) => {
+        if (data instanceof Blob) {
+          const file = new File([data], `79789model.${showModelData.suffix}`)
+          setModelFile(file);
+        }
+      })
+    } else {
+      setShowType('img')
+    }
+  };
 
   const onClose = () => {
-    setVisible(false)
-  }
+    setVisible(false);
+  };
 
   // 抛出去的方法
   useImperativeHandle(ref, () => ({
@@ -67,38 +95,73 @@ const CardDetail: ForwardRefRenderFunction<{
       <div className={s['close-icon']} onClick={onClose}>
         <Icon component={closeSvg} style={{ fontSize: 36 }} />
       </div>
-      {
-        loading ? <Skeleton active />
-          : (
-            <div className={s['drawer-content']}>
-              <div className={s['img-box']}>
-                {/* <Image alt={cardDetail?.resourceName} src={cardDetail?.resourceThumbUrl} /> */}
-                <Model />
-              </div>
-              <div className={s['detail-box']}>
-                <div className={s['user-info']}>
-                  <Avatar size={20}>U</Avatar>
-                  <span className={s['user-name']}>test</span>
-                </div>
-                <div className={s['resource-name']}>{cardDetail?.resourceName}</div>
-                <div className={s['update-time']}>
-                  <span>更新于&nbsp;</span>
-                  {moment(cardDetail?.gmtModified).format('YY/MM/DD HH:mm:ss') }
-                </div>
-                <div className={s['tag-box']}>
-                  {
-                    cardDetail?.tagInfo && Object.keys(cardDetail?.tagInfo)
-                      .map((item) => <Tag key={item} tagName={cardDetail?.tagInfo[item]} />)
-                  }
-                </div>
-                <div className={s['resource-description']}>{cardDetail?.resourceDescription}</div>
-                <Button className={s['download-btn']} type="primary" icon={<Icon component={downloadSvg} style={{ color: '#fff' }} />}>下载</Button>
-              </div>
+      {loading ? (
+        <Skeleton active />
+      ) : (
+        <div className={s['drawer-content']}>
+          <div className={s['img-box']}>
+            {
+             (showType === 'img') && <img alt={cardDetail?.resourceName} src={cardDetail?.resourceThumbUrl} />
+            }
+            {
+              (showType === 'model') && (
+                modelFile ? (
+                  <ModelViewer
+                    curType="readonly"
+                    modelFile={modelFile}
+                    pointConfig={undefined}
+                    actions={[]}
+                    setActions={undefined}
+                    setcurType={undefined}
+                    onChange={undefined}
+                    setPointConfig={() => {}}
+                    beforeEditValueRef={undefined}
+                    initValueRef={undefined}
+                    curTypeRef={{ current: 'readonly' }}
+                  />
+                ) : (
+                  <div>
+                    <Progress
+                      steps={20}
+                      percent={percent}
+                      format={(data) => `模型已加载${data}%、请等待`}
+                    />
+                  </div>
+                )
+              )
+            }
+          </div>
+          <div className={s['detail-box']}>
+            <div className={s['user-info']}>
+              <Avatar size={20}>{cardDetail?.modifiedUserName.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</Avatar>
+              <span className={s['user-name']}>{cardDetail?.modifiedUserName}</span>
             </div>
-          )
-      }
+            <div className={s['resource-name']}>{cardDetail?.resourceName}</div>
+            <div className={s['update-time']}>
+              <span>更新于&nbsp;</span>
+              {moment(cardDetail?.gmtModified).format('YY/MM/DD HH:mm:ss')}
+            </div>
+            <div className={s['tag-box']}>
+              {cardDetail?.tagInfo
+                && Object.keys(cardDetail?.tagInfo).map((item) => (
+                  <Tag key={item} tagName={cardDetail?.tagInfo[item]} />
+                ))}
+            </div>
+            <div className={s['resource-description']}>
+              {cardDetail?.resourceDescription}
+            </div>
+            <Button
+              className={s['download-btn']}
+              type="primary"
+              icon={<Icon component={downloadSvg} style={{ color: '#fff' }} />}
+            >
+              下载
+            </Button>
+          </div>
+        </div>
+      )}
     </Drawer>
-  )
+  );
 };
 
-export default forwardRef(CardDetail)
+export default forwardRef(CardDetail);
