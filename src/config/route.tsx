@@ -19,6 +19,7 @@ const lazy = (path) => {
 // 动态路由
 const list = lazy('/list')
 const addmodel = lazy('/addmodel')
+const about = lazy('/about')
 export interface RouteItem {
     type:'page'|'menu'|'index'|'layout'
     key:string
@@ -62,6 +63,12 @@ const routeList:RouteItem[] = [
         path: 'addmodel',
         key: '/addmodel',
         element: addmodel,
+      },
+      {
+        type: 'page',
+        path: 'about',
+        key: '/about',
+        element: about,
       },
       {
         type: 'page',
