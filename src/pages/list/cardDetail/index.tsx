@@ -1,3 +1,13 @@
+/*
+ * @Author: like 465420404@qq.com
+ * @Date: 2022-08-27 18:32:25
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-08 10:49:29
+ * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
+ */
 import React, {
   useState, useImperativeHandle, forwardRef,
 } from 'react';
@@ -8,10 +18,11 @@ import type { ForwardRefRenderFunction } from 'react'
 import {
   Drawer, Skeleton, Avatar, Button,
 } from 'antd'
-import Image from '@/components/image'
 import Tag from '@/components/tag/index'
 import { getResourceDetail } from '@/services/list'
+import moment from 'moment';
 import s from './index.less'
+import Model from './Model';
 
 interface IndexProps {
 
@@ -27,7 +38,7 @@ const CardDetail: ForwardRefRenderFunction<{
   const onShowDrawer = async (resourceId) => {
     setVisible(true)
     setLoading(true)
-    const res = await getResourceDetail(resourceId)
+    const res:BaseSource = await getResourceDetail(resourceId)
     setCardDetail(res)
     setLoading(false)
   }
@@ -43,30 +54,37 @@ const CardDetail: ForwardRefRenderFunction<{
 
   return (
     <Drawer
-      className={s['card-detail-drawer']}
+      contentWrapperStyle={{ borderRadius: '14px', overflow: 'hidden' }}
+      maskStyle={{ background: 'rgba(0,0,0,0.8)' }}
       placement="bottom"
+      height="calc(100% - 64px)"
+      destroyOnClose
       maskClosable={false}
       closable={false}
       onClose={onClose}
       visible={visible}
     >
+      <div className={s['close-icon']} onClick={onClose}>
+        <Icon component={closeSvg} style={{ fontSize: 36 }} />
+      </div>
       {
         loading ? <Skeleton active />
           : (
             <div className={s['drawer-content']}>
               <div className={s['img-box']}>
-                <Image alt={cardDetail?.resourceName} src={cardDetail?.resourceThumbUrl} />
+                {/* <Image alt={cardDetail?.resourceName} src={cardDetail?.resourceThumbUrl} /> */}
+                <Model />
               </div>
               <div className={s['detail-box']}>
-                <div className={s['close-icon']} onClick={onClose}>
-                  <Icon component={closeSvg} style={{ fontSize: 24 }} />
-                </div>
                 <div className={s['user-info']}>
                   <Avatar size={20}>U</Avatar>
                   <span className={s['user-name']}>test</span>
                 </div>
                 <div className={s['resource-name']}>{cardDetail?.resourceName}</div>
-                <div className={s['update-time']}>更新于 2022/05/10 19:24:34</div>
+                <div className={s['update-time']}>
+                  <span>更新于&nbsp;</span>
+                  {moment(cardDetail?.gmtModified).format('YY/MM/DD HH:mm:ss') }
+                </div>
                 <div className={s['tag-box']}>
                   {
                     cardDetail?.tagInfo && Object.keys(cardDetail?.tagInfo)

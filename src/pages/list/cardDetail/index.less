@@ -1,92 +1,89 @@
 /* stylelint-disable selector-pseudo-class-no-unknown */
-.card-detail-drawer {
-  .drawer-content {
-    display: flex;
+.close-icon {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
 
-    .img-box {
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-      overflow: hidden;
-      flex: 1;
+  &:hover {
+    opacity: 0.8;
+  }
+}
 
-      img {
-        object-fit: cover;
-        height: calc(100vh - 264px);
-      }
-    }
+.drawer-content {
+  display: flex;
 
-    .detail-box {
-      position: relative;
-      width: 344px;
-      padding: 32px;
-      background-color: #fff;
-      box-shadow: 0 2px 12px 0 rgb(0 101 255 / 10%);
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
+  .img-box {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    overflow: hidden;
+    flex: 1;
 
-      .close-icon {
-        position: absolute;
-        top: -30px;
-        right: -30px;
-        cursor: pointer;
-      }
-
-      .user-info {
-        display: flex;
-        align-items: center;
-
-        .user-name {
-          padding-left: 8px;
-          font-size: 14px;
-          color: rgb(0 0 0 / 50%);
-        }
-      }
-
-      .resource-name {
-        font-size: 30px;
-        padding-top: 15px;
-      }
-
-      .tag-box {
-        padding: 24px 0 30px;
-
-        :global {
-          .ant-tag {
-            margin: 0;
-            margin-right: 4px;
-          }
-        }
-      }
-
-      .update-time,
-      .resource-description {
-        font-size: 14px;
-        color: rgb(0 0 0 / 50%);
-      }
-
-      .download-btn {
-        position: absolute;
-        width: 280px;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 32px;
-      }
+    img {
+      object-fit: cover;
+      height: calc(100vh - 264px);
     }
   }
 
-  /* stylelint-disable-next-line no-descending-specificity */
-  :global {
-    .ant-drawer-content-wrapper {
-      height: calc(100vh - 64px) !important;
+  .detail-box {
+    position: relative;
+    width: 344px;
+    padding: 32px;
+    background-color: #fff;
+    box-shadow: 0 2px 12px 0 rgb(0 101 255 / 10%);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 
-      .ant-drawer-content {
-        background: #fafafa;
-        border-radius: 16px;
+    .user-info {
+      display: flex;
+      align-items: center;
 
-        .ant-drawer-wrapper-body {
-          .ant-drawer-body {
-            padding: 48px;
-          }
+      .user-name {
+        padding-left: 8px;
+        font-size: 14px;
+        color: rgb(0 0 0 / 50%);
+      }
+    }
+
+    .resource-name {
+      font-size: 30px;
+      padding-top: 15px;
+    }
+
+    .tag-box {
+      padding: 24px 0 30px;
+
+      :global {
+        .ant-tag {
+          margin: 0;
+          margin-right: 4px;
+        }
+      }
+    }
+
+    .update-time,
+    .resource-description {
+      font-size: 14px;
+      color: rgb(0 0 0 / 50%);
+    }
+
+    .download-btn {
+      position: absolute;
+      width: 280px;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 32px;
+    }
+  }
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+:global {
+  .ant-drawer-content-wrapper {
+    .ant-drawer-content {
+      .ant-drawer-wrapper-body {
+        .ant-drawer-body {
+          padding: 48px;
         }
       }
     }

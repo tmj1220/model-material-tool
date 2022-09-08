@@ -50,19 +50,21 @@ const DraggerUpload = ({
     },
   };
   const uploadChange = (info) => {
+    console.log('info', info)
     const {
       status, uid, name, percent, thumbUrl, url, type,
     } = info.file;
     if (status === 'done') {
       onChange([
         {
-          uid: info.file.response.data.fileId,
-          name: info.file.name,
+          uid,
+          name,
           url: info.file.response.data.fileUrl,
           status: 'done',
-          type: info.file.type,
+          type,
           thumbUrl: info.file.response.data.fileUrl,
           percent,
+          fileId: info.file.response.data.fileId,
         },
       ]);
     } else if (status === 'uploading') {

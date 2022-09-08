@@ -1,22 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Tabs, Input, Button, Menu, Dropdown, Space, MenuProps,
+  Tabs,
+  Input,
+  Button,
+  Menu,
+  Dropdown,
+  Space,
+  MenuProps,
+  Drawer,
 } from 'antd';
 import { useModelDispatchers, useModelState } from '@/store';
 import searchSvg from '@/assets/images/icons/search.svg';
 import UploadSvg from '@/assets/images/anticons/upload.svg';
+import closeSvg from '@/assets/images/anticons/close.svg';
 import logo from '@/assets/images/icons/logo.svg';
 import { useNavigate } from 'react-router-dom';
 import Icon, { DownOutlined } from '@ant-design/icons';
 import SignoutSvg from '@/assets/images/anticons/signout.svg';
-
 import { redirectLogin } from '@/utils/utils';
+import AddModel from './addmodel';
 import { menuOptions } from './constant';
 import s from './index.less';
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
+  const [addModelVisible, setaddModelVisible] = useState<boolean>(false);
   const navigate = useNavigate();
   const {
     getMaterialCategory,
@@ -133,7 +142,7 @@ const Header: React.FC<HeaderProps> = () => {
               borderRadius: 100,
             }}
             onClick={() => {
-              navigate('/addmodel');
+              setaddModelVisible(true);
             }}
           >
             上传
@@ -149,6 +158,27 @@ const Header: React.FC<HeaderProps> = () => {
           </Dropdown>
         </div>
       </div>
+      <Drawer
+        contentWrapperStyle={{ borderRadius: '14px', overflow: 'hidden' }}
+        maskStyle={{ background: 'rgba(0,0,0,0.8)' }}
+        placement="bottom"
+        height="calc(100% - 64px)"
+        destroyOnClose
+        maskClosable={false}
+        closable={false}
+        visible={addModelVisible}
+      >
+        <div className={s['drawer-close']}>
+          <Icon
+            onClick={() => {
+              setaddModelVisible(false);
+            }}
+            component={closeSvg}
+            style={{ fontSize: 36, color: '#fff' }}
+          />
+        </div>
+        <AddModel />
+      </Drawer>
     </div>
   );
 };

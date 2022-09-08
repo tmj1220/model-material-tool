@@ -1,3 +1,13 @@
+/*
+ * @Author: like 465420404@qq.com
+ * @Date: 2022-08-26 11:39:30
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-07 15:34:31
+ * @FilePath: /model-material-tool/src/config/route.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
+ */
 import React, { Suspense } from 'react'
 import { Navigate } from 'react-router-dom'
 import Loading from '@/pages/loading'
@@ -18,7 +28,6 @@ const lazy = (path) => {
 
 // 动态路由
 const list = lazy('/list')
-const addmodel = lazy('/addmodel')
 export interface RouteItem {
     type:'page'|'menu'|'index'|'layout'
     key:string
@@ -56,12 +65,6 @@ const routeList:RouteItem[] = [
         path: 'list',
         key: '/list',
         element: list,
-      },
-      {
-        type: 'page',
-        path: 'addmodel',
-        key: '/addmodel',
-        element: addmodel,
       },
       {
         type: 'page',

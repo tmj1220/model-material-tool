@@ -1,3 +1,13 @@
+/*
+ * @Author: like 465420404@qq.com
+ * @Date: 2022-08-27 18:32:25
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-07 19:24:59
+ * @FilePath: /model-material-tool/src/types/list.d.ts
+ * @Description:
+ *
+ * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
+ */
 /* eslint-disable no-unused-vars */
 declare interface IResourceParams {
   pageNum: number
@@ -13,6 +23,7 @@ declare interface ITagInfo {
 }
 
 declare interface BaseSource {
+  gmtModified:string
   categoryName: string
   resourceId: string
   resourceName: string

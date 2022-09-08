@@ -1,3 +1,4 @@
+import { addModel } from '@/services/addModel';
 import {
   Button,
   Form,
@@ -5,22 +6,32 @@ import {
   Radio,
 } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
+import AwesomeUpload from '@/components/BigFileUpload'
 import DraggerUpload from './DraggerUpload';
 import s from './index.less'
 import TagInput from './TagInput';
 
-export interface Addmodelfrom {
+interface Addmodelfrom {
   resourceCategoryId?: string;
   resourceDescription?: string;
   resourceName: string;
   resources: string[];
   resourceTagIds: string[];
   resourceType: number;
-  thumb: string;
+  thumb: Array<any>;
 }
 const Add = () => {
   const onAddmodelFinish = (values: Addmodelfrom) => {
     console.log('Success:', values);
+    const sendData = {
+      ...values,
+      thumb: values.thumb[0]?.fileId,
+      resourceFiles: [{
+        resourceFileId: 'plouto/0a14e1c06e1b4103a624773985e9629b.jpeg',
+        modelType: '0',
+      }],
+    }
+    addModel(sendData)
   };
   return (
     <div className={s['upload-model']}>
@@ -38,8 +49,8 @@ const Add = () => {
           ]}
         >
           <Radio.Group>
-            <Radio value="apple"> 模型 </Radio>
-            <Radio value="pear"> 材质 </Radio>
+            <Radio value="1"> 模型 </Radio>
+            <Radio value="2"> 材质 </Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item
@@ -80,13 +91,17 @@ const Add = () => {
           //   { required: true, message: '请上传模型文件' },
           // ]}
         >
-          <DraggerUpload
+          {/* <DraggerUpload
             accept="image/jpg,image/png,image/gif,image/jpeg"
             size={20}
             tips="（单张图片20MB以内，支持上传jpg\png\gif格式）"
-          />
+          /> */}
+          <AwesomeUpload uploadLimitInfo={{ max: 1000 * 1024 * 1024 }} />
         </Form.Item>
-        <Form.Item label="描述">
+        <Form.Item
+          label="描述"
+          name="resourceDescription"
+        >
           <TextArea placeholder="关于该设计资源的简要描述" rows={2} />
         </Form.Item>
         <Form.Item>
