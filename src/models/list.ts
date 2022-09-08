@@ -7,6 +7,7 @@ interface DefaultState {
   materialCategory: Material[] // 材质下的分类
   searchKeyword: string // 搜索关键字
   resources: BaseSource[] // 资源列表
+  isGetMoreResources: boolean // 是否能够加载更多资源
 }
 
 const defaultState: DefaultState = {
@@ -18,6 +19,7 @@ const defaultState: DefaultState = {
   materialCategory: [], // 材质下的分类
   searchKeyword: '', // 搜索关键字
   resources: [], // 资源列表
+  isGetMoreResources: true, // 是否能够加载更多资源
 };
 
 const stores = {
@@ -32,6 +34,9 @@ const stores = {
     ),
     updateSearchKeyword: (prevState: DefaultState, keyword: string) => (
       { ...prevState, searchKeyword: keyword }
+    ),
+    updateIsGetMoreResources: (prevState: DefaultState, status: boolean) => (
+      { ...prevState, isGetMoreResources: status }
     ),
     updateResources: (prevState: DefaultState, list) => (
       {
@@ -72,6 +77,8 @@ const stores = {
           this.updateResources(res.rows)
           if (res.rows.length > 0) {
             this.updateRequestParams(params)
+          } else {
+            this.updateIsGetMoreResources(false)
           }
         }
       } catch (error) {
@@ -89,6 +96,8 @@ const stores = {
           this.updateResources(res.rows)
           if (res.rows.length > 0) {
             this.updateRequestParams(params)
+          } else {
+            this.updateIsGetMoreResources(false)
           }
         }
       } catch (error) {

@@ -22,7 +22,7 @@ import AddModel from './addmodel';
 import { menuOptions } from './constant';
 import s from './index.less';
 
-interface HeaderProps {}
+interface HeaderProps { }
 
 const Header: React.FC<HeaderProps> = () => {
   const [addModelVisible, setaddModelVisible] = useState<boolean>(false);
@@ -34,12 +34,17 @@ const Header: React.FC<HeaderProps> = () => {
     getResourceList,
     getResourceByKeyword,
     updateSearchKeyword,
+    updateIsGetMoreResources,
   } = useModelDispatchers('list');
   const { requestParams, curCategory } = useModelState('list');
   const { name } = useModelState('user');
   // 切换tab
   const onTabChange = async (key) => {
     updateCurCategory(key);
+    // 更新可继续获取资源状态
+    updateIsGetMoreResources(true)
+    // 清空关键字
+    updateSearchKeyword('');
     // 点击材质请求材质下分类
     if (key === '2') {
       await getMaterialCategory();
@@ -80,6 +85,8 @@ const Header: React.FC<HeaderProps> = () => {
   );
   // 关键字检索
   const onSearch = (value) => {
+    // 更新可继续获取资源状态
+    updateIsGetMoreResources(true)
     if (value) {
       updateCurCategory(null);
       getResourceByKeyword({
