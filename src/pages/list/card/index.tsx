@@ -12,7 +12,6 @@
 import React, { useRef } from 'react'
 import { useModelState } from '@/store'
 import Image from '@/components/image'
-import downloadSvg from '@/assets/images/icons/download.svg'
 import { menuOptions } from '@/components/header/constant';
 import Tag from '@/components/tag/index'
 import { Skeleton } from 'antd';
@@ -22,7 +21,7 @@ import s from './index.less'
 interface SourceCardProps extends BaseSource { }
 
 const SourceCard: React.FC<SourceCardProps> = ({
-  resourceId, resourceName, resourceThumbUrl, resourceType, categoryName, tagInfoList,
+  resourceId, resourceName, resourceThumbUrl, resourceType, categoryName, tagInfoList, children,
 }) => {
   const { searchKeyword } = useModelState('list')
   const containerRef = useRef<HTMLDivElement>()
@@ -86,9 +85,7 @@ const SourceCard: React.FC<SourceCardProps> = ({
             }
             </div>
           </div>
-          <div className={s['action-box']}>
-            <img src={downloadSvg} alt="dowanload.png" />
-          </div>
+          {children}
         </div>
       </div>
       <CardDetail ref={cardDetailRef} />

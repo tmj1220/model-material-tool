@@ -167,7 +167,13 @@ const Header: React.FC<HeaderProps> = () => {
             上传
           </Button>
         </div>
-        <div className={s['user-info-box']}>
+        <div
+          className={s['user-info-box']}
+          onClick={() => {
+            updateCurCategory(null);
+            navigate('/personal')
+          }}
+        >
           <Dropdown placement="bottomLeft" overlay={menu}>
             <Space>
               <div className={s.avtar}>{name?.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</div>

@@ -16,6 +16,7 @@ declare interface IResourceParams {
   keyword?: string // 检索关键字
   materialCategoryId?: string // 材质分类
   tagId?: string // 标签id
+  mine?: number // 是否获取自己上传的资源，1获取自己的
 }
 declare interface ITagInfo {
   tagId: string
@@ -41,6 +42,7 @@ declare interface BaseSource {
   tagIdList?: string
   tagInfoList?: ITagInfo[]
   infoForDownload:Map<string, InfoForDownload>
+  children?: React.ReactNode;
 }
 
 declare interface Material {
