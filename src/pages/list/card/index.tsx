@@ -1,3 +1,13 @@
+/*
+ * @Author: like 465420404@qq.com
+ * @Date: 2022-08-27 18:32:25
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-09 09:25:20
+ * @FilePath: /model-material-tool/src/pages/list/card/index.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
+ */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useRef } from 'react'
 import { useModelState } from '@/store'
@@ -5,6 +15,7 @@ import Image from '@/components/image'
 import downloadSvg from '@/assets/images/icons/download.svg'
 import { menuOptions } from '@/components/header/constant';
 import Tag from '@/components/tag/index'
+import { Skeleton } from 'antd';
 import CardDetail from '../cardDetail/index'
 import s from './index.less'
 
@@ -40,7 +51,13 @@ const SourceCard: React.FC<SourceCardProps> = ({
           ref={containerRef}
           className={s['img-box']}
         >
-          <Image alt={resourceName} src={resourceThumbUrl} />
+          <Image
+            placeholder={
+              <Skeleton.Image className={s['source-card-img-preview']} />
+          }
+            alt={resourceName}
+            src={resourceThumbUrl}
+          />
         </div>
         <div className={s['desc-box']}>
           <div className={s['desc-text-box']}>

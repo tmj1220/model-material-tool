@@ -497,7 +497,7 @@ const Viewer = (
               const clips = gltf.animations || [];
               const model = gltf.scene;
               model.position.set( 1, 1, 0 );
-              model.scale.set( 0.02, 0.02, 0.02 );
+              model.scale.set( 0.03, 0.03, 0.03 );
               if (!scene) {
                 // Valid, but not supported by this viewer.
                 throw new Error(

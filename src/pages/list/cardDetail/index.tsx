@@ -2,13 +2,15 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 02:36:41
+ * @LastEditTime: 2022-09-09 10:48:53
  * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
  */
-import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import React, {
+  useState, useImperativeHandle, forwardRef, useRef,
+} from 'react';
 import Icon from '@ant-design/icons';
 import closeSvg from '@/assets/images/anticons/close.svg';
 import downloadSvg from '@/assets/images/anticons/download.svg';
@@ -31,12 +33,14 @@ const CardDetail: ForwardRefRenderFunction<
   },
   IndexProps
 > = (props, ref) => {
+  const { CancelToken } = axios;
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const [cardDetail, setCardDetail] = useState<BaseSource>(null);
   const [modelFile, setModelFile] = useState<File>(null);
   const [showType, setShowType] = useState<ShowType>(null);
-  const [percent, setpercent] = useState<number>(0)
+  const [percent, setpercent] = useState<number>(0);
+  const requestsRef = useRef(null);
   const onShowDrawer = async (resourceId) => {
     let showModelData:InfoForDownload = null;
     setVisible(true);
@@ -60,6 +64,10 @@ const CardDetail: ForwardRefRenderFunction<
         onDownloadProgress(progressEvent) {
           setpercent(Number(((progressEvent.loaded / progressEvent.total) * 100).toFixed(0)))
         },
+        cancelToken: new CancelToken((c) => {
+          requestsRef.current = { abort: c };
+        }),
+
       }).then(({ data }) => {
         if (data instanceof Blob) {
           const file = new File([data], `79789model.${showModelData.suffix}`)
@@ -72,6 +80,12 @@ const CardDetail: ForwardRefRenderFunction<
   };
 
   const onClose = () => {
+    try {
+      requestsRef.current?.abort();
+      requestsRef.current = null
+    } catch (error) {
+      console.log(error)
+    }
     setVisible(false);
   };
 
@@ -79,7 +93,6 @@ const CardDetail: ForwardRefRenderFunction<
   useImperativeHandle(ref, () => ({
     onShowDrawer,
   }));
-
   return (
     <Drawer
       contentWrapperStyle={{ borderRadius: '14px', overflow: 'hidden' }}

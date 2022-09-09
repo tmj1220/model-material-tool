@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 01:12:15
+ * @LastEditTime: 2022-09-09 08:54:12
  * @FilePath: /model-material-tool/src/types/list.d.ts
  * @Description:
  *
@@ -29,6 +29,7 @@ declare interface InfoForDownload{
 }
 declare interface BaseSource {
   gmtModified:string
+  categoryName?:string
   modifiedUserName: string
   resourceId: string
   resourceName: string

@@ -298,7 +298,7 @@ const RcUpload = (
     }
   }, []);
   const beforeUpload = useCallback(
-    async (file: RCFile, files) => {
+    async (file: RCFile, files:RCFile[]) => {
       if (beforeUploadCheck) {
         const tmpStatus = await beforeUploadCheck(file, files);
         if (!tmpStatus) {
@@ -563,7 +563,7 @@ const RcUpload = (
                   <Icon component={DrageUpload} />
                 </div>
                 <div className="upload-text">点击或者拖拽上传</div>
-                <div className="upload-hint">支持格式：jpg/png/gif</div>
+                <div className="upload-hint">支持格式：glb/gltf/c4d/mb/zip</div>
               </div>
             </div>
           )}
