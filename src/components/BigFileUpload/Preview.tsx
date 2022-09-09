@@ -164,7 +164,8 @@ const Preview: React.FC<PreviewProps> = ({
             'big-file-preview-misk'
           )}
         >
-          <span>上传中</span>
+          
+          <span>{file.status === 'calculating'?'文件校验中':'上传中'}</span>
           <Progress
             className="big-file-progress"
             trailColor="#E6E6E6"

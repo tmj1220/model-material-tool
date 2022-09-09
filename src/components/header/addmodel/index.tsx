@@ -1,14 +1,16 @@
 import { addModel } from '@/services/addModel';
 import {
-  Button, Form, Input, message, Radio, Spin,
+  Button, Form, Input, message, Radio, Select, Spin,
 } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import AwesomeUpload from '@/components/BigFileUpload';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getMaterialCategory } from '@/services/list';
 import DraggerUpload from './DraggerUpload';
 import s from './index.less';
 import TagInput from './TagInput';
 
+const { Option } = Select;
 interface Addmodelfrom {
   resourceCategoryId?: string;
   resourceDescription?: string;
@@ -21,8 +23,14 @@ interface Addmodelfrom {
 interface AddmodelFromProps {
   onAdd: Function;
 }
+interface ResourceCategory {
+    categoryId: string
+    categoryName: string
+}
 const Add = ({ onAdd }: AddmodelFromProps) => {
   const [loading, setloading] = useState<boolean>(false);
+  const [resourceCategory, setResourceCategory] = useState<ResourceCategory[]>([]);
+  const [fromData, setFromData] = useState<Addmodelfrom>(null)
   const onAddmodelFinish = async (values: Addmodelfrom) => {
     setloading(true);
     const sendData = {
@@ -38,6 +46,12 @@ const Add = ({ onAdd }: AddmodelFromProps) => {
       setloading(false);
     }
   };
+  useEffect(() => {
+    getMaterialCategory().then((res) => {
+      setResourceCategory(res)
+    })
+  }, [])
+
   return (
     <div className={s['upload-model']}>
       <Spin spinning={loading}>
@@ -45,8 +59,9 @@ const Add = ({ onAdd }: AddmodelFromProps) => {
           onFinish={onAddmodelFinish}
           style={{ width: 332 }}
           layout="vertical"
-          onValuesChange={(data) => {
-            console.log(data);
+          onValuesChange={(data, datas) => {
+            console.log(datas)
+            setFromData(datas)
           }}
         >
           <Form.Item
@@ -55,8 +70,8 @@ const Add = ({ onAdd }: AddmodelFromProps) => {
             rules={[{ required: true, message: '请选择类型' }]}
           >
             <Radio.Group>
-              <Radio value="1"> 模型 </Radio>
-              <Radio value="2"> 材质 </Radio>
+              <Radio value={1}> 模型 </Radio>
+              <Radio value={2}> 材质 </Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
@@ -77,6 +92,30 @@ const Add = ({ onAdd }: AddmodelFromProps) => {
               tips="支持格式：jpg/png/gif"
             />
           </Form.Item>
+          {
+            (fromData?.resourceType === 2) && (
+            <Form.Item
+              label="材质分类"
+              name="resourceCategoryId"
+              rules={[{ required: true, message: '请选择分类' }]}
+            >
+              <Select placeholder="请选择分类">
+                {
+                resourceCategory.map((item) => (
+                  <Option
+                    key={item.categoryId}
+                    value={item.categoryId}
+                  >
+                    {item.categoryName}
+                  </Option>
+                ))
+              }
+                <Option> </Option>
+              </Select>
+            </Form.Item>
+            )
+          }
+
           <Form.Item
             name="resourceTagIds"
             label="添加标签"
