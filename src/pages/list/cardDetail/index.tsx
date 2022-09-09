@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 10:48:53
+ * @LastEditTime: 2022-09-09 15:53:56
  * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
  * @Description:
  *
@@ -23,6 +23,7 @@ import { getResourceDetail } from '@/services/list';
 import moment from 'moment';
 import ModelViewer from '@/components/ModelViewer';
 import axios from 'axios';
+import ModelDown, { ForwardRefOrops } from '@/components/ModelDown';
 import s from './index.less';
 
 interface IndexProps {}
@@ -41,6 +42,7 @@ const CardDetail: ForwardRefRenderFunction<
   const [showType, setShowType] = useState<ShowType>(null);
   const [percent, setpercent] = useState<number>(0);
   const requestsRef = useRef(null);
+  const modelDownRef = useRef<ForwardRefOrops>(null);
   const onShowDrawer = async (resourceId) => {
     let showModelData:InfoForDownload = null;
     setVisible(true);
@@ -167,12 +169,14 @@ const CardDetail: ForwardRefRenderFunction<
               className={s['download-btn']}
               type="primary"
               icon={<Icon component={downloadSvg} style={{ color: '#fff' }} />}
+              onClick={() => modelDownRef.current.onShowDrawer(cardDetail)}
             >
               下载
             </Button>
           </div>
         </div>
       )}
+      <ModelDown ref={modelDownRef} />
     </Drawer>
   );
 };

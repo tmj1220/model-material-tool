@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 09:25:20
+ * @LastEditTime: 2022-09-09 19:17:44
  * @FilePath: /model-material-tool/src/pages/list/card/index.tsx
  * @Description:
  *
@@ -16,6 +16,7 @@ import downloadSvg from '@/assets/images/icons/download.svg'
 import { menuOptions } from '@/components/header/constant';
 import Tag from '@/components/tag/index'
 import { Skeleton } from 'antd';
+import ModelDown, { ForwardRefOrops } from '@/components/ModelDown';
 import CardDetail from '../cardDetail/index'
 import s from './index.less'
 
@@ -27,6 +28,7 @@ const SourceCard: React.FC<SourceCardProps> = ({
   const { searchKeyword } = useModelState('list')
   const containerRef = useRef<HTMLDivElement>()
   const cardDetailRef = useRef(null)
+  const modelDownRef = useRef<ForwardRefOrops>(null);
 
   // 查看详情
   const toDetail = () => {
@@ -87,11 +89,19 @@ const SourceCard: React.FC<SourceCardProps> = ({
             </div>
           </div>
           <div className={s['action-box']}>
-            <img src={downloadSvg} alt="dowanload.png" />
+            <img
+              onClick={(e) => {
+                e.stopPropagation();
+                modelDownRef.current.onShowDrawer(resourceId)
+              }}
+              src={downloadSvg}
+              alt="dowanload.png"
+            />
           </div>
         </div>
       </div>
       <CardDetail ref={cardDetailRef} />
+      <ModelDown ref={modelDownRef} />
     </>
   )
 };

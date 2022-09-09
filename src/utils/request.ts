@@ -81,6 +81,9 @@ instance.interceptors.response.use((response) => {
       })
       throw new Error('loginInvalid')
     }
+    if (data.code === 401) {
+      redirectLogin()
+    }
     throw new Error(data.msg)
   }
 
