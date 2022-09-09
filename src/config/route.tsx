@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-26 11:39:30
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-07 15:34:31
+ * @LastEditTime: 2022-09-09 02:31:59
  * @FilePath: /model-material-tool/src/config/route.tsx
  * @Description:
  *
@@ -28,6 +28,7 @@ const lazy = (path) => {
 
 // 动态路由
 const list = lazy('/list')
+const about = lazy('/about')
 export interface RouteItem {
     type:'page'|'menu'|'index'|'layout'
     key:string
@@ -65,6 +66,12 @@ const routeList:RouteItem[] = [
         path: 'list',
         key: '/list',
         element: list,
+      },
+      {
+        type: 'page',
+        path: 'about',
+        key: '/about',
+        element: about,
       },
       {
         type: 'page',

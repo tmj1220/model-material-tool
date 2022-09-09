@@ -1,6 +1,6 @@
 /* eslint-disable no-unsafe-optional-chaining */
 import React, {
-  useEffect, useRef, useLayoutEffect,
+  useEffect, useRef,
 } from 'react'
 import {
   List, Skeleton, Divider,
@@ -30,25 +30,6 @@ const SourceList: React.FC<ListProps> = () => {
     })
   }
 
-  useLayoutEffect(() => {
-    if (containerRef.current && containerRef.current.children[0] && resources.length > 0) {
-      try {
-        const { height } = containerRef.current.getBoundingClientRect()
-        // eslint-disable-next-line no-underscore-dangle
-        const { height: listHeight } = containerRef.current.children[0].getBoundingClientRect()
-        if (listHeight < height) {
-          loadMoreData()
-        }
-      } catch (error) {
-        console.log('useLayoutEffect -error', error);
-      }
-    }
-
-    return () => {
-
-    };
-  }, [])
-
   useEffect(() => {
     getResourceList({
       ...requestParams,
@@ -67,7 +48,11 @@ const SourceList: React.FC<ListProps> = () => {
         <InfiniteScroll
           ref={listRef}
           dataLength={resources.length}
-          next={loadMoreData}
+          next={() => {
+            if (resources.length > 0) {
+              loadMoreData()
+            }
+          }}
           hasMore={isGetMoreResources}
           hasChildren
           scrollThreshold={0.1}

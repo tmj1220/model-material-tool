@@ -724,7 +724,7 @@ const Viewer = (
       className={classnames(
         s.root,
         {
-          [s.readonly-root]: curType === 'readonly',
+          [s['readonly-root']]: curType === 'readonly',
         },
         {
           [s.editRoot]: curType === 'edit',

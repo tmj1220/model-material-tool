@@ -26,6 +26,7 @@ interface HeaderProps { }
 
 const Header: React.FC<HeaderProps> = () => {
   const [addModelVisible, setaddModelVisible] = useState<boolean>(false);
+  const [curKeyword, setCurKeyword] = useState<string>('')
   const navigate = useNavigate();
   const {
     getMaterialCategory,
@@ -45,22 +46,28 @@ const Header: React.FC<HeaderProps> = () => {
     updateIsGetMoreResources(true)
     // 清空关键字
     updateSearchKeyword('');
-    // 点击材质请求材质下分类
-    if (key === '2') {
-      await getMaterialCategory();
-      await getResourceList({
-        pageNum: 1,
-        pageSize: requestParams.pageSize,
-        resourceType: key,
-        materialCategoryId: null,
-      });
+    setCurKeyword('')
+    if (key === '3') {
+      navigate('/about')
     } else {
-      getResourceList({
-        pageNum: 1,
-        pageSize: requestParams.pageSize,
-        resourceType: key,
-      });
-      updateMaterialCategory([]);
+      navigate('/list');
+      // 点击材质请求材质下分类
+      if (key === '2') {
+        await getMaterialCategory();
+        await getResourceList({
+          pageNum: 1,
+          pageSize: requestParams.pageSize,
+          resourceType: key,
+          materialCategoryId: null,
+        });
+      } else {
+        getResourceList({
+          pageNum: 1,
+          pageSize: requestParams.pageSize,
+          resourceType: key,
+        });
+        updateMaterialCategory([]);
+      }
     }
   };
   const onClick: MenuProps['onClick'] = () => {
@@ -83,6 +90,9 @@ const Header: React.FC<HeaderProps> = () => {
       ]}
     />
   );
+  const onChangeKeyword = (e) => {
+    setCurKeyword(e.target.value)
+  }
   // 关键字检索
   const onSearch = (value) => {
     // 更新可继续获取资源状态
@@ -129,6 +139,8 @@ const Header: React.FC<HeaderProps> = () => {
         <div className={s['input-box']}>
           <Input.Search
             placeholder="搜索"
+            value={curKeyword}
+            onChange={onChangeKeyword}
             onSearch={onSearch}
             prefix={(
               <img
@@ -158,7 +170,7 @@ const Header: React.FC<HeaderProps> = () => {
         <div className={s['user-info-box']}>
           <Dropdown placement="bottomLeft" overlay={menu}>
             <Space>
-              <div className={s.avtar}>{name.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</div>
+              <div className={s.avtar}>{name?.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</div>
               <div style={{ minWidth: 40 }}>{name}</div>
               <DownOutlined style={{ color: '#333333', fontSize: 12 }} />
             </Space>

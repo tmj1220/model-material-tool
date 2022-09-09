@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 01:58:41
+ * @LastEditTime: 2022-09-09 02:36:41
  * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
  * @Description:
  *
@@ -133,7 +133,7 @@ const CardDetail: ForwardRefRenderFunction<
           </div>
           <div className={s['detail-box']}>
             <div className={s['user-info']}>
-              <Avatar size={20}>{cardDetail?.modifiedUserName.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</Avatar>
+              <Avatar size={20}>{cardDetail?.modifiedUserName?.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</Avatar>
               <span className={s['user-name']}>{cardDetail?.modifiedUserName}</span>
             </div>
             <div className={s['resource-name']}>{cardDetail?.resourceName}</div>
