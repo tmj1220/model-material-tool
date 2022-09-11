@@ -19,14 +19,16 @@ import {
   Drawer, Skeleton, Avatar, Button, Progress,
 } from 'antd';
 import Tag from '@/components/tag/index';
+import { useModelDispatchers, useModelState } from '@/store'
+import { useNavigate } from 'react-router-dom';
 import { getResourceDetail } from '@/services/list';
 import moment from 'moment';
 import ModelViewer from '@/components/ModelViewer';
 import axios from 'axios';
 import s from './index.less';
 
-interface IndexProps {}
-type ShowType = 'model'|'img'
+interface IndexProps { }
+type ShowType = 'model' | 'img'
 const CardDetail: ForwardRefRenderFunction<
   {
     onShowDrawer: (data) => void;
@@ -34,6 +36,9 @@ const CardDetail: ForwardRefRenderFunction<
   IndexProps
 > = (props, ref) => {
   const { CancelToken } = axios;
+  const { getResourceList, updateCurSearchTag, updateCurCategory } = useModelDispatchers('list')
+  const { requestParams } = useModelState('list')
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const [cardDetail, setCardDetail] = useState<BaseSource>(null);
@@ -42,7 +47,7 @@ const CardDetail: ForwardRefRenderFunction<
   const [percent, setpercent] = useState<number>(0);
   const requestsRef = useRef(null);
   const onShowDrawer = async (resourceId) => {
-    let showModelData:InfoForDownload = null;
+    let showModelData: InfoForDownload = null;
     setVisible(true);
     setLoading(true);
     const res: BaseSource = await getResourceDetail(resourceId);
@@ -89,6 +94,22 @@ const CardDetail: ForwardRefRenderFunction<
     setVisible(false);
   };
 
+  // 点击标签跳转至检索页面
+  const onSearchTag = (id, tagName) => {
+    setVisible(false);
+    updateCurCategory(null)
+    updateCurSearchTag([{
+      tagId: id,
+      tagName,
+    }])
+    navigate('/list')
+    getResourceList({
+      pageNum: 1,
+      pageSize: requestParams.pageSize,
+      tagId: id,
+    })
+  }
+
   // 抛出去的方法
   useImperativeHandle(ref, () => ({
     onShowDrawer,
@@ -114,7 +135,7 @@ const CardDetail: ForwardRefRenderFunction<
         <div className={s['drawer-content']}>
           <div className={s['img-box']}>
             {
-             (showType === 'img') && <img alt={cardDetail?.resourceName} src={cardDetail?.resourceThumbUrl} />
+              (showType === 'img') && <img alt={cardDetail?.resourceName} src={cardDetail?.resourceThumbUrl} />
             }
             {
               (showType === 'model') && (
@@ -127,7 +148,7 @@ const CardDetail: ForwardRefRenderFunction<
                     setActions={undefined}
                     setcurType={undefined}
                     onChange={undefined}
-                    setPointConfig={() => {}}
+                    setPointConfig={() => { }}
                     beforeEditValueRef={undefined}
                     initValueRef={undefined}
                     curTypeRef={{ current: 'readonly' }}
@@ -157,7 +178,12 @@ const CardDetail: ForwardRefRenderFunction<
             <div className={s['tag-box']}>
               {cardDetail?.tagInfo
                 && Object.keys(cardDetail?.tagInfo).map((item) => (
-                  <Tag key={item} tagName={cardDetail?.tagInfo[item]} />
+                  <span
+                    key={item}
+                    onClick={() => onSearchTag(item, cardDetail?.tagInfo[item])}
+                  >
+                    <Tag tagName={cardDetail?.tagInfo[item]} />
+                  </span>
                 ))}
             </div>
             <div className={s['resource-description']}>

@@ -36,6 +36,7 @@ const Header: React.FC<HeaderProps> = () => {
     getResourceByKeyword,
     updateSearchKeyword,
     updateIsGetMoreResources,
+    updateCurSearchTag,
   } = useModelDispatchers('list');
   const { requestParams, curCategory } = useModelState('list');
   const { name } = useModelState('user');
@@ -46,6 +47,8 @@ const Header: React.FC<HeaderProps> = () => {
     updateIsGetMoreResources(true)
     // 清空关键字
     updateSearchKeyword('');
+    // 清空标签检索
+    updateCurSearchTag([])
     setCurKeyword('')
     if (key === '3') {
       navigate('/about')
@@ -97,6 +100,8 @@ const Header: React.FC<HeaderProps> = () => {
   const onSearch = (value) => {
     // 更新可继续获取资源状态
     updateIsGetMoreResources(true)
+    // 清空标签检索
+    updateCurSearchTag([])
     if (value) {
       updateCurCategory(null);
       getResourceByKeyword({
