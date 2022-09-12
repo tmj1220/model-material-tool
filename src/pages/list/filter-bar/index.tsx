@@ -3,6 +3,7 @@ import { Select, Tabs } from 'antd'
 import { useModelDispatchers, useModelState } from '@/store'
 import { menuOptions } from '@/components/header/constant'
 import { getResource } from '@/services/list'
+import Tag from '@/components/tag/index';
 import { fitlerOptions } from '../constants'
 import s from './index.less'
 
@@ -11,7 +12,7 @@ interface FilterBarProps { }
 const FilterBar: React.FC<FilterBarProps> = () => {
   const [menus, setMenus] = useState([])
   const {
-    materialCategory, requestParams, searchKeyword, curCategory,
+    materialCategory, requestParams, searchKeyword, curCategory, curSearchTag,
   } = useModelState('list')
   const { getResourceList, getResourceByKeyword } = useModelDispatchers('list')
 
@@ -72,15 +73,15 @@ const FilterBar: React.FC<FilterBarProps> = () => {
                       {title}
                       {
                         total && (
-                        <span style={{
-                          borderRadius: 18,
-                          background: '#DDDDDD',
-                          padding: '2px 8px',
-                          marginLeft: 4,
-                        }}
-                        >
-                          {total}
-                        </span>
+                          <span style={{
+                            borderRadius: 18,
+                            background: '#DDDDDD',
+                            padding: '2px 8px',
+                            marginLeft: 4,
+                          }}
+                          >
+                            {total}
+                          </span>
                         )
                       }
                     </span>
@@ -88,6 +89,19 @@ const FilterBar: React.FC<FilterBarProps> = () => {
                 />
               ))}
             </Tabs>
+          )
+        }
+        {
+          curSearchTag.length > 0
+          && (
+          <div>
+            <span>标签</span>
+            {
+              curSearchTag.map((item) => (
+                <Tag key={item.tagId} tagName={item.tagName} />
+              ))
+            }
+          </div>
           )
         }
         <Tabs animated={false} onChange={onTabChange}>

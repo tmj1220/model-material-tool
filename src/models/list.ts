@@ -8,6 +8,7 @@ interface DefaultState {
   searchKeyword: string // 搜索关键字
   resources: BaseSource[] // 资源列表
   isGetMoreResources: boolean // 是否能够加载更多资源
+  curSearchTag: ITagInfo[] // 当前筛选的标签类型
 }
 
 const defaultState: DefaultState = {
@@ -20,6 +21,7 @@ const defaultState: DefaultState = {
   searchKeyword: '', // 搜索关键字
   resources: [], // 资源列表
   isGetMoreResources: true, // 是否能够加载更多资源
+  curSearchTag: [], // 当前筛选的标签类型
 };
 
 const stores = {
@@ -37,6 +39,9 @@ const stores = {
     ),
     updateIsGetMoreResources: (prevState: DefaultState, status: boolean) => (
       { ...prevState, isGetMoreResources: status }
+    ),
+    updateCurSearchTag: (prevState: DefaultState, tag: ITagInfo[]) => (
+      { ...prevState, curSearchTag: tag }
     ),
     updateResources: (prevState: DefaultState, list) => (
       {

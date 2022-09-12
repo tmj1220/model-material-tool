@@ -1,3 +1,4 @@
+/* stylelint-disable selector-pseudo-class-no-unknown */
 .about-content {
   .banner-box {
     min-width: 100vw;
@@ -5,5 +6,52 @@
     background-image: url("@/assets/images/icons/about-banner.svg");
     background-size: cover;
     background-repeat: no-repeat;
+  }
+
+  .content-box {
+    display: flex;
+    justify-content: center;
+    padding: 60px 0 80px;
+    line-height: 24px;
+    color: #3d3d3d;
+
+    .msg-box {
+      max-width: 500px;
+    }
+
+    .title-msg {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    :global {
+      .ant-avatar {
+        background: #0065ff;
+      }
+    }
+  }
+
+  .footer-box {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    width: 100vw;
+    height: 218px;
+    background: #343434;
+    font-size: 12px;
+    padding-top: 50px;
+
+    .title {
+      color: #fff;
+    }
+
+    .logo {
+      cursor: pointer;
+    }
+
+    .copyright {
+      color: #666;
+    }
   }
 }
