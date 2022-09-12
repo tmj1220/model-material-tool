@@ -1,37 +1,27 @@
-/*
- * @Author: like 465420404@qq.com
- * @Date: 2022-09-09 19:24:28
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 19:33:05
- * @FilePath: /model-material-tool/src/pages/list/index.tsx
- * @Description:
- *
- * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
- */
 /* eslint-disable no-unsafe-optional-chaining */
 import React, {
   useEffect, useRef,
 } from 'react'
 import {
-  List, Skeleton, Divider,
+  List, Skeleton, Divider, Avatar, message, Modal,
 } from 'antd';
+import Icon, { ExclamationCircleOutlined } from '@ant-design/icons';
+import EditSvg from '@/assets/images/anticons/edit.svg'
+import DeleteSvg from '@/assets/images/anticons/delete.svg'
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useModelDispatchers, useModelState, useModelEffectsLoading } from '@/store'
-import downloadSvg from '@/assets/images/icons/download.svg'
-import ModelDown, { ForwardRefOrops } from '@/components/ModelDown';
-import FilterBar from './filter-bar'
-import Card from './card'
+import { deleteResource } from '@/services/list'
+import Card from '../list/card'
 import s from './index.less'
 
 interface ListProps { }
 
 const SourceList: React.FC<ListProps> = () => {
-  const modelDownRef = useRef<ForwardRefOrops>(null);
   const { getResourceList } = useModelDispatchers('list')
   const {
-    requestParams, curCategory, resources, isGetMoreResources,
+    requestParams, resources, isGetMoreResources,
   } = useModelState('list')
-  const { getResourceByKeyword: isKeywordLoading } = useModelEffectsLoading('list');
+  const { name } = useModelState('user');
   const { getResourceList: isLoading } = useModelEffectsLoading('list');
   const containerRef = useRef<HTMLDivElement>()
   const listRef = useRef<any>()
@@ -43,19 +33,47 @@ const SourceList: React.FC<ListProps> = () => {
     })
   }
 
-  useEffect(() => {
+  // 获取自己上传的资源
+  const getResource = () => {
     getResourceList({
-      ...requestParams,
-      resourceType: curCategory,
-    })
+      pageNum: 1,
+      pageSize: requestParams.pageSize,
+      mine: 1,
+    }as any)
+  }
+
+  // 删除资源
+  const deleteSource = async (id) => {
+    Modal.confirm({
+      title: '删除',
+      icon: <ExclamationCircleOutlined />,
+      content: '确认删除该资源？',
+      async onOk() {
+        const res = await deleteResource(id)
+        if (res) {
+          getResource()
+          message.success('删除成功');
+        }
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
+  useEffect(() => {
+    getResource()
   }, []);
 
   return (
     <div className={s['list-root']}>
-      <FilterBar />
+      <div className={s['user-info']}>
+        <Avatar size={90}>{name?.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</Avatar>
+        <div className={s['user-name']}>{name}</div>
+      </div>
       <div
         className={s['list-box']}
-        id="scrollableDiv"
+        id="scrollableBox"
         ref={containerRef}
       >
         <InfiniteScroll
@@ -69,10 +87,10 @@ const SourceList: React.FC<ListProps> = () => {
           hasMore={isGetMoreResources}
           hasChildren
           scrollThreshold={0.1}
-          loader={(isLoading || isKeywordLoading)
+          loader={(isLoading)
             ? <Skeleton avatar paragraph={{ rows: 1 }} active /> : null}
           endMessage={<Divider plain>所有的都在这儿了🤐</Divider>}
-          scrollableTarget="scrollableDiv"
+          scrollableTarget="scrollableBox"
         >
           <List
             dataSource={resources}
@@ -82,14 +100,15 @@ const SourceList: React.FC<ListProps> = () => {
             renderItem={(item) => (
               <List.Item key={item.resourceId}>
                 <Card {...item}>
-                  <div className={s['action-box']}>
-                    <img
+                  <div>
+                    <Icon component={EditSvg} />
+                    <Icon
+                      component={DeleteSvg}
+                      style={{ marginLeft: 16 }}
                       onClick={(e) => {
-                        e.stopPropagation();
-                        modelDownRef.current.onShowDrawer(item.resourceId);
+                        e.stopPropagation()
+                        deleteSource(item.resourceId)
                       }}
-                      src={downloadSvg}
-                      alt="dowanload.png"
                     />
                   </div>
                 </Card>
@@ -98,7 +117,6 @@ const SourceList: React.FC<ListProps> = () => {
           />
         </InfiniteScroll>
       </div>
-      <ModelDown ref={modelDownRef} />
     </div>
   )
 };

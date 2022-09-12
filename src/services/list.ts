@@ -22,3 +22,9 @@ export async function getResourceByKeyword(params: IResourceParams) {
 export async function getResourceDetail(id: string) {
   return request(`/resource/detail/${id}`);
 }
+// 删除资源
+export async function deleteResource(id: string) {
+  return request(`/resource/${id}`, {
+    method: 'DELETE',
+  });
+}

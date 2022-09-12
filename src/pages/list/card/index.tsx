@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 19:17:44
+ * @LastEditTime: 2022-09-09 19:30:46
  * @FilePath: /model-material-tool/src/pages/list/card/index.tsx
  * @Description:
  *
@@ -12,23 +12,22 @@
 import React, { useRef } from 'react'
 import { useModelState } from '@/store'
 import Image from '@/components/image'
-import downloadSvg from '@/assets/images/icons/download.svg'
 import { menuOptions } from '@/components/header/constant';
 import Tag from '@/components/tag/index'
 import { Skeleton } from 'antd';
-import ModelDown, { ForwardRefOrops } from '@/components/ModelDown';
 import CardDetail from '../cardDetail/index'
 import s from './index.less'
 
-interface SourceCardProps extends BaseSource { }
+interface SourceCardProps extends BaseSource {
+  children?:any
+ }
 
 const SourceCard: React.FC<SourceCardProps> = ({
-  resourceId, resourceName, resourceThumbUrl, resourceType, categoryName, tagInfoList,
+  resourceId, resourceName, resourceThumbUrl, resourceType, categoryName, tagInfoList, children,
 }) => {
   const { searchKeyword } = useModelState('list')
   const containerRef = useRef<HTMLDivElement>()
   const cardDetailRef = useRef(null)
-  const modelDownRef = useRef<ForwardRefOrops>(null);
 
   // 查看详情
   const toDetail = () => {
@@ -88,20 +87,10 @@ const SourceCard: React.FC<SourceCardProps> = ({
             }
             </div>
           </div>
-          <div className={s['action-box']}>
-            <img
-              onClick={(e) => {
-                e.stopPropagation();
-                modelDownRef.current.onShowDrawer(resourceId)
-              }}
-              src={downloadSvg}
-              alt="dowanload.png"
-            />
-          </div>
+          {children}
         </div>
       </div>
       <CardDetail ref={cardDetailRef} />
-      <ModelDown ref={modelDownRef} />
     </>
   )
 };

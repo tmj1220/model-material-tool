@@ -1,0 +1,39 @@
+/* stylelint-disable selector-pseudo-class-no-unknown */
+.list-root {
+  background: #fafafa;
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 0 20px;
+
+    :global {
+      .ant-avatar {
+        background: #0065ff;
+        font-size: 24px !important;
+      }
+    }
+
+    .user-name {
+      font-size: 24px;
+      font-weight: 500;
+      padding: 10px;
+    }
+  }
+
+  .list-box {
+    // display: flex;
+    justify-content: space-between;
+    padding: 10px 32px;
+    height: calc(100vh - 120px);
+    overflow: auto;
+
+    :global {
+      .ant-row {
+        margin: 5px 0 0 !important;
+      }
+    }
+  }
+}
