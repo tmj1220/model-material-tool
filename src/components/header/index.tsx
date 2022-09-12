@@ -1,32 +1,25 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
-  Tabs,
-  Input,
-  Button,
-  Menu,
-  Dropdown,
-  Space,
-  MenuProps,
-  Drawer,
+  Tabs, Input, Button, Menu, Dropdown, Space, MenuProps,
 } from 'antd';
 import { useModelDispatchers, useModelState } from '@/store';
 import searchSvg from '@/assets/images/icons/search.svg';
 import UploadSvg from '@/assets/images/anticons/upload.svg';
-import closeSvg from '@/assets/images/anticons/close.svg';
+
 import logo from '@/assets/images/icons/logo.svg';
 import { useNavigate } from 'react-router-dom';
 import Icon, { DownOutlined } from '@ant-design/icons';
 import SignoutSvg from '@/assets/images/anticons/signout.svg';
 import { redirectLogin } from '@/utils/utils';
-import AddModel from './addmodel';
+import AddModel, { AddModelForwardRefOrops } from './addmodel';
 import { menuOptions } from './constant';
 import s from './index.less';
 
-interface HeaderProps { }
+interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
-  const [addModelVisible, setaddModelVisible] = useState<boolean>(false);
-  const [curKeyword, setCurKeyword] = useState<string>('')
+  const [curKeyword, setCurKeyword] = useState<string>('');
+  const addModelRef = useRef<AddModelForwardRefOrops>(null);
   const navigate = useNavigate();
   const {
     getMaterialCategory,
@@ -44,14 +37,14 @@ const Header: React.FC<HeaderProps> = () => {
   const onTabChange = async (key) => {
     updateCurCategory(key);
     // 更新可继续获取资源状态
-    updateIsGetMoreResources(true)
+    updateIsGetMoreResources(true);
     // 清空关键字
     updateSearchKeyword('');
     // 清空标签检索
-    updateCurSearchTag([])
-    setCurKeyword('')
+    updateCurSearchTag([]);
+    setCurKeyword('');
     if (key === '3') {
-      navigate('/about')
+      navigate('/about');
     } else {
       navigate('/list');
       // 点击材质请求材质下分类
@@ -94,14 +87,14 @@ const Header: React.FC<HeaderProps> = () => {
     />
   );
   const onChangeKeyword = (e) => {
-    setCurKeyword(e.target.value)
-  }
+    setCurKeyword(e.target.value);
+  };
   // 关键字检索
   const onSearch = (value) => {
     // 更新可继续获取资源状态
-    updateIsGetMoreResources(true)
+    updateIsGetMoreResources(true);
     // 清空标签检索
-    updateCurSearchTag([])
+    updateCurSearchTag([]);
     if (value) {
       updateCurCategory(null);
       getResourceByKeyword({
@@ -166,7 +159,7 @@ const Header: React.FC<HeaderProps> = () => {
               borderRadius: 100,
             }}
             onClick={() => {
-              setaddModelVisible(true);
+              addModelRef.current.onShowDrawer();
             }}
           >
             上传
@@ -176,42 +169,21 @@ const Header: React.FC<HeaderProps> = () => {
           className={s['user-info-box']}
           onClick={() => {
             updateCurCategory(null);
-            navigate('/personal')
+            navigate('/personal');
           }}
         >
           <Dropdown placement="bottomLeft" overlay={menu}>
             <Space>
-              <div className={s.avtar}>{name?.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</div>
+              <div className={s.avtar}>
+                {name?.replace(/^(.*[n])*.*(.|n)$/g, '$2')}
+              </div>
               <div style={{ minWidth: 40 }}>{name}</div>
               <DownOutlined style={{ color: '#333333', fontSize: 12 }} />
             </Space>
           </Dropdown>
         </div>
       </div>
-      <Drawer
-        contentWrapperStyle={{ borderRadius: '14px', overflow: 'hidden' }}
-        maskStyle={{ background: 'rgba(0,0,0,0.8)' }}
-        placement="bottom"
-        height="calc(100% - 64px)"
-        destroyOnClose
-        maskClosable={false}
-        closable={false}
-        visible={addModelVisible}
-      >
-        <div className={s['drawer-close']}>
-          <Icon
-            onClick={() => {
-              setaddModelVisible(false);
-            }}
-            component={closeSvg}
-            style={{ fontSize: 36, color: '#fff' }}
-          />
-        </div>
-        <AddModel onAdd={() => {
-          setaddModelVisible(false);
-        }}
-        />
-      </Drawer>
+      <AddModel ref={addModelRef} onAdd={(type) => { onTabChange(type) }} />
     </div>
   );
 };

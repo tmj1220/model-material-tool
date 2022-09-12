@@ -2,14 +2,17 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 15:53:56
+ * @LastEditTime: 2022-09-12 19:52:30
  * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
  */
 import React, {
-  useState, useImperativeHandle, forwardRef, useRef,
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  useRef,
 } from 'react';
 import Icon from '@ant-design/icons';
 import closeSvg from '@/assets/images/anticons/close.svg';
@@ -19,7 +22,7 @@ import {
   Drawer, Skeleton, Avatar, Button, Progress,
 } from 'antd';
 import Tag from '@/components/tag/index';
-import { useModelDispatchers, useModelState } from '@/store'
+import { useModelDispatchers, useModelState } from '@/store';
 import { useNavigate } from 'react-router-dom';
 import { getResourceDetail } from '@/services/list';
 import moment from 'moment';
@@ -28,8 +31,8 @@ import axios from 'axios';
 import ModelDown, { ForwardRefOrops } from '@/components/ModelDown';
 import s from './index.less';
 
-interface IndexProps { }
-type ShowType = 'model' | 'img'
+interface IndexProps {}
+type ShowType = 'model' | 'img';
 const CardDetail: ForwardRefRenderFunction<
   {
     onShowDrawer: (data) => void;
@@ -37,8 +40,8 @@ const CardDetail: ForwardRefRenderFunction<
   IndexProps
 > = (props, ref) => {
   const { CancelToken } = axios;
-  const { getResourceList, updateCurSearchTag, updateCurCategory } = useModelDispatchers('list')
-  const { requestParams } = useModelState('list')
+  const { getResourceList, updateCurSearchTag, updateCurCategory } = useModelDispatchers('list');
+  const { requestParams } = useModelState('list');
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
@@ -57,41 +60,47 @@ const CardDetail: ForwardRefRenderFunction<
     setLoading(false);
     const { infoForDownload } = res;
     Object.keys(infoForDownload).forEach((key) => {
-      const {
-        modelType,
-      } = infoForDownload[key];
-      if (['.gltf', '.glb'].includes(modelType.substring(modelType.lastIndexOf('.')))) {
-        showModelData = infoForDownload[key]
+      const { modelType } = infoForDownload[key];
+      if (
+        ['.gltf', '.glb'].includes(
+          modelType.substring(modelType.lastIndexOf('.')),
+        )
+      ) {
+        showModelData = infoForDownload[key];
+        showModelData.key = key;
       }
     });
     if (showModelData) {
-      setShowType('model')
+      setShowType('model');
       axios(showModelData.resourceFileUrl, {
         responseType: 'blob',
         onDownloadProgress(progressEvent) {
-          setpercent(Number(((progressEvent.loaded / progressEvent.total) * 100).toFixed(0)))
+          setpercent(
+            Number(
+              ((progressEvent.loaded / progressEvent.total) * 100).toFixed(0),
+            ),
+          );
         },
         cancelToken: new CancelToken((c) => {
           requestsRef.current = { abort: c };
         }),
-
       }).then(({ data }) => {
         if (data instanceof Blob) {
-          const file = new File([data], `79789model.${showModelData.suffix}`)
+          const file = new File([data], `${showModelData.key}.${showModelData.suffix}`);
           setModelFile(file);
         }
-      })
+      });
     } else {
-      setShowType('img')
+      setShowType('img');
     }
   };
 
   const onClose = () => {
     try {
       requestsRef.current?.abort();
-      requestsRef.current = null
+      requestsRef.current = null;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
     setVisible(false);
   };
@@ -99,18 +108,20 @@ const CardDetail: ForwardRefRenderFunction<
   // 点击标签跳转至检索页面
   const onSearchTag = (id, tagName) => {
     setVisible(false);
-    updateCurCategory(null)
-    updateCurSearchTag([{
-      tagId: id,
-      tagName,
-    }])
-    navigate('/list')
+    updateCurCategory(null);
+    updateCurSearchTag([
+      {
+        tagId: id,
+        tagName,
+      },
+    ]);
+    navigate('/list');
     getResourceList({
       pageNum: 1,
       pageSize: requestParams.pageSize,
       tagId: id,
-    })
-  }
+    });
+  };
 
   // 抛出去的方法
   useImperativeHandle(ref, () => ({
@@ -136,41 +147,36 @@ const CardDetail: ForwardRefRenderFunction<
       ) : (
         <div className={s['drawer-content']}>
           <div className={s['img-box']}>
-            {
-              (showType === 'img') && <img alt={cardDetail?.resourceName} src={cardDetail?.resourceThumbUrl} />
-            }
-            {
-              (showType === 'model') && (
-                modelFile ? (
-                  <ModelViewer
-                    curType="readonly"
-                    modelFile={modelFile}
-                    pointConfig={undefined}
-                    actions={[]}
-                    setActions={undefined}
-                    setcurType={undefined}
-                    onChange={undefined}
-                    setPointConfig={() => { }}
-                    beforeEditValueRef={undefined}
-                    initValueRef={undefined}
-                    curTypeRef={{ current: 'readonly' }}
+            {showType === 'img' && (
+              <img
+                alt={cardDetail?.resourceName}
+                src={cardDetail?.resourceThumbUrl}
+              />
+            )}
+            {showType === 'model'
+              && (modelFile ? (
+                <ModelViewer curType="readonly" modelFile={modelFile} />
+              ) : (
+                <div>
+                  <Progress
+                    steps={20}
+                    percent={percent}
+                    format={(data) => `模型已加载${data}%、请等待`}
                   />
-                ) : (
-                  <div>
-                    <Progress
-                      steps={20}
-                      percent={percent}
-                      format={(data) => `模型已加载${data}%、请等待`}
-                    />
-                  </div>
-                )
-              )
-            }
+                </div>
+              ))}
           </div>
           <div className={s['detail-box']}>
             <div className={s['user-info']}>
-              <Avatar size={20}>{cardDetail?.modifiedUserName?.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</Avatar>
-              <span className={s['user-name']}>{cardDetail?.modifiedUserName}</span>
+              <Avatar size={20}>
+                {cardDetail?.modifiedUserName?.replace(
+                  /^(.*[n])*.*(.|n)$/g,
+                  '$2',
+                )}
+              </Avatar>
+              <span className={s['user-name']}>
+                {cardDetail?.modifiedUserName}
+              </span>
             </div>
             <div className={s['resource-name']}>{cardDetail?.resourceName}</div>
             <div className={s['update-time']}>

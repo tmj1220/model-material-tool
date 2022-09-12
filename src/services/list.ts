@@ -22,6 +22,10 @@ export async function getResourceByKeyword(params: IResourceParams) {
 export async function getResourceDetail(id: string) {
   return request(`/resource/detail/${id}`);
 }
+// 编辑获取资源详情
+export async function getEditResourceDetail(id: string) {
+  return request(`/resource/info/${id}`);
+}
 // 删除资源
 export async function deleteResource(id: string) {
   return request(`/resource/${id}`, {

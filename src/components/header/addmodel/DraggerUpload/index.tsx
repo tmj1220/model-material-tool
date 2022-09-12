@@ -92,13 +92,13 @@ const DraggerUpload = ({
         if (item.percent === 100) {
           return 99.99;
         }
-        return Number(item.percent.toFixed(2));
+        return Number(item?.percent?.toFixed(2));
       case 'done':
         return 100;
       case 'error':
         return 100;
       default:
-        return Number(item.percent.toFixed(2));
+        return Number(item?.percent?.toFixed(2));
     }
   };
   return (

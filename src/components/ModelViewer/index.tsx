@@ -12,9 +12,6 @@ import zip from 'zip-js-esm';
 import { fs } from './zip-fs.js';
 import classnames from 'classnames';
 //import EditForm from '../EditForm'
-interface PointConfig {
-  [name: string]: any;
-}
 import {
   Vector3,
   AnimationClip,
@@ -33,12 +30,14 @@ import {
   Camera,
   AnimationAction,
   Box3,
+  MathUtils,
 } from 'three';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import {
   MAP_NAMES,
   AMBIENTCOLOR,
@@ -64,32 +63,13 @@ const KTX2_LOADER = new KTX2Loader(MANAGER).setTranscoderPath(
 interface ViewerProps {
   curType: 'readonly' | 'edit';
   modelFile: File;
-  pointConfig: PointConfig;
-  actions: { value: number; label: string; data?: any }[];
-  setActions: Function;
-  setcurType: Function;
-  onChange: Function;
-  onBeforeSave?: (prev: PointConfig, next: PointConfig) => Promise<boolean>;
-  setPointConfig: (cb: ((v: PointConfig) => PointConfig) | PointConfig) => void;
-  beforeEditValueRef: React.MutableRefObject<PointConfig>;
-  initValueRef: React.MutableRefObject<PointConfig>;
-  curTypeRef: React.MutableRefObject<'readonly' | 'edit'>;
 }
 
 export interface ViewerInstance {
   genPreviewImg: () => Promise<void>;
 }
 
-const Viewer = (
-  {
-    modelFile,
-    curType,
-    setPointConfig,
-    onChange,
-    curTypeRef
-  }: ViewerProps,
-  ref
-) => {
+const Viewer = ({ modelFile, curType }: ViewerProps, ref) => {
   const getCanvasInfo = useCallback(() => {
     let width: number;
     let height: number;
@@ -217,39 +197,14 @@ const Viewer = (
   }, []);
 
   const onListenCanvas = useCallback(() => {
-    if (curTypeRef.current === 'readonly') return;
     const lastTime = lastTimeRef.current;
     const thisTime = new Date().getTime();
-    // const c = defaultCameraRef.current
-    // if (c) {
-    //   console.log('camera', c.getFocalLength(), c.getEffectiveFOV(), c.filmGauge, c.scale, c.filmOffset);
-
-    // }
-    // const a = controlsRef.current
-    // if (a) {
-    //   console.log('control', a, a.center, a.getDistance(), a.zoomO,);
-
-    // }
     if (thisTime % TIME_LEN < lastTime % TIME_LEN) {
       if (activeCameraRef.current) {
         const { x, y, z } = activeCameraRef.current.position;
-        // console.log('cameraPos', [x, y, z], y.toString());
-        setPointConfig((pre) => ({
-          ...pre,
-          cameraPositionX: x,
-          cameraPositionY: y,
-          cameraPositionZ: z,
-        }));
       }
       if (controlsRef.current) {
         const { x, y, z } = controlsRef.current.target;
-        // console.log('targetPos', [x, y, z]);
-        setPointConfig((pre) => ({
-          ...pre,
-          focusPositionX: x,
-          focusPositionY: y,
-          focusPositionZ: z,
-        }));
       }
     }
     lastTimeRef.current = thisTime;
@@ -318,24 +273,8 @@ const Viewer = (
           controls.autoRotateSpeed = -10;
           controls.screenSpacePanning = true;
           controls.addEventListener('change', render);
-          // controls.minDistance = 2;
-          // controls.maxDistance = 10;
-          // window.addEventListener('resize', onWindowResize);
         }
-
-        // if (vignertteRef.current) {
-        //   const bg = createBackground({
-        //     aspect: BASE_ASPECT,
-        //     // clearColor: 'rgb(51,51,51)',
-        //     grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
-        //     colors: [BGCOLOR1, BGCOLOR2]
-        //   })
-        //   bg.name = 'Vignette';
-        //   bg.renderOrder = -1;
-        //   vignertteRef.current = bg
-        // }
         canvasBoxRef.current.appendChild(rendererRef.current.domElement);
-        // canvasBoxRef.current.addEventListener('resize', resize)
         aniIdRef.current = requestAnimationFrame(animate);
         hasInitRef.current = true;
         setStatus('inited');
@@ -442,7 +381,7 @@ const Viewer = (
       let rootFile: any;
       let rootPath: any;
       Array.from(fileMap).forEach(([path, file]) => {
-        if (file.name.match(/\.(gltf|glb)$/)) {
+        if (file.name.match(/\.(gltf|glb|fbx)$/)) {
           rootFile = file;
           rootPath = path.replace(file.name, '');
         }
@@ -495,9 +434,6 @@ const Viewer = (
             (gltf) => {
               const scene = gltf.scene || gltf.scenes[0];
               const clips = gltf.animations || [];
-              const model = gltf.scene;
-              model.position.set( 1, 1, 0 );
-              model.scale.set( 0.03, 0.03, 0.03 );
               if (!scene) {
                 // Valid, but not supported by this viewer.
                 throw new Error(
@@ -515,11 +451,14 @@ const Viewer = (
             rej
           );
           window.onresize = function () {
-
-            defaultCameraRef.current.aspect = canvasBoxRef.current.clientWidth / canvasBoxRef.current.clientHeight;
+            defaultCameraRef.current.aspect =
+              canvasBoxRef.current.clientWidth /
+              canvasBoxRef.current.clientHeight;
             defaultCameraRef.current.updateProjectionMatrix();
-            rendererRef.current.setSize( canvasBoxRef.current.clientWidth, canvasBoxRef.current.clientHeight );
-    
+            rendererRef.current.setSize(
+              canvasBoxRef.current.clientWidth,
+              canvasBoxRef.current.clientHeight
+            );
           };
         });
       }),
@@ -545,21 +484,13 @@ const Viewer = (
     control.maxDistance = size * 10;
     camera.near = size / 100;
     camera.far = size * 100;
+    
     camera.updateProjectionMatrix();
     camera.position.copy(center);
-    camera.position.x += 50 / 2.0;
-    camera.position.y += 50 / 5.0;
-    camera.position.z += 50 / 2.0;
+    camera.position.x += size ;
+    camera.position.y += size ;
+    camera.position.z += size ;
     camera.lookAt(center);
-    setPointConfig((pre) => ({
-      ...pre,
-      cameraPositionX: camera.position.x,
-      cameraPositionY: camera.position.y,
-      cameraPositionZ: camera.position.z,
-      focusPositionX: controlsRef.current.target.x,
-      focusPositionY: controlsRef.current.target.y,
-      focusPositionZ: controlsRef.current.target.z,
-    }));
     controlsRef.current.saveState();
     sceneRef.current.add(object);
     mainSceneRef.current = object;
@@ -645,16 +576,7 @@ const Viewer = (
       index = 0;
     }
     //}
-    setPointConfig((pre) => {
-      const data = {
-        ...pre,
-        modelAction: index,
-      };
-      // console.log('updateGUI', data);
 
-      onChange && onChange(data);
-      return data;
-    });
     if (tmpActions[index]) {
       const clip = tmpActions[index].data;
       curActionRef.current = clip;
@@ -662,7 +584,6 @@ const Viewer = (
       actionRef.current.play();
     }
   }, []);
-
 
   const updateTextureEncoding = useCallback(() => {
     // const encoding = this.state.textureEncoding === 'sRGB'
@@ -688,9 +609,6 @@ const Viewer = (
     if (sceneRef.current) {
       sceneRef.current.remove(mainSceneRef.current);
     }
-
-    //setActions([{ value: 'none', label: '无' }])
-    // setCutAction('none')
     curActionRef.current = 'none';
 
     mainSceneRef.current.traverse((node) => {
@@ -717,7 +635,6 @@ const Viewer = (
       materials.forEach(cb);
     });
   }, []);
-
 
   return (
     <div
@@ -746,8 +663,7 @@ const Viewer = (
           width: '100%',
           height: `100%`,
         }}
-      >
-      </div>
+      ></div>
     </div>
   );
 };

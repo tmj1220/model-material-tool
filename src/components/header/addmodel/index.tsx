@@ -1,150 +1,101 @@
-import { addModel } from '@/services/addModel';
+/*
+ * @Author: like 465420404@qq.com
+ * @Date: 2022-09-12 10:18:23
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-12 19:06:24
+ * @FilePath: /model-material-tool/src/components/header/addmodel/index.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
+ */
+/*
+ * @Author: like 465420404@qq.com
+ * @Date: 2022-08-27 18:32:25
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-12 10:49:40
+ * @FilePath: /model-material-tool/src/components/header/addmodel/index.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
+ */
+import { getEditResourceDetail } from '@/services/list';
+import { Drawer } from 'antd';
 import {
-  Button, Form, Input, message, Radio, Select, Spin,
-} from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
-import AwesomeUpload from '@/components/BigFileUpload';
-import { useEffect, useState } from 'react';
-import { getMaterialCategory } from '@/services/list';
-import DraggerUpload from './DraggerUpload';
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  ForwardRefRenderFunction,
+} from 'react';
+import closeSvg from '@/assets/images/anticons/close.svg';
+import Icon from '@ant-design/icons';
+import AddModel, { Addmodelfrom } from './FromCom';
 import s from './index.less';
-import TagInput from './TagInput';
 
-const { Option } = Select;
-interface Addmodelfrom {
-  resourceCategoryId?: string;
-  resourceDescription?: string;
-  resourceName: string;
-  resources: string[];
-  resourceTagIds: string[];
-  resourceType: number;
-  thumb: Array<any>;
+export interface IndexProps {
+  onAdd:Function
 }
-interface AddmodelFromProps {
-  onAdd: Function;
+export interface AddModelForwardRefOrops {
+  onShowDrawer: (arg0?: string) => void;
 }
-interface ResourceCategory {
-    categoryId: string
-    categoryName: string
-}
-const Add = ({ onAdd }: AddmodelFromProps) => {
-  const [loading, setloading] = useState<boolean>(false);
-  const [resourceCategory, setResourceCategory] = useState<ResourceCategory[]>([]);
-  const [fromData, setFromData] = useState<Addmodelfrom>(null)
-  const onAddmodelFinish = async (values: Addmodelfrom) => {
-    setloading(true);
-    const sendData = {
-      ...values,
-      thumb: values.thumb[0]?.fileId,
-    };
-    try {
-      await addModel(sendData);
-      message.success('发布成功')
-      onAdd();
-      setloading(false);
-    } catch (error) {
-      setloading(false);
+const index: ForwardRefRenderFunction<AddModelForwardRefOrops, IndexProps> = (
+  { onAdd },
+  ref,
+) => {
+  const [addModelVisible, setaddModelVisible] = useState<boolean>(false);
+  const [infoData, setInfoData] = useState<Addmodelfrom>(null);
+  const onShowDrawer = async (data) => {
+    if (data) {
+      const res: Addmodelfrom = await getEditResourceDetail(data);
+      res.thumb = [{
+        uid: Date.now(),
+        url: res.thumbUrl,
+        type: '',
+        thumbUrl: res.thumbUrl,
+        percent: 100,
+        status: 'done',
+        name: res.thumb,
+        fileId: res.thumb,
+      }]
+      setInfoData(res);
     }
+    //
+    setaddModelVisible(true);
   };
-  useEffect(() => {
-    getMaterialCategory().then((res) => {
-      setResourceCategory(res)
-    })
-  }, [])
-
+  // 抛出去的方法
+  useImperativeHandle(ref, () => ({
+    onShowDrawer,
+  }));
   return (
-    <div className={s['upload-model']}>
-      <Spin spinning={loading}>
-        <Form
-          onFinish={onAddmodelFinish}
-          style={{ width: 332 }}
-          layout="vertical"
-          onValuesChange={(data, datas) => {
-            console.log(datas)
-            setFromData(datas)
+    <Drawer
+      contentWrapperStyle={{ borderRadius: '14px', overflow: 'hidden' }}
+      maskStyle={{ background: 'rgba(0,0,0,0.8)' }}
+      placement="bottom"
+      height="calc(100% - 64px)"
+      destroyOnClose
+      maskClosable={false}
+      closable={false}
+      visible={addModelVisible}
+    >
+      <div className={s['drawer-close']}>
+        <Icon
+          onClick={() => {
+            setaddModelVisible(false);
           }}
-        >
-          <Form.Item
-            label="类型"
-            name="resourceType"
-            rules={[{ required: true, message: '请选择类型' }]}
-          >
-            <Radio.Group>
-              <Radio value={1}> 模型 </Radio>
-              <Radio value={2}> 材质 </Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item
-            label="名称"
-            name="resourceName"
-            rules={[{ required: true }]}
-          >
-            <Input maxLength={20} placeholder="请输入" />
-          </Form.Item>
-          <Form.Item
-            label="封面图"
-            name="thumb"
-            rules={[{ required: true, message: '请上传封面图' }]}
-          >
-            <DraggerUpload
-              accept="image/jpg,image/png,image/gif,image/jpeg"
-              size={20}
-              tips="支持格式：jpg/png/gif"
-            />
-          </Form.Item>
-          {
-            (fromData?.resourceType === 2) && (
-            <Form.Item
-              label="材质分类"
-              name="resourceCategoryId"
-              rules={[{ required: true, message: '请选择分类' }]}
-            >
-              <Select placeholder="请选择分类">
-                {
-                resourceCategory.map((item) => (
-                  <Option
-                    key={item.categoryId}
-                    value={item.categoryId}
-                  >
-                    {item.categoryName}
-                  </Option>
-                ))
-              }
-                <Option> </Option>
-              </Select>
-            </Form.Item>
-            )
+          component={closeSvg}
+          style={{ fontSize: 36, color: '#fff' }}
+        />
+      </div>
+      <AddModel
+        initialValue={infoData}
+        onAdd={(type) => {
+          if (onAdd) {
+            onAdd(type);
           }
-
-          <Form.Item
-            name="resourceTagIds"
-            label="添加标签"
-            rules={[{ required: true, message: '请选择标签' }]}
-          >
-            <TagInput />
-          </Form.Item>
-          <Form.Item
-            name="resourceFiles"
-            label="模型文件"
-            rules={[{ required: true, message: '请上传文件' }]}
-          >
-            <AwesomeUpload uploadLimitInfo={{ max: 1000 * 1024 * 1024 }} />
-          </Form.Item>
-          <Form.Item label="描述" name="resourceDescription">
-            <TextArea
-              maxLength={200}
-              placeholder="关于该设计资源的简要描述"
-              rows={2}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button htmlType="submit" type="primary" style={{ width: '100%' }}>
-              发布
-            </Button>
-          </Form.Item>
-        </Form>
-      </Spin>
-    </div>
+          setaddModelVisible(false);
+        }}
+      />
+    </Drawer>
   );
 };
-export default Add;
+
+export default forwardRef(index);

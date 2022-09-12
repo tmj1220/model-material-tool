@@ -109,7 +109,6 @@ const RcUpload = (
   const val2RcFiles = (val) => {
     let arr: RCFile[] = [];
     // console.log('val2RcFiles', val);
-
     if (limit > 1 && isArray(val)) {
       arr = val;
     } else if (limit === 1 && isObject(val)) {
@@ -118,21 +117,19 @@ const RcUpload = (
     return arr.map((ossFile, i) => {
       console.log('ossFile', ossFile);
 
-      const { fileUrl = '', fileThumbnailUrl } = ossFile;
-      const startIndex = fileUrl.lastIndexOf('/');
-      const queryIndex = fileUrl.lastIndexOf('?');
-      const fileName = fileUrl.slice(
-        startIndex,
-        queryIndex === -1 ? fileUrl.length : queryIndex
-      );
+      const { resourceFileId,modelType, resourceFileUrl } = ossFile;
       // const suffix = fileName.slice(fileName.lastIndexOf('.'), fileName.length)
       return {
-        name: fileName,
-        imageThumbnailUrl: fileThumbnailUrl,
-        url: fileUrl,
+        modelType,
+        name: resourceFileId,
+        imageThumbnailUrl: resourceFileUrl,
+        url: resourceFileUrl,
         status: 'uploaded',
         uid: getUid(i),
-        ossFile,
+        ossFile:{
+          fileId:resourceFileId,
+          fileUrl:resourceFileUrl
+        },
       } as any;
     });
   };

@@ -1,37 +1,40 @@
 /* eslint-disable no-unsafe-optional-chaining */
-import React, {
-  useEffect, useRef,
-} from 'react'
+import React, { useEffect, useRef } from 'react';
 import {
   List, Skeleton, Divider, Avatar, message, Modal,
 } from 'antd';
 import Icon, { ExclamationCircleOutlined } from '@ant-design/icons';
-import EditSvg from '@/assets/images/anticons/edit.svg'
-import DeleteSvg from '@/assets/images/anticons/delete.svg'
+import EditSvg from '@/assets/images/anticons/edit.svg';
+import DeleteSvg from '@/assets/images/anticons/delete.svg';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useModelDispatchers, useModelState, useModelEffectsLoading } from '@/store'
-import { deleteResource } from '@/services/list'
-import Card from '../list/card'
-import s from './index.less'
+import {
+  useModelDispatchers,
+  useModelState,
+  useModelEffectsLoading,
+} from '@/store';
+import { deleteResource } from '@/services/list';
+import AddModel, {
+  AddModelForwardRefOrops,
+} from '@/components/header/addmodel';
+import Card from '../list/card';
+import s from './index.less';
 
-interface ListProps { }
+interface ListProps {}
 
 const SourceList: React.FC<ListProps> = () => {
-  const { getResourceList } = useModelDispatchers('list')
-  const {
-    requestParams, resources, isGetMoreResources,
-  } = useModelState('list')
+  const { getResourceList } = useModelDispatchers('list');
+  const { requestParams, resources, isGetMoreResources } = useModelState('list');
   const { name } = useModelState('user');
   const { getResourceList: isLoading } = useModelEffectsLoading('list');
-  const containerRef = useRef<HTMLDivElement>()
-  const listRef = useRef<any>()
-
+  const containerRef = useRef<HTMLDivElement>();
+  const listRef = useRef<any>();
+  const addModelRef = useRef<AddModelForwardRefOrops>(null);
   const loadMoreData = () => {
     getResourceList({
       ...requestParams,
       pageNum: requestParams.pageNum + 1,
-    })
-  }
+    });
+  };
 
   // 获取自己上传的资源
   const getResource = () => {
@@ -39,8 +42,8 @@ const SourceList: React.FC<ListProps> = () => {
       pageNum: 1,
       pageSize: requestParams.pageSize,
       mine: 1,
-    }as any)
-  }
+    } as any);
+  };
 
   // 删除资源
   const deleteSource = async (id) => {
@@ -49,9 +52,9 @@ const SourceList: React.FC<ListProps> = () => {
       icon: <ExclamationCircleOutlined />,
       content: '确认删除该资源？',
       async onOk() {
-        const res = await deleteResource(id)
+        const res = await deleteResource(id);
         if (res) {
-          getResource()
+          getResource();
           message.success('删除成功');
         }
       },
@@ -59,10 +62,10 @@ const SourceList: React.FC<ListProps> = () => {
         console.log('Cancel');
       },
     });
-  }
+  };
 
   useEffect(() => {
-    getResource()
+    getResource();
   }, []);
 
   return (
@@ -71,43 +74,51 @@ const SourceList: React.FC<ListProps> = () => {
         <Avatar size={90}>{name?.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</Avatar>
         <div className={s['user-name']}>{name}</div>
       </div>
-      <div
-        className={s['list-box']}
-        id="scrollableBox"
-        ref={containerRef}
-      >
+      <div className={s['list-box']} id="scrollableBox" ref={containerRef}>
         <InfiniteScroll
           ref={listRef}
           dataLength={resources.length}
           next={() => {
             if (resources.length > 0) {
-              loadMoreData()
+              loadMoreData();
             }
           }}
           hasMore={isGetMoreResources}
           hasChildren
           scrollThreshold={0.1}
-          loader={(isLoading)
-            ? <Skeleton avatar paragraph={{ rows: 1 }} active /> : null}
+          loader={
+            isLoading ? (
+              <Skeleton avatar paragraph={{ rows: 1 }} active />
+            ) : null
+          }
           endMessage={<Divider plain>所有的都在这儿了🤐</Divider>}
           scrollableTarget="scrollableBox"
         >
           <List
             dataSource={resources}
             grid={{
-              gutter: 16, column: 4, xl: 4, xxl: 6,
+              gutter: 16,
+              column: 4,
+              xl: 4,
+              xxl: 6,
             }}
             renderItem={(item) => (
               <List.Item key={item.resourceId}>
                 <Card {...item}>
                   <div>
-                    <Icon component={EditSvg} />
+                    <Icon
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addModelRef.current.onShowDrawer(item.resourceId);
+                      }}
+                      component={EditSvg}
+                    />
                     <Icon
                       component={DeleteSvg}
                       style={{ marginLeft: 16 }}
                       onClick={(e) => {
-                        e.stopPropagation()
-                        deleteSource(item.resourceId)
+                        e.stopPropagation();
+                        deleteSource(item.resourceId);
                       }}
                     />
                   </div>
@@ -117,8 +128,9 @@ const SourceList: React.FC<ListProps> = () => {
           />
         </InfiniteScroll>
       </div>
+      <AddModel onAdd={() => { getResource() }} ref={addModelRef} />
     </div>
-  )
+  );
 };
 
-export default SourceList
+export default SourceList;
