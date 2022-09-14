@@ -1,3 +1,13 @@
+/*
+ * @Author: like 465420404@qq.com
+ * @Date: 2022-08-26 12:06:58
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-14 15:59:06
+ * @FilePath: /model-material-tool/src/utils/utils.ts
+ * @Description:
+ *
+ * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
+ */
 /* eslint-disable no-useless-escape */
 import jsCookie from 'js-cookie'
 
@@ -68,24 +78,13 @@ export const setToken = (value) => jsCookie.set('Admin-Token', value)
 export const redirectLogin = () => {
   removeToken()
   const currentUrl = window.location.pathname + window.location.search;
-  let redirectUrl = encodeURIComponent(currentUrl);
-  let companyCode = '';
-  // 已经是登录页面
-  if (getParameterByName('redirect')) {
-    redirectUrl = getParameterByName('redirect');
-  }
-  console.log('redirectUrl', redirectUrl);
-
-  // 企业号
-  if (getCompanyCode()) {
-    companyCode = `&code=${getCompanyCode()}`
-  }
+  const redirectUrl = encodeURIComponent(currentUrl);
   if (window.location.pathname === '/login') {
     window.location.reload();
   } else if (redirectUrl === '%2Fempty') { // 如果是从/empty跳登录  就不加重定向
-    window.location.href = `/login?${companyCode}`;
+    window.location.href = '/login';
   } else {
-    window.location.href = `/login?redirect=${redirectUrl}${companyCode}`;
+    window.location.href = '/login';
   }
 };
 

@@ -68,7 +68,7 @@ const config = merge(baseConfig, {
         ],
       },
       {
-        test: /\.(png|jpeg|jpg|gif|bmp)/,
+        test: /\.(png|jpeg|jpg|gif|bmp|svg)/,
         include: resolveApp('src'),
         use: [{
           loader: 'url-loader',
@@ -78,6 +78,7 @@ const config = merge(baseConfig, {
             esModule: false,
           },
         }],
+        exclude: /(anticons|icons)/,
       },
       {
         test: /\.(eot|woff|woff2|ttf)/,

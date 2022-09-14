@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Tabs, Input, Button, Menu, Dropdown, Space, MenuProps,
 } from 'antd';
@@ -7,7 +7,7 @@ import searchSvg from '@/assets/images/icons/search.svg';
 import UploadSvg from '@/assets/images/anticons/upload.svg';
 
 import logo from '@/assets/images/icons/logo.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Icon, { DownOutlined } from '@ant-design/icons';
 import SignoutSvg from '@/assets/images/anticons/signout.svg';
 import { redirectLogin } from '@/utils/utils';
@@ -21,6 +21,7 @@ const Header: React.FC<HeaderProps> = () => {
   const [curKeyword, setCurKeyword] = useState<string>('');
   const addModelRef = useRef<AddModelForwardRefOrops>(null);
   const navigate = useNavigate();
+  const urlLocation = useLocation();
   const {
     getMaterialCategory,
     updateCurCategory,
@@ -114,13 +115,32 @@ const Header: React.FC<HeaderProps> = () => {
     updateSearchKeyword(value);
     updateMaterialCategory([]);
   };
+  const goHome = () => {
+    if (urlLocation?.pathname !== '/list') {
+      navigate('/list');
+      updateMaterialCategory([]);
+      updateCurCategory(1);
+    }
+  };
+  useEffect(() => {
+    console.log(urlLocation)
+    switch (urlLocation?.pathname) {
+      case '/list': updateCurCategory(1);
+
+        break;
+      case '/about': updateCurCategory(3);
+
+        break;
+      default:
+        break;
+    }
+  }, [])
+
   return (
     <div className={s['header-root']}>
       <div className={s['left-box']}>
         <h1
-          onClick={() => {
-            navigate('/list');
-          }}
+          onClick={goHome}
           className={s['logo-box']}
         >
           <img src={logo} alt="" />
@@ -167,14 +187,16 @@ const Header: React.FC<HeaderProps> = () => {
         </div>
         <div
           className={s['user-info-box']}
-          onClick={() => {
-            updateCurCategory(null);
-            navigate('/personal');
-          }}
         >
           <Dropdown placement="bottomLeft" overlay={menu}>
             <Space>
-              <div className={s.avtar}>
+              <div
+                onClick={() => {
+                  updateCurCategory(null);
+                  navigate('/personal');
+                }}
+                className={s.avtar}
+              >
                 {name?.replace(/^(.*[n])*.*(.|n)$/g, '$2')}
               </div>
               <div style={{ minWidth: 40 }}>{name}</div>

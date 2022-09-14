@@ -1,8 +1,17 @@
+/*
+ * @Author: like 465420404@qq.com
+ * @Date: 2022-08-26 11:30:08
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-14 17:10:15
+ * @FilePath: /model-material-tool/src/pages/home/index.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
+ */
 import React, { useCallback } from 'react'
 import { Button } from 'antd'
 import request from '@/utils/request'
-import img from '@/assets/images/favicon.png'
-import s from './index.less'
+// import img from '@/assets/images/favicon.png'
 
 interface HomeProps {}
 
@@ -29,9 +38,8 @@ const Home: React.FC<HomeProps> = () => {
   )
 
   return (
-    <div className={s['home-root']}>
+    <div>
       我是首页
-      <img src={img} alt="23" />
       <Button onClick={getInfo}>请求</Button>
     </div>
   )

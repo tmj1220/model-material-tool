@@ -3,7 +3,7 @@ import { getMaterialCategory, getResource, getResourceByKeyword } from '@/servic
 
 interface DefaultState {
   requestParams: IResourceParams
-  curCategory: 1 | 2 | null // 1:模型 2材质
+  curCategory: 1 | 2 | 3 | null // 1:模型 2材质 3关于
   materialCategory: Material[] // 材质下的分类
   searchKeyword: string // 搜索关键字
   resources: BaseSource[] // 资源列表

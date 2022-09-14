@@ -78,7 +78,7 @@ const config = {
         ],
       },
       {
-        test: /\.(png|jpeg|jpg|gif|bmp)/,
+        test: /\.(png|jpeg|jpg|gif|bmp|svg)/,
         include: resolveApp('src'),
         use: [{
           loader: 'url-loader',
@@ -87,6 +87,7 @@ const config = {
             name: 'static/images/[name].[contenthash:8].[ext]',
           },
         }],
+        exclude: /(anticons|icons)/,
       },
       {
         test: /\.(eot|woff|woff2|ttf)/,
