@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-12 10:09:03
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-15 16:03:27
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2022-09-16 16:57:39
  * @FilePath: /model-material-tool/src/pages/about/index.tsx
  * @Description:
  *
@@ -57,7 +57,13 @@ const About: React.FC<AboutProps> = () => (
       <a className={s.logo} href="www.rcux.team" target="_blank">
         <Icon component={rcuxSvg} style={{ fontSize: 72 }} />
       </a>
-      <div className={s.copyright}>Copyright © 2022 Rokid.inc</div>
+      <div className={s.copyright}>
+        Copyright ©
+        {' '}
+        {new Date().getFullYear()}
+        {' '}
+        Rokid.inc
+      </div>
     </div>
   </div>
 )
