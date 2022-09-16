@@ -92,7 +92,7 @@ const RcUpload = (
   if (limit < 1) {
     console.error('limit should be greater than 1');
   }
-  if (chunkSize < 100 * 1024 || chunkSize > 5 * 1024 * 1024) {
+  if (chunkSize < 100 * 1024 || chunkSize > 15 * 1024 * 1024) {
     console.error('chunkSize should be between 100K and 5M');
   }
   if (!(typeof onChange === 'function')) {
@@ -296,6 +296,7 @@ const RcUpload = (
   }, []);
   const beforeUpload = useCallback(
     async (file: RCFile, files:RCFile[]) => {
+      debugger
       if (beforeUploadCheck) {
         const tmpStatus = await beforeUploadCheck(file, files);
         if (!tmpStatus) {
@@ -310,7 +311,10 @@ const RcUpload = (
       const totalFiles = [...files, ...fileListRef.current];
       const totalNumber = totalFiles.length;
       console.log('totalNumber', totalFiles, totalFiles.length);
-
+      if(file.size > uploadLimitInfo?.max){
+        message.error(uploadLimitInfo.hintText);
+        return Promise.reject();
+      }
       if (totalNumber > limit) {
         message.error('文件数量已最大');
         return Promise.reject();

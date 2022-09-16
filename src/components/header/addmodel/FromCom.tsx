@@ -135,7 +135,7 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
             label="模型文件"
             rules={[{ required: true, message: '请上传文件' }]}
           >
-            <AwesomeUpload uploadLimitInfo={{ max: 1000 * 1024 * 1024 }} />
+            <AwesomeUpload uploadLimitInfo={{ max: 200 * 1024 * 1024, hintText: '单个文件最大上传200M' }} />
           </Form.Item>
           <Form.Item label="描述" name="resourceDescription">
             <TextArea
