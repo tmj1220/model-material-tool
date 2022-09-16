@@ -49,6 +49,12 @@ const stores = {
         resources: prevState.resources.concat(list),
       }
     ),
+    updateResourcesAll: (prevState: DefaultState, list) => (
+      {
+        ...prevState,
+        resources: list,
+      }
+    ),
     clearResources: (prevState: DefaultState) => (
       {
         ...prevState,
@@ -73,13 +79,14 @@ const stores = {
     },
     async getResourceList(params: IResourceParams) {
       try {
-        // 请求第一页数据前先清空列表数据
-        if (params.pageNum === 1) {
-          this.clearResources()
-        }
         const res = await getResource(params)
         if (res.rows) {
-          this.updateResources(res.rows)
+          // 请求第一页数据
+          if (params.pageNum === 1) {
+            this.updateResourcesAll(res.rows)
+          } else {
+            this.updateResources(res.rows)
+          }
           if (res.rows.length > 0) {
             this.updateRequestParams(params)
           } else {

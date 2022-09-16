@@ -92,11 +92,13 @@ const Header: React.FC<HeaderProps> = () => {
   };
   // 关键字检索
   const onSearch = (value) => {
+    updateSearchKeyword(value);
     // 更新可继续获取资源状态
     updateIsGetMoreResources(true);
     // 清空标签检索
     updateCurSearchTag([]);
     if (value) {
+      navigate('/list');
       updateCurCategory(null);
       getResourceByKeyword({
         pageNum: 1,
@@ -112,7 +114,6 @@ const Header: React.FC<HeaderProps> = () => {
         resourceType: menuOptions[0].key as any,
       });
     }
-    updateSearchKeyword(value);
     updateMaterialCategory([]);
   };
   const goHome = () => {

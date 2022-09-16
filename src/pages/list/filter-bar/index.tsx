@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Select, Tabs } from 'antd'
 import { useModelDispatchers, useModelState } from '@/store'
 import { menuOptions } from '@/components/header/constant'
-import { getResource } from '@/services/list'
+import { getResourceByKeyword as getResourceByKeywordAmount } from '@/services/list'
 import Tag from '@/components/tag/index';
 import { fitlerOptions } from '../constants'
 import s from './index.less'
@@ -29,15 +29,25 @@ const FilterBar: React.FC<FilterBarProps> = () => {
     getResourceByKeyword({
       ...requestParams,
       pageNum: 1,
-      resourceType: key,
+      resourceType: key === 'null' ? '' : key,
     })
   }
 
   useEffect(() => {
     if (searchKeyword) {
       (async () => {
-        const modal = await getResource({ pageNum: 1, pageSize: 10, resourceType: 1 })
-        const texture = await getResource({ pageNum: 1, pageSize: 10, resourceType: 2 })
+        const modal = await getResourceByKeywordAmount({
+          keyword: searchKeyword,
+          pageNum: 1,
+          pageSize: 0,
+          resourceType: 1,
+        })
+        const texture = await getResourceByKeywordAmount({
+          keyword: searchKeyword,
+          pageNum: 1,
+          pageSize: 0,
+          resourceType: 2,
+        })
         const newMenus = [...menuOptions.filter((item) => item.key !== 3)]
         newMenus.forEach((item: any) => {
           if (item.key === 1) {

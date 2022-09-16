@@ -1,7 +1,18 @@
+/*
+ * @Author: like 465420404@qq.com
+ * @Date: 2022-09-12 10:09:03
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-15 16:03:27
+ * @FilePath: /model-material-tool/src/pages/about/index.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
+ */
 import React from 'react';
 import { Avatar } from 'antd'
 import Icon from '@ant-design/icons';
 import rcuxSvg from '@/assets/images/anticons/rcux.svg';
+import banner from '@/assets/images/about-banner.png'
 import s from './index.less'
 
 interface AboutProps {
@@ -12,7 +23,7 @@ const participants = ['静静', 'reamey', 'like', 'Akiza', '铭键', '徐佳']
 
 const About: React.FC<AboutProps> = () => (
   <div className={s['about-content']}>
-    <div className={s['banner-box']} />
+    <div style={{ backgroundImage: `url(${banner})` }} className={s['banner-box']} />
     <div className={s['content-box']}>
       <div className={s['msg-box']}>
         <div className={s['title-msg']}>Plouto是什么?</div>

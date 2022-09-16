@@ -97,8 +97,9 @@ export const parseLocalVideo = (file) => new Promise<{ width: number, height: nu
 // eslint-disable-next-line no-unused-vars
 export const parseOnlineImage = (url) => new Promise((res: (info: Info) => void) => {
   const img = new Image()
+  debugger
   img.onload = () => {
-    res({ width: img.naturalWidth, height: img.naturalHeight })
+    res({ width: img?.naturalWidth, height: img?.naturalHeight })
   }
   img.src = url
 })

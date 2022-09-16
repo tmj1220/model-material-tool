@@ -8,6 +8,7 @@ import { useModelDispatchers, useModelEffectsLoading } from '@/store';
 import logo from '@/assets/images/icons/login-logo.svg';
 import EmailSvg from '@/assets/images/anticons/email.svg';
 import PasswordSvg from '@/assets/images/anticons/password.svg';
+import bg from '@/assets/images/login-background-image.png'
 import s from './index.less';
 
 interface LoginProps {}
@@ -36,7 +37,7 @@ const Login: React.FC<LoginProps> = () => {
   }, []);
 
   return (
-    <div className={s['login-root']}>
+    <div className={s['login-root']} style={{ backgroundImage: `url(${bg})` }}>
       {/* <aside /> */}
       <section className={s['login-form-box']}>
         <header>
