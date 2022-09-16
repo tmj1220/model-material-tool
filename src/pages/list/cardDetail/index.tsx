@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-12 19:52:30
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2022-09-16 21:22:29
  * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
  * @Description:
  *
@@ -40,7 +40,10 @@ const CardDetail: ForwardRefRenderFunction<
   IndexProps
 > = (props, ref) => {
   const { CancelToken } = axios;
-  const { getResourceList, updateCurSearchTag, updateCurCategory } = useModelDispatchers('list');
+  const {
+    getResourceList, updateCurSearchTag, updateCurCategory,
+    updateSearchKeyword, updateMaterialCategory,
+  } = useModelDispatchers('list');
   const { requestParams } = useModelState('list');
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
@@ -109,6 +112,8 @@ const CardDetail: ForwardRefRenderFunction<
   const onSearchTag = (id, tagName) => {
     setVisible(false);
     updateCurCategory(null);
+    updateSearchKeyword('')
+    updateMaterialCategory([])
     updateCurSearchTag([
       {
         tagId: id,

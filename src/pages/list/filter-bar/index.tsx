@@ -82,12 +82,13 @@ const FilterBar: React.FC<FilterBarProps> = () => {
                     <span>
                       {title}
                       {
-                        total && (
+                        total > 0 && (
                           <span style={{
                             borderRadius: 18,
                             background: '#DDDDDD',
                             padding: '2px 8px',
                             marginLeft: 4,
+                            color: '#333',
                           }}
                           >
                             {total}
@@ -104,23 +105,27 @@ const FilterBar: React.FC<FilterBarProps> = () => {
         {
           curSearchTag.length > 0
           && (
-          <div>
-            <span>标签</span>
-            {
-              curSearchTag.map((item) => (
-                <Tag key={item.tagId} tagName={item.tagName} />
-              ))
-            }
-          </div>
+            <div className={s['tag-box']}>
+              <span>标签</span>
+              {
+                curSearchTag.map((item) => (
+                  <Tag key={item.tagId} tagName={item.tagName} />
+                ))
+              }
+            </div>
           )
         }
-        <Tabs animated={false} onChange={onTabChange}>
-          {
-            materialCategory.map(({
-              categoryId, categoryName,
-            }) => <Tabs.TabPane key={categoryId} tab={categoryName} />)
-          }
-        </Tabs>
+        {
+          materialCategory.length > 0 && (
+          <Tabs animated={false} onChange={onTabChange}>
+            {
+              materialCategory.map(({
+                categoryId, categoryName,
+              }) => <Tabs.TabPane key={categoryId} tab={categoryName} />)
+            }
+          </Tabs>
+          )
+        }
       </div>
       <div className={s['right-box']}>
         排序

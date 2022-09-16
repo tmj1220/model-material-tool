@@ -97,6 +97,8 @@ const Header: React.FC<HeaderProps> = () => {
     updateIsGetMoreResources(true);
     // 清空标签检索
     updateCurSearchTag([]);
+    // 情况材质分类
+    updateMaterialCategory([])
     if (value) {
       navigate('/list');
       updateCurCategory(null);
