@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-06 18:02:22
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 00:22:43
+ * @LastEditTime: 2022-09-16 16:28:43
  * @FilePath: /model-material-tool/src/components/BigFileUpload/constant.ts
  * @Description:
  *

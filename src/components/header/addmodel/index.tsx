@@ -2,17 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-12 10:18:23
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-12 19:06:24
- * @FilePath: /model-material-tool/src/components/header/addmodel/index.tsx
- * @Description:
- *
- * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
- */
-/*
- * @Author: like 465420404@qq.com
- * @Date: 2022-08-27 18:32:25
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-12 10:49:40
+ * @LastEditTime: 2022-09-16 16:30:39
  * @FilePath: /model-material-tool/src/components/header/addmodel/index.tsx
  * @Description:
  *
