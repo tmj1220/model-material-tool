@@ -14,8 +14,23 @@ const UserLayout: React.FC<UserLayoutProps> = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { getUserInfo } = useModelDispatchers('user');
+  const { updateRequestParams } = useModelDispatchers('list')
 
-  // console.log('getToken', getToken());
+  useEffect(() => {
+    // 默认行个数
+    let sizeNum: number = 4
+    if (document.body.scrollWidth > 1440) {
+      // 大分辨率行个数
+      sizeNum = 6
+    }
+    // 根据窗口高度确定列个数
+    const lineNum = Math.round(document.body.scrollHeight / 280)
+    updateRequestParams({
+      pageNum: 1,
+      pageSize: sizeNum * lineNum,
+    })
+  })
+
   useEffect(
     () => {
       if (!getToken()) {
