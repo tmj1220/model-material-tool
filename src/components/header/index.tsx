@@ -15,7 +15,7 @@ import AddModel, { AddModelForwardRefOrops } from './addmodel';
 import { menuOptions } from './constant';
 import s from './index.less';
 
-interface HeaderProps {}
+interface HeaderProps { }
 
 const Header: React.FC<HeaderProps> = () => {
   const [curKeyword, setCurKeyword] = useState<string>('');
@@ -32,7 +32,7 @@ const Header: React.FC<HeaderProps> = () => {
     updateIsGetMoreResources,
     updateCurSearchTag,
   } = useModelDispatchers('list');
-  const { requestParams, curCategory } = useModelState('list');
+  const { requestParams, defaultRequestParams, curCategory } = useModelState('list');
   const { name } = useModelState('user');
   // 切换tab
   const onTabChange = async (key) => {
@@ -52,14 +52,16 @@ const Header: React.FC<HeaderProps> = () => {
       if (key === '2') {
         await getMaterialCategory();
         await getResourceList({
-          pageNum: 1,
+          ...defaultRequestParams,
           pageSize: requestParams.pageSize,
+          direction: requestParams.direction,
           resourceType: key,
           materialCategoryId: null,
         });
       } else {
         getResourceList({
-          pageNum: 1,
+          ...defaultRequestParams,
+          direction: requestParams.direction,
           pageSize: requestParams.pageSize,
           resourceType: key,
         });
@@ -100,19 +102,18 @@ const Header: React.FC<HeaderProps> = () => {
     // 情况材质分类
     updateMaterialCategory([])
     if (value) {
-      navigate('/list');
       updateCurCategory(null);
       getResourceByKeyword({
-        pageNum: 1,
-        pageSize: requestParams.pageSize,
+        ...defaultRequestParams,
+        direction: requestParams.direction,
         resourceType: null,
         keyword: value,
       });
     } else {
       updateCurCategory(menuOptions[0].key);
       getResourceList({
-        pageNum: 1,
-        pageSize: requestParams.pageSize,
+        ...defaultRequestParams,
+        direction: requestParams.direction,
         resourceType: menuOptions[0].key as any,
       });
     }

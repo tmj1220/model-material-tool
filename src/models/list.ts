@@ -3,6 +3,7 @@ import { getMaterialCategory, getResource, getResourceByKeyword } from '@/servic
 
 interface DefaultState {
   requestParams: IResourceParams
+  defaultRequestParams: IResourceParams
   curCategory: 1 | 2 | 3 | null // 1:模型 2材质 3关于
   materialCategory: Material[] // 材质下的分类
   searchKeyword: string // 搜索关键字
@@ -15,6 +16,14 @@ const defaultState: DefaultState = {
   requestParams: {
     pageNum: 1,
     pageSize: 10,
+    order: 'gmt_modified',
+    direction: 'desc',
+  },
+  defaultRequestParams: {
+    pageNum: 1,
+    pageSize: 10,
+    order: 'gmt_modified',
+    direction: 'desc',
   },
   curCategory: 1, // 1:模型 2材质
   materialCategory: [], // 材质下的分类

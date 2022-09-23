@@ -44,7 +44,7 @@ const CardDetail: ForwardRefRenderFunction<
     getResourceList, updateCurSearchTag, updateCurCategory,
     updateSearchKeyword, updateMaterialCategory,
   } = useModelDispatchers('list');
-  const { requestParams } = useModelState('list');
+  const { requestParams, defaultRequestParams } = useModelState('list');
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
@@ -122,7 +122,8 @@ const CardDetail: ForwardRefRenderFunction<
     ]);
     navigate('/list');
     getResourceList({
-      pageNum: 1,
+      ...defaultRequestParams,
+      direction: requestParams.direction,
       pageSize: requestParams.pageSize,
       tagId: id,
     });
