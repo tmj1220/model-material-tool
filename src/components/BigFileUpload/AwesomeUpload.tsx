@@ -33,6 +33,7 @@ import { fs } from '../ModelViewer/zip-fs.js';
 import DrageUpload from '@/assets/images/anticons/drage-upload.svg';
 import Upload1Svg from '@/assets/images/anticons/upload1.svg';
 import Icon from '@ant-design/icons';
+import { size } from 'lodash';
 const isObject = (v) => Object.prototype.toString.call(v) === '[object Object]';
 const isArray = (v) => Object.prototype.toString.call(v) === '[object Array]';
 
@@ -226,9 +227,10 @@ const RcUpload = (
   const fileList2Value = () => {
     const list = fileListRef.current
       .filter((item) => item.status === 'uploaded')
-      .map(({ ossFile, modelType }) => ({
+      .map(({ ossFile, modelType,size }) => ({
         resourceFileId: ossFile.fileId,
         modelType,
+        fileSize:size
       }));
     return limit > 1 ? list : list[0];
   };
@@ -296,7 +298,6 @@ const RcUpload = (
   }, []);
   const beforeUpload = useCallback(
     async (file: RCFile, files:RCFile[]) => {
-      debugger
       if (beforeUploadCheck) {
         const tmpStatus = await beforeUploadCheck(file, files);
         if (!tmpStatus) {
@@ -564,7 +565,7 @@ const RcUpload = (
                   <Icon component={DrageUpload} />
                 </div>
                 <div className="upload-text">点击或者拖拽上传</div>
-                <div className="upload-hint">支持上传格式：glb/gltf/c4d/mb,glb/gltf支持预览</div>
+                <div className="upload-hint">支持上传格式：glb/gltf/c4d/mb/fbx,glb/gltf支持预览</div>
               </div>
             </div>
           )}

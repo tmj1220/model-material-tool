@@ -6,6 +6,8 @@ import { UploadFile } from 'antd/es/upload/interface';
 import DrageUpload from '@/assets/images/anticons/drage-upload.svg';
 import Delet from '@/assets/images/anticons/delet.svg';
 import ImgCrop from 'antd-img-crop';
+import { useRef, useState } from 'react';
+import ColorThief from 'colorthief'
 import s from './index.less';
 import 'antd/es/slider/style';
 
@@ -23,6 +25,9 @@ const DraggerUpload = ({
   size = 2,
   ...props
 }: DraggerUploadProps) => {
+  const [img, setimg] = useState<string>(null);
+  const [imgColor, setimgColor] = useState('');
+  const imgRef = useRef(null);
   const defaultProps: DraggerUploadProps = {
     name: 'file',
     multiple: true,
@@ -34,6 +39,7 @@ const DraggerUpload = ({
     },
     action: '/api/file/upload',
     beforeUpload(file) {
+      // 处理格式
       const accept = props.accept.split(',');
       let isAcceptType = false;
       if (!accept.includes(file.type)) {
@@ -45,6 +51,15 @@ const DraggerUpload = ({
       const sizeLength = file.size / 1024 / 1024 < size;
       if (!sizeLength) {
         message.error(tips);
+      }
+      // 处理背景色
+      const x = new FileReader();
+      x.readAsDataURL(file);
+      x.onloadend = function (e) {
+        console.log(e)
+        if (typeof e.target.result === 'string') {
+          setimg(e.target.result);
+        }
       }
       return isAcceptType && sizeLength;
     },
@@ -65,6 +80,7 @@ const DraggerUpload = ({
           thumbUrl: info.file.response.data.fileUrl,
           percent,
           fileId: info.file.response.data.fileId,
+          thumbRgb: imgColor,
         },
       ]);
     } else if (status === 'uploading') {
@@ -102,57 +118,79 @@ const DraggerUpload = ({
     }
   };
   return (
-    <ImgCrop
-      aspect={332 / 206}
-      rotate
-    >
-      <Dragger
-        fileList={value}
-        onChange={uploadChange}
-        {...defaultProps}
-        {...props}
+    <>
+      <ImgCrop
+        aspect={332 / 206}
+        rotate
       >
-        {value.length === 0 ? (
-          <div className={s['upload-add-box']}>
-            <p className={s['upload-icon']}>
-              <Icon component={DrageUpload} />
-            </p>
-            <p className={s['upload-text']}>点击或者拖拽上传</p>
-            <p className={s['upload-hint']}>{tips}</p>
-          </div>
-        ) : (
-          <div>
-            {value[0].status === 'done' ? (
-              <>
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onChange([]);
-                  }}
-                  className={s['delet-button']}
-                >
-                  <Icon component={Delet} />
+        <Dragger
+          fileList={value}
+          onChange={uploadChange}
+          {...defaultProps}
+          {...props}
+        >
+          {value.length === 0 ? (
+            <div className={s['upload-add-box']}>
+              <p className={s['upload-icon']}>
+                <Icon component={DrageUpload} />
+              </p>
+              <p className={s['upload-text']}>点击或者拖拽上传</p>
+              <p className={s['upload-hint']}>{tips}</p>
+            </div>
+          ) : (
+            <div>
+              {value[0].status === 'done' ? (
+                <>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onChange([]);
+                    }}
+                    className={s['delet-button']}
+                  >
+                    <Icon component={Delet} />
+                  </div>
+                  <div
+                    style={{ backgroundImage: `url(${value[0].url})` }}
+                    className={s['preview-image']}
+                  />
+                </>
+              ) : (
+                <div className={s['upload-progress']}>
+                  <span>上传中</span>
+                  <Progress
+                    trailColor="#E6E6E6"
+                    size="small"
+                    showInfo={false}
+                    percent={progressStep(value[0])}
+                  />
                 </div>
-                <div
-                  style={{ backgroundImage: `url(${value[0].url})` }}
-                  className={s['preview-image']}
-                />
-              </>
-            ) : (
-              <div className={s['upload-progress']}>
-                <span>上传中</span>
-                <Progress
-                  trailColor="#E6E6E6"
-                  size="small"
-                  showInfo={false}
-                  percent={progressStep(value[0])}
-                />
-              </div>
-            )}
-          </div>
-        )}
-      </Dragger>
-    </ImgCrop>
+              )}
+            </div>
+          )}
+        </Dragger>
+      </ImgCrop>
+      {
+        img && (
+        <img
+          style={{ display: 'none' }}
+          ref={imgRef}
+          src={img}
+          alt=""
+          onLoad={() => {
+            console.log('onLoad');
+            const c = new ColorThief()
+            console.log(c.getColor(imgRef.current))
+            try {
+              setimgColor(`rgb(${String(c.getColor(imgRef.current))})`)
+            } catch (error) {
+              setimgColor('rgb(0,0,0)')
+            }
+          }}
+        />
+        )
+      }
+    </>
   );
 };
 export default DraggerUpload;

@@ -2,7 +2,6 @@
 import React, {
   forwardRef, useImperativeHandle, useRef, useState, useMemo,
 } from 'react'
-import ColorThief from 'colorthief'
 import type { ForwardRefRenderFunction } from 'react'
 import s from './index.less'
 
@@ -17,6 +16,7 @@ export interface ImageProps {
   crossorigin?:string
   onLoad?:Function
   onError?:Function
+  thumbRgb?:string
 }
 
 type Status = 'unload' | 'loading' |'success'|'fail'
@@ -27,6 +27,7 @@ interface ImageInstance {
 }
 
 const Image:ForwardRefRenderFunction<ImageInstance, ImageProps> = ({
+  thumbRgb = '#cccccc',
   src,
   fallback = undefined,
   alt,
@@ -39,7 +40,6 @@ const Image:ForwardRefRenderFunction<ImageInstance, ImageProps> = ({
   onError = () => {},
 }, ref) => {
   const [status, setStatus] = useState<Status>('unload')
-  const [rgb, setRgb] = useState([0, 0, 0])
   const imgRef = useRef<HTMLImageElement>()
 
   useImperativeHandle(
@@ -74,7 +74,7 @@ const Image:ForwardRefRenderFunction<ImageInstance, ImageProps> = ({
     <div
       className={s['img-root']}
       style={{
-        background: `rgb(${rgb})`,
+        background: thumbRgb ?? '#cccccc',
       }}
     >
       {!!placeholder && ['loading', 'unload'].includes(status) && placeholder}
@@ -83,11 +83,7 @@ const Image:ForwardRefRenderFunction<ImageInstance, ImageProps> = ({
         ref={imgRef}
         loading="lazy"
         onLoad={() => {
-          // console.log('onLoad');
           setStatus('success')
-          const c = new ColorThief()
-          // setRgb((c.getPalette(imgRef.current))[0])
-          setRgb(c.getColor(imgRef.current))
           onLoad()
         }}
         onError={() => {

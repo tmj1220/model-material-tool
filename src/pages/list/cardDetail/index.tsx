@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
- * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2022-09-16 21:22:29
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-25 12:38:31
  * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
  * @Description:
  *
@@ -146,7 +146,7 @@ const CardDetail: ForwardRefRenderFunction<
       visible={visible}
     >
       <div className={s['close-icon']} onClick={onClose}>
-        <Icon component={closeSvg} style={{ fontSize: 36 }} />
+        <Icon component={closeSvg} style={{ fontSize: 36, color: '#fff' }} />
       </div>
       {loading ? (
         <Skeleton active />

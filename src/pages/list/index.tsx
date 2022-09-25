@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-09 19:24:28
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-09 19:33:05
+ * @LastEditTime: 2022-09-25 14:42:01
  * @FilePath: /model-material-tool/src/pages/list/index.tsx
  * @Description:
  *
@@ -70,7 +70,7 @@ const SourceList: React.FC<ListProps> = () => {
           hasChildren
           scrollThreshold={0.1}
           loader={(isLoading || isKeywordLoading)
-            ? <Skeleton avatar paragraph={{ rows: 1 }} active /> : null}
+            ? <Skeleton paragraph={{ rows: 5 }} active /> : null}
           endMessage={<Divider plain>所有的都在这儿了🤐</Divider>}
           scrollableTarget="scrollableDiv"
         >

@@ -62,11 +62,8 @@ const Login: React.FC<LoginProps> = () => {
                     {
                       required: true,
                       message: '请输入邮箱',
-                    },
-                    {
-                      max: 18,
-                      min: 4,
-                      message: '邮箱长度限制在4-18个字符以内',
+                      type: 'string',
+                      whitespace: true,
                     },
                   ]}
                 >

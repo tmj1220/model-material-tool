@@ -74,17 +74,15 @@ instance.interceptors.response.use((response) => {
   ) {
     if (data.code === 200) {
       return data.data
-    } if (data.code === 10002) {
+    }
+    if (data.code === 50001) {
       Modal.warn({
         title: getTips('login.invalid'),
         onOk: redirectLogin,
       })
       throw new Error('loginInvalid')
     }
-    if (data.code === 50001) {
-      redirectLogin()
-    }
-    throw new Error(data.msg)
+    throw new Error(data.message)
   }
 
   /**
