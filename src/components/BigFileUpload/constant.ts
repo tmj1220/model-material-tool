@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-06 18:02:22
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-16 16:28:43
+ * @LastEditTime: 2022-09-21 19:03:59
  * @FilePath: /model-material-tool/src/components/BigFileUpload/constant.ts
  * @Description:
  *
@@ -41,4 +41,4 @@ export const DEFAULT_NEED_CHECK_IMG_RATIO = true
 export const DEFAULT_NEED_SORT = false
 export const DEFAULT_IMG_RATIO = 16 / 9
 export const DEFAULT_LIMIT = 5
-export const DEFAULT_ACCEPTS: Accept[] = ['.zip', '.gltf', '.glb','.fbx','.mb']
+export const DEFAULT_ACCEPTS: Accept[] = ['.gltf', '.glb','.fbx','.mb','.c4d']//'.zip'

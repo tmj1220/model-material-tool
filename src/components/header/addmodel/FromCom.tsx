@@ -31,6 +31,7 @@ interface ResourceCategory {
     categoryName: string
 }
 const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
+  console.log(initialValue)
   const [loading, setloading] = useState<boolean>(false);
   const [resourceCategory, setResourceCategory] = useState<ResourceCategory[]>([]);
   const [formData, setFormData] = useState<Addmodelfrom>(null)
@@ -100,7 +101,7 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
             />
           </Form.Item>
           {
-            (formData?.resourceType === 2) && (
+            (formData?.resourceType === 2 || initialValue?.resourceType === 2) && (
             <Form.Item
               label="材质分类"
               name="resourceCategoryId"
