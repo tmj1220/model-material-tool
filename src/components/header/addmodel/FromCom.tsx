@@ -66,9 +66,9 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
     console.log(file);
     console.log(fileList);
     // 已有的数据
-    const defalutType = formData.resourceFiles.map((item) => item.modelType);
+    const defalutType = formData?.resourceFiles?.map((item) => item.modelType) || [];
     // 上传选的数据
-    const uploadType = fileList.map((item) => item.name.substring(item.name.lastIndexOf('.')));
+    const uploadType = fileList?.map((item) => item?.name.substring(item?.name.lastIndexOf('.'))) || [];
 
     const duplicates = [];
 
