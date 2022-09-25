@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-25 12:38:31
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2022-09-25 16:48:29
  * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
  * @Description:
  *
@@ -17,6 +17,7 @@ import React, {
 import Icon from '@ant-design/icons';
 import closeSvg from '@/assets/images/anticons/close.svg';
 import downloadSvg from '@/assets/images/anticons/download.svg';
+import viewSvg from '@/assets/images/anticons/view.svg';
 import type { ForwardRefRenderFunction } from 'react';
 import {
   Drawer, Skeleton, Avatar, Button, Progress,
@@ -31,8 +32,8 @@ import axios from 'axios';
 import ModelDown, { ForwardRefOrops } from '@/components/ModelDown';
 import s from './index.less';
 
-interface IndexProps {}
-type ShowType = 'model' | 'img';
+interface IndexProps { }
+type ShowType = 'model' | 'img' | 'thumbImage';
 const CardDetail: ForwardRefRenderFunction<
   {
     onShowDrawer: (data) => void;
@@ -50,10 +51,33 @@ const CardDetail: ForwardRefRenderFunction<
   const [visible, setVisible] = useState<boolean>(false);
   const [cardDetail, setCardDetail] = useState<BaseSource>(null);
   const [modelFile, setModelFile] = useState<File>(null);
+  const [modelData, setModelData] = useState<InfoForDownload>(null);
   const [showType, setShowType] = useState<ShowType>(null);
   const [percent, setpercent] = useState<number>(0);
   const requestsRef = useRef(null);
   const modelDownRef = useRef<ForwardRefOrops>(null);
+  /** @description 获取模型数据 */
+  const getModalData = (showModelData) => {
+    setShowType('model');
+    axios(showModelData.resourceFileUrl, {
+      responseType: 'blob',
+      onDownloadProgress(progressEvent) {
+        setpercent(
+          Number(
+            ((progressEvent.loaded / progressEvent.total) * 100).toFixed(0),
+          ),
+        );
+      },
+      cancelToken: new CancelToken((c) => {
+        requestsRef.current = { abort: c };
+      }),
+    }).then(({ data }) => {
+      if (data instanceof Blob) {
+        const file = new File([data], `${showModelData.key}.${showModelData.suffix}`);
+        setModelFile(file);
+      }
+    });
+  }
   const onShowDrawer = async (resourceId) => {
     let showModelData: InfoForDownload = null;
     setVisible(true);
@@ -74,26 +98,15 @@ const CardDetail: ForwardRefRenderFunction<
       }
     });
     if (showModelData) {
-      setShowType('model');
-      axios(showModelData.resourceFileUrl, {
-        responseType: 'blob',
-        onDownloadProgress(progressEvent) {
-          setpercent(
-            Number(
-              ((progressEvent.loaded / progressEvent.total) * 100).toFixed(0),
-            ),
-          );
-        },
-        cancelToken: new CancelToken((c) => {
-          requestsRef.current = { abort: c };
-        }),
-      }).then(({ data }) => {
-        if (data instanceof Blob) {
-          const file = new File([data], `${showModelData.key}.${showModelData.suffix}`);
-          setModelFile(file);
-        }
-      });
+      setModelData(showModelData);
+      /** @description 模型超过5mb，显示预览图，点击预览查看模型 */
+      if (showModelData.resourceFileSize > 5 * 1024) {
+        setShowType('thumbImage');
+      } else {
+        getModalData(showModelData)
+      }
     } else {
+      setModelData(null);
       setShowType('img');
     }
   };
@@ -153,11 +166,31 @@ const CardDetail: ForwardRefRenderFunction<
       ) : (
         <div className={s['drawer-content']}>
           <div className={s['img-box']}>
-            {showType === 'img' && (
-              <img
-                alt={cardDetail?.resourceName}
-                src={cardDetail?.resourceThumbUrl}
-              />
+            {(showType === 'img' || showType === 'thumbImage') && (
+              <div className={s['image-box']}>
+                <img
+                  alt={cardDetail?.resourceName}
+                  src={cardDetail?.resourceThumbUrl}
+                />
+                {
+                  showType === 'thumbImage'
+                  && <div className={s.wrap} />
+                }
+                {
+                  showType === 'thumbImage'
+                  && (
+                    <Button
+                      className={s['view-btn']}
+                      onClick={() => getModalData(modelData)}
+                      type="primary"
+                      size="middle"
+                    >
+                      <Icon component={viewSvg} />
+                      点击预览模型
+                    </Button>
+                  )
+                }
+              </div>
             )}
             {showType === 'model'
               && (modelFile ? (

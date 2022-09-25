@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-25 12:19:08
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2022-09-25 16:18:44
  * @FilePath: /model-material-tool/src/types/list.d.ts
  * @Description:
  *
@@ -30,6 +30,7 @@ declare interface InfoForDownload{
   resourceFileUrl:string
   suffix:string
   key:string
+  resourceFileSize?: number
 }
 declare interface BaseSource {
   gmtModified:string

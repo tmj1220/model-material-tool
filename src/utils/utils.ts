@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-26 12:06:58
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-14 15:59:06
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2022-09-25 15:30:53
  * @FilePath: /model-material-tool/src/utils/utils.ts
  * @Description:
  *
@@ -12,8 +12,8 @@
 import jsCookie from 'js-cookie'
 
 export const hasOwnProperties = (
-  obj:Object,
-  keys:Array<string|number>,
+  obj: Object,
+  keys: Array<string | number>,
 ) => !keys.some((key) => !Object.prototype.hasOwnProperty?.call(obj, key))
 
 export const getLanguage = () => {
@@ -94,4 +94,14 @@ export const commonReg = {
   importabilityChar: /^[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5|a-zA-Z\u4e00-\u9fa50-9!-~]+$/,
   importabilityCharAnother: /^(\ud83c[\udf00-\udfff])|(\ud83d[\udc00-\ude4f\ude80-\udeff])|[\u2600-\u2B55]/g,
   emoj: /(\ud83c[\udf00-\udfff])|(\ud83d[\udc00-\ude4f\ude80-\udeff])|[\u2600-\u2B55]/,
+}
+/** @name kb换算成mb，gb，tb */
+export const figureFileSize = (size) => { // 把字节转换成正常文件大小
+  if (!size) return '';
+  const num = 1024.00; // byte
+  if (size < num) { return `${size}B`; }
+  if (size < num ** 2) { return `${(size / num).toFixed(2)}KB`; } // kb
+  if (size < num ** 3) { return `${(size / num ** 2).toFixed(2)}MB`; } // M
+  if (size < num ** 4) { return `${(size / num ** 3).toFixed(2)}G`; } // G
+  return `${(size / num ** 4).toFixed(2)}T`; // T
 }

@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-09 19:24:28
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-25 14:42:01
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2022-09-25 16:54:31
  * @FilePath: /model-material-tool/src/pages/list/index.tsx
  * @Description:
  *
@@ -17,7 +17,8 @@ import {
 } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useModelDispatchers, useModelState, useModelEffectsLoading } from '@/store'
-import downloadSvg from '@/assets/images/icons/download.svg'
+import Icon from '@ant-design/icons';
+import downloadSvg from '@/assets/images/anticons/download.svg'
 import ModelDown, { ForwardRefOrops } from '@/components/ModelDown';
 import FilterBar from './filter-bar'
 import Card from './card'
@@ -82,15 +83,14 @@ const SourceList: React.FC<ListProps> = () => {
             renderItem={(item) => (
               <List.Item key={item.resourceId}>
                 <Card {...item}>
-                  <div className={s['action-box']}>
-                    <img
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        modelDownRef.current.onShowDrawer(item.resourceId);
-                      }}
-                      src={downloadSvg}
-                      alt="dowanload.png"
-                    />
+                  <div
+                    className={s['action-box']}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      modelDownRef.current.onShowDrawer(item.resourceId);
+                    }}
+                  >
+                    <Icon component={downloadSvg} />
                   </div>
                 </Card>
               </List.Item>
