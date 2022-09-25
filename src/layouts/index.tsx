@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useOutlet, useNavigate, useLocation } from 'react-router-dom'
 import { getToken } from '@/utils/utils';
-import { useModelDispatchers } from '@/store';
+import { useModelState, useModelDispatchers } from '@/store';
 import Header from '@/components/header'
 import jsCookie from 'js-cookie'
 import s from './index.less'
@@ -14,6 +14,7 @@ const UserLayout: React.FC<UserLayoutProps> = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { getUserInfo } = useModelDispatchers('user');
+  const { requestParams } = useModelState('list')
   const { updateRequestParams } = useModelDispatchers('list')
 
   useEffect(() => {
@@ -26,10 +27,10 @@ const UserLayout: React.FC<UserLayoutProps> = () => {
     // 根据窗口高度确定列个数
     const lineNum = Math.round(document.body.scrollHeight / 280)
     updateRequestParams({
-      pageNum: 1,
+      ...requestParams,
       pageSize: sizeNum * lineNum,
     })
-  })
+  }, [])
 
   useEffect(
     () => {

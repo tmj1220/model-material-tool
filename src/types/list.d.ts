@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-16 15:34:33
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2022-09-21 15:15:32
  * @FilePath: /model-material-tool/src/types/list.d.ts
  * @Description:
  *
@@ -17,6 +17,8 @@ declare interface IResourceParams {
   materialCategoryId?: string // 材质分类
   tagId?: string // 标签id
   mine?: number // 是否获取自己上传的资源，1获取自己的
+  order?: string // 排序:gmt_modified根据修改时间排序,score 根据关联性排序
+  direction?: string // desc倒序 asc正序
 }
 declare interface ITagInfo {
   tagId: string

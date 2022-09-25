@@ -4,7 +4,7 @@ import { useModelDispatchers, useModelState } from '@/store'
 import { menuOptions } from '@/components/header/constant'
 import { getResourceByKeyword as getResourceByKeywordAmount } from '@/services/list'
 import Tag from '@/components/tag/index';
-import { fitlerOptions } from '../constants'
+import { filterOptions } from '../constants'
 import s from './index.less'
 
 interface FilterBarProps { }
@@ -31,6 +31,22 @@ const FilterBar: React.FC<FilterBarProps> = () => {
       pageNum: 1,
       resourceType: key === 'null' ? '' : key,
     })
+  }
+  // 排序切换
+  const onFilterSelect = (value) => {
+    if (searchKeyword) {
+      getResourceByKeyword({
+        ...requestParams,
+        pageNum: 1,
+        direction: value,
+      })
+    } else {
+      getResourceList({
+        ...requestParams,
+        pageNum: 1,
+        direction: value,
+      })
+    }
   }
 
   useEffect(() => {
@@ -117,19 +133,19 @@ const FilterBar: React.FC<FilterBarProps> = () => {
         }
         {
           materialCategory.length > 0 && (
-          <Tabs animated={false} onChange={onTabChange}>
-            {
-              materialCategory.map(({
-                categoryId, categoryName,
-              }) => <Tabs.TabPane key={categoryId} tab={categoryName} />)
-            }
-          </Tabs>
+            <Tabs animated={false} onChange={onTabChange}>
+              {
+                materialCategory.map(({
+                  categoryId, categoryName,
+                }) => <Tabs.TabPane key={categoryId} tab={categoryName} />)
+              }
+            </Tabs>
           )
         }
       </div>
       <div className={s['right-box']}>
         排序
-        <Select options={fitlerOptions} defaultValue="lastest" bordered={false} />
+        <Select options={filterOptions} defaultValue="desc" bordered={false} onSelect={onFilterSelect} />
       </div>
     </div>
   )

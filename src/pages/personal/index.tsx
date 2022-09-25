@@ -23,7 +23,9 @@ interface ListProps {}
 
 const SourceList: React.FC<ListProps> = () => {
   const { getResourceList } = useModelDispatchers('list');
-  const { requestParams, resources, isGetMoreResources } = useModelState('list');
+  const {
+    requestParams, defaultRequestParams, resources, isGetMoreResources,
+  } = useModelState('list');
   const { name } = useModelState('user');
   const { getResourceList: isLoading } = useModelEffectsLoading('list');
   const containerRef = useRef<HTMLDivElement>();
@@ -39,10 +41,10 @@ const SourceList: React.FC<ListProps> = () => {
   // 获取自己上传的资源
   const getResource = () => {
     getResourceList({
-      pageNum: 1,
+      ...defaultRequestParams,
       pageSize: requestParams.pageSize,
       mine: 1,
-    } as any);
+    });
   };
 
   // 删除资源
