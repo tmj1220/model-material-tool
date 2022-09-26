@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2022-09-25 15:54:25
+ * @LastEditTime: 2022-09-26 20:18:01
  * @FilePath: /model-material-tool/src/components/ModelDown/index.tsx
  * @Description:
  *
@@ -17,11 +17,11 @@ import React, {
 import { figureFileSize } from '@/utils/utils'
 import downloadSvg from '@/assets/images/anticons/download.svg'
 import c4dSvg from '@/assets/images/anticons/c4d.svg'
-import fbxSvg from '@/assets/images/anticons/fbx.svg'
+import fbxSvg from '@/assets/images/fbx.png'
 import gltfSvg from '@/assets/images/anticons/gltf.svg'
 import maxSvg from '@/assets/images/anticons/max.svg'
 import mbSvg from '@/assets/images/anticons/mb.svg'
-import objSvg from '@/assets/images/anticons/obj.svg'
+import objSvg from '@/assets/images/obj.png'
 import s from './index.less';
 
 interface IndexProps { }
@@ -63,9 +63,9 @@ const CardDetail: ForwardRefRenderFunction<
       case '.glb':
         return <Icon component={gltfSvg} />
       case '.fbx':
-        return <Icon component={fbxSvg} />
+        return <img src={fbxSvg} alt="" />
       case '.obj':
-        return <Icon component={objSvg} />
+        return <img src={objSvg} alt="" />
       default:
         return null
     }
