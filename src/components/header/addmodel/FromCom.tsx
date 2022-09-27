@@ -51,7 +51,6 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
       thumbRgb: values.thumb[0]?.thumbRgb,
       resourceId: initialValue?.resourceId,
     };
-
     try {
       await addModel(sendData);
       message.success(`${initialValue?.resourceId ? '修改成功' : '发布成功'}`);
@@ -66,9 +65,11 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
     console.log(file);
     console.log(fileList);
     // 已有的数据
-    const defalutType = formData?.resourceFiles?.map((item) => item.modelType) || [];
+    const defalutType = formData?.resourceFiles?.map(
+      (item) => item.modelType.toLocaleLowerCase(),
+    ) || [];
     // 上传选的数据
-    const uploadType = fileList?.map((item) => item?.name.substring(item?.name.lastIndexOf('.'))) || [];
+    const uploadType = fileList?.map((item) => item?.name.substring(item?.name.lastIndexOf('.')).toLocaleLowerCase()) || [];
 
     const duplicates = [];
 

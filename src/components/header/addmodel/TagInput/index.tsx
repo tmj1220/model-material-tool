@@ -111,7 +111,7 @@ const index: React.FC<TagInputProps> = ({ value = [], onChange }) => {
         <Spin spinning={loading}>
           <div className={s['tags-box']}>
             <Input
-              maxLength={5}
+              maxLength={10}
               style={{ height: 36, width: '100%' }}
               placeholder="新建标签"
               ref={inputRef}

@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
  * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-25 15:01:25
+ * @LastEditTime: 2022-09-27 10:11:24
  * @FilePath: /model-material-tool/src/pages/list/card/index.tsx
  * @Description:
  *
@@ -12,7 +12,6 @@
 import React, { useRef } from 'react';
 import { useModelState } from '@/store';
 import Image from '@/components/image';
-import { menuOptions } from '@/components/header/constant';
 import Tag from '@/components/tag/index';
 import { Tooltip } from 'antd';
 import CardDetail from '../cardDetail/index';
@@ -26,11 +25,10 @@ const SourceCard: React.FC<SourceCardProps> = ({
   resourceId,
   resourceName,
   resourceThumbUrl,
-  resourceType,
-  categoryName,
   tagInfoList,
   children,
   resourceThumbRgb,
+  modelTypes,
 }) => {
   const { searchKeyword } = useModelState('list');
   const containerRef = useRef<HTMLDivElement>();
@@ -79,14 +77,7 @@ const SourceCard: React.FC<SourceCardProps> = ({
           <div className={s['desc-text-box']}>
             <div className={s['desc-title']}>{highlightName()}</div>
             <div className={s['desc-other']}>
-              {menuOptions.find((m) => m.key === resourceType).title}
-              {categoryName && (
-              <span>
-                {' '}
-                /
-                {categoryName}
-              </span>
-              )}
+              {modelTypes}
               {tagInfoList
                 && tagInfoList.length > 0
                 && tagInfoList.map((item) => (

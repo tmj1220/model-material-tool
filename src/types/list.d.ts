@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
- * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2022-09-25 16:18:44
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-27 10:11:15
  * @FilePath: /model-material-tool/src/types/list.d.ts
  * @Description:
  *
@@ -47,7 +47,8 @@ declare interface BaseSource {
   tagInfoList?: ITagInfo[]
   infoForDownload:Map<string, InfoForDownload>
   children?: React.ReactNode;
-  resourceThumbRgb?:string
+  resourceThumbRgb?:string;
+  modelTypes:string;
 }
 
 declare interface Material {

@@ -118,7 +118,7 @@ const RcUpload = (
     return arr.map((ossFile, i) => {
       console.log('ossFile', ossFile);
 
-      const { resourceFileId,modelType, resourceFileUrl } = ossFile;
+      const { resourceFileId,modelType, resourceFileUrl,fileSize } = ossFile;
       // const suffix = fileName.slice(fileName.lastIndexOf('.'), fileName.length)
       return {
         modelType,
@@ -127,6 +127,7 @@ const RcUpload = (
         url: resourceFileUrl,
         status: 'uploaded',
         uid: getUid(i),
+        size:fileSize,
         ossFile:{
           fileId:resourceFileId,
           fileUrl:resourceFileUrl
