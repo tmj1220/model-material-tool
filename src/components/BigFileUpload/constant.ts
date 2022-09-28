@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-06 18:02:22
- * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2022-09-28 15:38:44
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-28 18:56:38
  * @FilePath: /model-material-tool/src/components/BigFileUpload/constant.ts
  * @Description:
  *
@@ -40,5 +40,5 @@ export const DEFAULT_MERGE_FILE_URL = '/file/large/merge'
 export const DEFAULT_NEED_CHECK_IMG_RATIO = true
 export const DEFAULT_NEED_SORT = false
 export const DEFAULT_IMG_RATIO = 16 / 9
-export const DEFAULT_LIMIT = 7
-export const DEFAULT_ACCEPTS: Accept[] = ['.gltf', '.glb','.fbx','.mb','.c4d', '.obj', '.max']//'.zip'
+export const DEFAULT_LIMIT = 8
+export const DEFAULT_ACCEPTS: Accept[] = ['.gltf', '.glb','.fbx','.mb','.c4d', '.obj', '.max','.zip']//'.zip'

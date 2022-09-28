@@ -328,7 +328,7 @@ const RcUpload = (
       if (suffix === '.zip') {
         const modelType = await handlModelFile(file, accepts);
         if (!modelType) {
-          message.error(`zip文件中须包含 gltf、glb、fbx、mb中任意一种文件类型`);
+          message.error(`zip文件中须包含 gltf、glb、fbx、mb、c4d、obj、max中任意一种文件类型`);
           return Promise.reject();
         } else {
           return Promise.resolve(modelType);

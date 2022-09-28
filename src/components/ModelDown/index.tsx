@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
- * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2022-09-26 20:18:01
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-28 18:55:17
  * @FilePath: /model-material-tool/src/components/ModelDown/index.tsx
  * @Description:
  *
@@ -33,13 +33,23 @@ const CardDetail: ForwardRefRenderFunction<
   IndexProps
 > = (props, ref) => {
   const [visible, setVisible] = useState<boolean>(false);
-  const [infoData, setInfoData] = useState<BaseSource>(null);
+  const [infoData, setInfoData] = useState<any[]>([]);
   const onShowDrawer = async (data) => {
+    // 按type的指定顺序排序
+    const order = ['.c4d', '.mb', '.max', '.fbx', '.obj', '.glb', '.gltf'];
     if (data instanceof Object) {
-      setInfoData(data);
+      const info = Object.keys(data.infoForDownload).map((item) => data.infoForDownload[item])
+      info.sort((star, next) => order.indexOf(star.modelType) - order.indexOf(next.modelType))
+      setInfoData(info);
     } else {
-      const res: BaseSource = await getResourceDetail(data);
-      setInfoData(res);
+      try {
+        const res: BaseSource = await getResourceDetail(data);
+        const info = Object.keys(res.infoForDownload).map((item) => res.infoForDownload[item])
+        info.sort((star, next) => order.indexOf(star.modelType) - order.indexOf(next.modelType))
+        setInfoData(info);
+      } catch (error) {
+        setInfoData([]);
+      }
     }
     //
 
@@ -59,13 +69,13 @@ const CardDetail: ForwardRefRenderFunction<
         return <Icon component={mbSvg} />
       case '.max':
         return <Icon component={maxSvg} />
-      case '.gltf':
-      case '.glb':
-        return <Icon component={gltfSvg} />
       case '.fbx':
         return <img src={fbxSvg} alt="" />
       case '.obj':
         return <img src={objSvg} alt="" />
+      case '.gltf':
+      case '.glb':
+        return <Icon component={gltfSvg} />
       default:
         return null
     }
@@ -85,22 +95,22 @@ const CardDetail: ForwardRefRenderFunction<
       width={416}
       footer=""
     >
-      {infoData && Object.keys(infoData.infoForDownload).map((item) => (
-        <p key={item} className={s['model-download-item']}>
+      {infoData && infoData.map((item) => (
+        <p key={item.resourceFileUrl} className={s['model-download-item']}>
           <span className={s['format-name']}>
-            {formatIcon(infoData.infoForDownload[item].modelType)}
-            <span className={s.format}>{infoData.infoForDownload[item].modelType}</span>
+            {formatIcon(item.modelType)}
+            <span className={s.format}>{item.modelType}</span>
           </span>
           <Button
             onClick={() => {
-              window.open(infoData.infoForDownload[item].resourceFileUrl)
+              window.open(item.resourceFileUrl)
             }}
             type="primary"
             size="middle"
           >
             <Icon component={downloadSvg} />
             下载
-            <span className={s['file-size']}>{figureFileSize(infoData.infoForDownload[item].resourceFileSize)}</span>
+            <span className={s['file-size']}>{figureFileSize(item.resourceFileSize)}</span>
           </Button>
         </p>
       ))}
