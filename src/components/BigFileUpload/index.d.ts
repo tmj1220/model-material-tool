@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-06 18:02:22
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-12 17:16:34
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2022-09-28 15:39:07
  * @FilePath: /model-material-tool/src/components/BigFileUpload/index.d.ts
  * @Description:
  *
@@ -78,6 +78,8 @@ export type Accept =
   | '.c4d'
   | '.fbx'
   | '.mb'
+  | '.obj'
+  | '.max'
 
 export interface Info {
   width?: number;

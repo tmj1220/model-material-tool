@@ -16,7 +16,7 @@ const htmlCfg = {
   favicon: resolveApp('public/favicon.ico'),
   template: resolveApp('public/index.ejs'),
   templateParameters: {
-    title: '3D素材管理工具',
+    title: 'Plouto - 模型管理与共享平台',
     rootId: rootID,
   },
   minify: {

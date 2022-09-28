@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-12 10:09:03
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-28 13:38:28
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2022-09-28 14:57:22
  * @FilePath: /model-material-tool/src/pages/about/index.tsx
  * @Description:
  *
@@ -19,7 +19,7 @@ interface AboutProps {
 
 }
 
-const participants = ['静静', 'reamey', 'like', 'Akiza', '铭键', '徐佳']
+const participants = ['静静', 'reamey', 'like', 'Akiza', '铭键', '徐佳', '元元', '帅帅', '蒋安龙']
 
 const About: React.FC<AboutProps> = () => (
   <div className={s['about-content']}>
@@ -37,12 +37,12 @@ const About: React.FC<AboutProps> = () => (
         <div>现在，你可以将自己本地的模型与材质资源等上传到 Plouto 平台，方便地浏览、管理与分享。</div>
         <div style={{ padding: '20px 0' }}>如您有任何建议或在使用中遇到问题，请邮件 rcux@rokid.com 联系我们，谢谢！</div>
         <div style={{ padding: '20px 0' }}>❤️特别鸣谢：</div>
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           {
             participants.map((item, index) => (
-              <span key={item} style={{ display: 'flex', alignItems: 'center' }}>
+              <span key={item} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                 <Avatar size={16}>{item.replace(/^(.*[n])*.*(.|n)$/g, '$2')}</Avatar>
-                <span style={{ paddingLeft: 5 }}>{item}</span>
+                <span>{item}</span>
                 {
                   index !== participants.length - 1 && <span>、</span>
                 }
