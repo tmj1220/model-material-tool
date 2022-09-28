@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
- * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2022-09-25 16:48:29
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-28 19:13:37
  * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
  * @Description:
  *
@@ -246,7 +246,7 @@ const CardDetail: ForwardRefRenderFunction<
               {cardDetail?.resourceDescription}
             </div>
             <div className={s['support-format']}>
-              <span className={s['format-title']}>支持格式：</span>
+              <span className={s['format-title']}>文件格式&nbsp;</span>
               {cardDetail?.infoForDownload && formatShow(cardDetail?.infoForDownload)}
             </div>
             <Button
