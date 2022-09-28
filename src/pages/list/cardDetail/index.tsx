@@ -141,6 +141,15 @@ const CardDetail: ForwardRefRenderFunction<
       tagId: id,
     });
   };
+  /** @description 显示支持的格式 */
+  const formatShow = (info) => {
+    const format: string[] = []
+    Object.keys(info).forEach((item) => {
+      const { modelType } = info[item];
+      format.push(modelType.replace('.', ''))
+    })
+    return format.join('/')
+  }
 
   // 抛出去的方法
   useImperativeHandle(ref, () => ({
@@ -235,6 +244,10 @@ const CardDetail: ForwardRefRenderFunction<
             </div>
             <div className={s['resource-description']}>
               {cardDetail?.resourceDescription}
+            </div>
+            <div className={s['support-format']}>
+              <span className={s['format-title']}>支持格式：</span>
+              {cardDetail?.infoForDownload && formatShow(cardDetail?.infoForDownload)}
             </div>
             <Button
               className={s['download-btn']}

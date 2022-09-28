@@ -40,5 +40,5 @@ export const DEFAULT_MERGE_FILE_URL = '/file/large/merge'
 export const DEFAULT_NEED_CHECK_IMG_RATIO = true
 export const DEFAULT_NEED_SORT = false
 export const DEFAULT_IMG_RATIO = 16 / 9
-export const DEFAULT_LIMIT = 5
+export const DEFAULT_LIMIT = 7
 export const DEFAULT_ACCEPTS: Accept[] = ['.gltf', '.glb','.fbx','.mb','.c4d', '.obj', '.max']//'.zip'

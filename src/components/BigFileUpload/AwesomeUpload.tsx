@@ -566,7 +566,8 @@ const RcUpload = (
                   <Icon component={DrageUpload} />
                 </div>
                 <div className="upload-text">点击或者拖拽上传</div>
-                <div className="upload-hint">支持上传格式：glb/gltf/c4d/mb/fbx,glb/gltf支持预览</div>
+                <div className="upload-hint">支持上传格式：c4d/mb/max/gltf/glb/fbx/obj</div>
+                <div className="upload-hint">其中glb/gltf格式支持预览</div>
               </div>
             </div>
           )}
