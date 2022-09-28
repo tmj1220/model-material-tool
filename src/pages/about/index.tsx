@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-12 10:09:03
- * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2022-09-16 16:57:39
+ * @LastEditors: like 465420404@qq.com
+ * @LastEditTime: 2022-09-28 13:38:28
  * @FilePath: /model-material-tool/src/pages/about/index.tsx
  * @Description:
  *
@@ -54,7 +54,7 @@ const About: React.FC<AboutProps> = () => (
     </div>
     <div className={s['footer-box']}>
       <div className={s.title}>Designed by</div>
-      <a className={s.logo} href="www.rcux.team" target="_blank">
+      <a className={s.logo} href="http://www.rcux.team" target="_blank" rel="noreferrer">
         <Icon component={rcuxSvg} style={{ fontSize: 72 }} />
       </a>
       <div className={s.copyright}>
