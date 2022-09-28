@@ -1,4 +1,3 @@
-import { message } from 'antd'
 import { login } from '@/services/api'
 import {
   getParameterByName,
@@ -25,7 +24,7 @@ const stores = {
           payload.navigate(getParameterByName('redirect') || '/');
         }
       } catch (error) {
-        message.error(error?.message)
+        // message.error(error?.message)
       }
     },
   }),
