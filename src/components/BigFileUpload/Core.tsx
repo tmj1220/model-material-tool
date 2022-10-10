@@ -293,89 +293,92 @@ const CoreUpload = (
               form.append('fragment', chunk.chunk);
               return { form, index: chunk.index, errorTimes: 0 };
             });
-          await new Promise<void>((res, rej) => {
-            let maxCq = concurrentQuantity;
-            const len = requests.length;
-            let isStop = false;
-            let count = 0;
-            const start = async () => {
-              if (isStop) {
-                return;
-              }
-              const task = requests.shift();
-              if (task) {
-                const {
-                  form,
-                  // index,
-                } = task;
-                try {
-                  await request(uploadFileUrl, {
-                    method: 'post',
-                    data: form,
-                    cancelToken: new CancelToken((c) => {
-                      requestsRef.current[
-                        `${file.uid}-chunk-${form.get('index') as string}`
-                      ] = { abort: c };
-                    }),
-                  });
-                  delete requestsRef.current[
-                    form.get('fragmentName') as string
-                  ];
-                  const current = getFileItem(file);
-                  if (!current) {
-                    throw new Error('Task has been deleted');
+            if(requests.length>0){
+              await new Promise<void>((res, rej) => {
+                let maxCq = concurrentQuantity;
+                const len = requests.length;
+                let isStop = false;
+                let count = 0;
+                const start = async () => {
+                  if (isStop) {
+                    return;
                   }
-                  const isError = current.status === 'error';
-                  if (count === len - 1) {
-                    updateFileStatus(file, {
-                      status: isError ? 'error' : 'merging',
-                      percent: 0,
-                    });
-                    // 最后一个任务
-                    !isError && res();
-                  } else {
-                    const percent = Number(
-                      parseInt(
-                        String(
-                          ((count + (uploadedFragments || []).length + 1)
-                            / chunks.length)
-                            * 100,
-                        ),
-                        10,
-                      ),
-                    );
-                    // console.log('uploading-1', percent, count, len);
-
-                    updateFileStatus(file, {
-                      status: isError ? 'error' : 'uploading',
-                      percent,
-                    });
-                    count++;
-                    // 启动下一个任务
-                    !isError && start();
+                  const task = requests.shift();
+                  if (task) {
+                    const {
+                      form,
+                      // index,
+                    } = task;
+                    try {
+                      await request(uploadFileUrl, {
+                        method: 'post',
+                        data: form,
+                        cancelToken: new CancelToken((c) => {
+                          requestsRef.current[
+                            `${file.uid}-chunk-${form.get('index') as string}`
+                          ] = { abort: c };
+                        }),
+                      });
+                      delete requestsRef.current[
+                        form.get('fragmentName') as string
+                      ];
+                      const current = getFileItem(file);
+                      if (!current) {
+                        throw new Error('Task has been deleted');
+                      }
+                      const isError = current.status === 'error';
+                      if (count === len - 1) {
+                        updateFileStatus(file, {
+                          status: isError ? 'error' : 'merging',
+                          percent: 0,
+                        });
+                        // 最后一个任务
+                        !isError && res();
+                      } else {
+                        const percent = Number(
+                          parseInt(
+                            String(
+                              ((count + (uploadedFragments || []).length + 1)
+                                / chunks.length)
+                                * 100,
+                            ),
+                            10,
+                          ),
+                        );
+                        // console.log('uploading-1', percent, count, len);
+    
+                        updateFileStatus(file, {
+                          status: isError ? 'error' : 'uploading',
+                          percent,
+                        });
+                        count++;
+                        // 启动下一个任务
+                        !isError && start();
+                      }
+                    } catch (error) {
+                      if (
+                        axios.isCancel(error)
+                        || (error && error.message === 'Task has been deleted')
+                        || task.errorTimes >= 3
+                      ) {
+                        // 错误三次 或者当前任务已经被删除
+                        isStop = true;
+                        rej();
+                      } else {
+                        task.errorTimes++;
+                        requests.unshift(task);
+                        start();
+                      }
+                    }
                   }
-                } catch (error) {
-                  if (
-                    axios.isCancel(error)
-                    || (error && error.message === 'Task has been deleted')
-                    || task.errorTimes >= 3
-                  ) {
-                    // 错误三次 或者当前任务已经被删除
-                    isStop = true;
-                    rej();
-                  } else {
-                    task.errorTimes++;
-                    requests.unshift(task);
-                    start();
-                  }
+                };
+                while (maxCq > 0) {
+                  start();
+                  maxCq--;
                 }
-              }
-            };
-            while (maxCq > 0) {
-              start();
-              maxCq--;
+              });
             }
-          });
+         
           /**
            * 合并文件请求
            */

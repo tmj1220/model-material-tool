@@ -43,12 +43,16 @@ const index: React.FC<TagInputProps> = ({ value = [], onChange }) => {
   const onAddTag = async (data:string) => {
     if (data.replace(/^\s*|\s*$/g, '').length > 0) {
       setloading(true);
-      const resData:TagType[] = await addTag([{ tagName: data }]);
-      if (resData.length > 0) {
+      try {
+        const resData:TagType[] = await addTag([{ tagName: data }]);
+        if (resData.length > 0) {
+          setloading(false);
+          onChange([...value, resData[0]?.tagId]);
+          setName('');
+          setTagsValue([...tagsValue, resData[0]])
+        }
+      } catch (error) {
         setloading(false);
-        onChange([...value, resData[0]?.tagId]);
-        setName('');
-        setTagsValue([...tagsValue, resData[0]])
       }
     }
   }
