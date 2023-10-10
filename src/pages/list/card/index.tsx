@@ -1,8 +1,8 @@
 /*
  * @Author: like 465420404@qq.com
  * @Date: 2022-08-27 18:32:25
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-27 10:11:24
+ * @LastEditors: mingjian.tang mingjian.tang@rokid.com
+ * @LastEditTime: 2023-10-10 11:44:19
  * @FilePath: /model-material-tool/src/pages/list/card/index.tsx
  * @Description:
  *
@@ -22,6 +22,7 @@ interface SourceCardProps extends BaseSource {
 }
 
 const SourceCard: React.FC<SourceCardProps> = ({
+  categoryName,
   resourceId,
   resourceName,
   resourceThumbUrl,
@@ -29,6 +30,8 @@ const SourceCard: React.FC<SourceCardProps> = ({
   children,
   resourceThumbRgb,
   modelTypes,
+  resourceSn,
+  format,
 }) => {
   const { searchKeyword } = useModelState('list');
   const containerRef = useRef<HTMLDivElement>();
@@ -76,6 +79,19 @@ const SourceCard: React.FC<SourceCardProps> = ({
         <div className={s['desc-box']}>
           <div className={s['desc-text-box']}>
             <div className={s['desc-title']}>{highlightName()}</div>
+            <div className={s['desc-type']}>
+              <span>{categoryName}</span>
+              {
+                format && (
+                <Tooltip mouseEnterDelay={0.5} placement="topRight" title={format.split(',').join('/')}>
+                  <span className={s['desc-format']}>{format.split(',').join('/')}</span>
+                </Tooltip>
+                )
+              }
+              {
+                resourceSn && <span>{resourceSn}</span>
+              }
+            </div>
             <div className={s['desc-other']}>
               {modelTypes}
               {tagInfoList

@@ -5,14 +5,13 @@ import {
 import { useModelDispatchers, useModelState } from '@/store';
 import searchSvg from '@/assets/images/icons/search.svg';
 import UploadSvg from '@/assets/images/anticons/upload.svg';
-
 import logo from '@/assets/images/icons/logo.svg';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Icon, { DownOutlined } from '@ant-design/icons';
 import SignoutSvg from '@/assets/images/anticons/signout.svg';
 import { redirectLogin } from '@/utils/utils';
+import { menuOptions } from '@/utils/constant';
 import AddModel, { AddModelForwardRefOrops } from './addmodel';
-import { menuOptions } from './constant';
 import s from './index.less';
 
 interface HeaderProps { }
@@ -25,7 +24,6 @@ const Header: React.FC<HeaderProps> = () => {
   const {
     getMaterialCategory,
     updateCurCategory,
-    updateMaterialCategory,
     getResourceList,
     getResourceByKeyword,
     updateSearchKeyword,
@@ -44,29 +42,25 @@ const Header: React.FC<HeaderProps> = () => {
     // 清空标签检索
     updateCurSearchTag([]);
     setCurKeyword('');
-    if (key === '3') {
+    if (key === menuOptions[1].key) {
       navigate('/about');
-    } else {
+    } else if (key === menuOptions[0].key) {
       navigate('/list');
-      // 点击材质请求材质下分类
-      if (key === '2') {
-        await getMaterialCategory();
-        await getResourceList({
-          ...defaultRequestParams,
-          pageSize: requestParams.pageSize,
-          direction: requestParams.direction,
-          resourceType: key,
-          materialCategoryId: null,
-        });
-      } else {
-        getResourceList({
-          ...defaultRequestParams,
-          direction: requestParams.direction,
-          pageSize: requestParams.pageSize,
-          resourceType: key,
-        });
-        updateMaterialCategory([]);
-      }
+      await getMaterialCategory();
+      await getResourceList({
+        ...defaultRequestParams,
+        pageSize: requestParams.pageSize,
+        resourceType: key,
+        materialCategoryId: null,
+      });
+    }
+    /** 在自己资源页面上传后获取新的资源列表 */
+    if (!key) {
+      getResourceList({
+        ...defaultRequestParams,
+        pageSize: requestParams.pageSize,
+        mine: 1,
+      });
     }
   };
   const onClick: MenuProps['onClick'] = () => {
@@ -99,37 +93,23 @@ const Header: React.FC<HeaderProps> = () => {
     updateIsGetMoreResources(true);
     // 清空标签检索
     updateCurSearchTag([]);
-    // 情况材质分类
-    updateMaterialCategory([])
-    if (value) {
-      updateCurCategory(null);
-      getResourceByKeyword({
-        ...defaultRequestParams,
-        direction: requestParams.direction,
-        resourceType: null,
-        keyword: value,
-      });
-    } else {
-      updateCurCategory(menuOptions[0].key);
-      getResourceList({
-        ...defaultRequestParams,
-        direction: requestParams.direction,
-        resourceType: menuOptions[0].key as any,
-      });
-    }
-    updateMaterialCategory([]);
+    getResourceByKeyword({
+      ...requestParams,
+      pageNum: 1,
+      resourceType: menuOptions[0].key as any,
+      keyword: value ?? '',
+    });
   };
   const goHome = () => {
     if (urlLocation?.pathname !== '/list') {
       navigate('/list');
-      updateMaterialCategory([]);
-      updateCurCategory(1);
+      updateCurCategory(menuOptions[0].key as any);
     }
   };
   useEffect(() => {
     console.log(urlLocation)
     switch (urlLocation?.pathname) {
-      case '/list': updateCurCategory(1);
+      case '/list': updateCurCategory(menuOptions[0].key as any);
 
         break;
       case '/about': updateCurCategory(3);

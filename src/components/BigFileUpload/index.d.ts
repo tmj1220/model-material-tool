@@ -2,7 +2,7 @@
  * @Author: like 465420404@qq.com
  * @Date: 2022-09-06 18:02:22
  * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2022-09-28 15:39:07
+ * @LastEditTime: 2023-10-09 17:14:01
  * @FilePath: /model-material-tool/src/components/BigFileUpload/index.d.ts
  * @Description:
  *
@@ -80,6 +80,8 @@ export type Accept =
   | '.mb'
   | '.obj'
   | '.max'
+  | '.blend'
+  | '.unitypackage'
 
 export interface Info {
   width?: number;

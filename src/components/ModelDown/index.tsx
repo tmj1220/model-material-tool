@@ -1,13 +1,3 @@
-/*
- * @Author: like 465420404@qq.com
- * @Date: 2022-08-27 18:32:25
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-28 18:55:17
- * @FilePath: /model-material-tool/src/components/ModelDown/index.tsx
- * @Description:
- *
- * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
- */
 import { getResourceDetail } from '@/services/list';
 import { Button, Modal } from 'antd';
 import Icon from '@ant-design/icons';
@@ -15,8 +5,11 @@ import React, {
   useState, useImperativeHandle, forwardRef, ForwardRefRenderFunction,
 } from 'react';
 import { figureFileSize } from '@/utils/utils'
+import { formatTypes } from '@/utils/constant'
 import downloadSvg from '@/assets/images/anticons/download.svg'
 import c4dSvg from '@/assets/images/anticons/c4d.svg'
+import unitypackageSvg from '@/assets/images/anticons/unitypackage.svg'
+import blendSvg from '@/assets/images/anticons/blend.svg'
 import fbxSvg from '@/assets/images/fbx.png'
 import gltfSvg from '@/assets/images/anticons/gltf.svg'
 import maxSvg from '@/assets/images/anticons/max.svg'
@@ -36,7 +29,7 @@ const CardDetail: ForwardRefRenderFunction<
   const [infoData, setInfoData] = useState<any[]>([]);
   const onShowDrawer = async (data) => {
     // 按type的指定顺序排序
-    const order = ['.c4d', '.mb', '.max', '.fbx', '.obj', '.glb', '.gltf'];
+    const order = formatTypes.map((v) => v.format);
     if (data instanceof Object) {
       const info = Object.keys(data.infoForDownload).map((item) => data.infoForDownload[item])
       info.sort((star, next) => order.indexOf(star.modelType) - order.indexOf(next.modelType))
@@ -63,6 +56,10 @@ const CardDetail: ForwardRefRenderFunction<
   /** @description 格式显示图标 */
   const formatIcon = (format) => {
     switch (format) {
+      case '.unitypackage':
+        return <Icon component={unitypackageSvg} />
+      case '.blend':
+        return <Icon component={blendSvg} />
       case '.c4d':
         return <Icon component={c4dSvg} />
       case '.mb':

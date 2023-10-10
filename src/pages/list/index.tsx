@@ -1,13 +1,3 @@
-/*
- * @Author: like 465420404@qq.com
- * @Date: 2022-09-09 19:24:28
- * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2022-09-25 16:54:31
- * @FilePath: /model-material-tool/src/pages/list/index.tsx
- * @Description:
- *
- * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
- */
 /* eslint-disable no-unsafe-optional-chaining */
 import React, {
   useEffect, useRef,
@@ -28,7 +18,7 @@ interface ListProps { }
 
 const SourceList: React.FC<ListProps> = () => {
   const modelDownRef = useRef<ForwardRefOrops>(null);
-  const { getResourceList } = useModelDispatchers('list')
+  const { getResourceList, getMaterialCategory } = useModelDispatchers('list')
   const {
     requestParams, curCategory, resources, isGetMoreResources,
   } = useModelState('list')
@@ -45,6 +35,7 @@ const SourceList: React.FC<ListProps> = () => {
   }
 
   useEffect(() => {
+    getMaterialCategory();
     getResourceList({
       ...requestParams,
       resourceType: curCategory,

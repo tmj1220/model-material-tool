@@ -328,7 +328,7 @@ const RcUpload = (
       if (suffix === '.zip') {
         const modelType = await handlModelFile(file, accepts);
         if (!modelType) {
-          message.error(`zip文件中须包含 gltf、glb、fbx、mb、c4d、obj、max中任意一种文件类型`);
+          message.error(`zip文件中须包含 gltf、glb、fbx、mb、c4d、obj、max、blend中任意一种文件类型`);
           return Promise.reject();
         } else {
           return Promise.resolve(modelType);
@@ -566,8 +566,8 @@ const RcUpload = (
                   <Icon component={DrageUpload} />
                 </div>
                 <div className="upload-text">点击或者拖拽上传</div>
-                <div className="upload-hint">支持格式：c4d/mb/max/gltf/glb/fbx/obj</div>
-                <div className="upload-hint">其中glb/gltf格式支持预览</div>
+                {/* <div className="upload-hint">支持格式：c4d/mb/max/gltf/glb/fbx/obj</div>
+                <div className="upload-hint">其中glb/gltf格式支持预览</div> */}
               </div>
             </div>
           )}

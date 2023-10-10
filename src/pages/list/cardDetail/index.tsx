@@ -1,13 +1,3 @@
-/*
- * @Author: like 465420404@qq.com
- * @Date: 2022-08-27 18:32:25
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-28 19:13:37
- * @FilePath: /model-material-tool/src/pages/list/cardDetail/index.tsx
- * @Description:
- *
- * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
- */
 import React, {
   useState,
   useImperativeHandle,
@@ -249,6 +239,14 @@ const CardDetail: ForwardRefRenderFunction<
               <span className={s['format-title']}>文件格式&nbsp;</span>
               {cardDetail?.infoForDownload && formatShow(cardDetail?.infoForDownload)}
             </div>
+            {
+              cardDetail?.resourceSn && (
+              <div className={s['resource-sn']}>
+                <span className={s.title}>POI编号&nbsp;&nbsp;</span>
+                {cardDetail?.resourceSn}
+              </div>
+              )
+            }
             <Button
               className={s['download-btn']}
               type="primary"

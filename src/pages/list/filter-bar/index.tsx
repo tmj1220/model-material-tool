@@ -1,123 +1,75 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Select, Tabs } from 'antd'
 import { useModelDispatchers, useModelState } from '@/store'
-import { menuOptions } from '@/components/header/constant'
-import { getResourceByKeyword as getResourceByKeywordAmount } from '@/services/list'
+import { filterOptions } from '@/utils/constant'
 import Tag from '@/components/tag/index';
-import { filterOptions } from '../constants'
+import FilterBox from './FilterBox'
 import s from './index.less'
 
 interface FilterBarProps { }
 
 const FilterBar: React.FC<FilterBarProps> = () => {
-  const [menus, setMenus] = useState([])
+  /** 当前选中的子类型 */
+  const [currCategoryName, setCurrCategoryName] = useState('全部')
   const {
     materialCategory, requestParams, searchKeyword, curCategory, curSearchTag,
   } = useModelState('list')
   const { getResourceList, getResourceByKeyword } = useModelDispatchers('list')
 
   const onTabChange = (key) => {
+    const category = materialCategory.find((v) => v.categoryId === key)
+    setCurrCategoryName(category.categoryName)
     getResourceList({
       ...requestParams,
       pageNum: 1,
       resourceType: curCategory,
       materialCategoryId: key || null,
-    })
-  }
-
-  const onMenuTabChange = (key) => {
-    getResourceByKeyword({
-      ...requestParams,
-      pageNum: 1,
-      resourceType: key === 'null' ? '' : key,
+      /** 切换tab清空筛选条件 */
+      format: null,
+      resourcePoiType: null,
     })
   }
   // 排序切换
   const onFilterSelect = (value) => {
+    const val = value.split('-')
+    const order = val[0]
+    const direction = val[1]
     if (searchKeyword) {
       getResourceByKeyword({
         ...requestParams,
         pageNum: 1,
-        direction: value,
+        order,
+        direction,
       })
     } else {
       getResourceList({
         ...requestParams,
         pageNum: 1,
-        direction: value,
+        order,
+        direction,
+      })
+    }
+  }
+  /** 筛选改变 */
+  const onFilterChange = (payload) => {
+    if (searchKeyword) {
+      getResourceByKeyword({
+        ...requestParams,
+        ...payload,
+        pageNum: 1,
+      })
+    } else {
+      getResourceList({
+        ...requestParams,
+        ...payload,
+        pageNum: 1,
       })
     }
   }
 
-  useEffect(() => {
-    if (searchKeyword) {
-      (async () => {
-        const modal = await getResourceByKeywordAmount({
-          keyword: searchKeyword,
-          pageNum: 1,
-          pageSize: 0,
-          resourceType: 1,
-        })
-        const texture = await getResourceByKeywordAmount({
-          keyword: searchKeyword,
-          pageNum: 1,
-          pageSize: 0,
-          resourceType: 2,
-        })
-        const newMenus = [...menuOptions.filter((item) => item.key !== 3)]
-        newMenus.forEach((item: any) => {
-          if (item.key === 1) {
-            item.total = modal.total
-          }
-          if (item.key === 2) {
-            item.total = texture.total
-          }
-        })
-        newMenus.unshift({
-          title: '全部',
-          key: null,
-        })
-        setMenus(newMenus)
-      })()
-    } else {
-      setMenus([])
-    }
-  }, [searchKeyword])
-
   return (
     <div className={s['filter-bar-root']}>
       <div className={s['left-box']}>
-        {
-          searchKeyword
-          && (
-            <Tabs onChange={onMenuTabChange}>
-              {menus.map(({ key, title, total }) => (
-                <Tabs.TabPane
-                  key={key}
-                  tab={(
-                    <span>
-                      {title}
-                      {
-                        total > 0 && (
-                          <span style={{
-                            borderRadius: 18,
-                            background: '#DDDDDD',
-                            padding: '2px 8px',
-                            marginLeft: 4,
-                            color: '#333',
-                          }}
-                          >
-                            {total}
-                          </span>
-                        )
-                      }
-                    </span>
-                  )}
-                />
-              ))}
-            </Tabs>
-          )
-        }
         {
           curSearchTag.length > 0
           && (
@@ -144,8 +96,16 @@ const FilterBar: React.FC<FilterBarProps> = () => {
         }
       </div>
       <div className={s['right-box']}>
-        排序
-        <Select options={filterOptions} defaultValue="desc" bordered={false} onSelect={onFilterSelect} />
+        <FilterBox categoryName={currCategoryName} onSelectValue={onFilterChange} />
+        <div>
+          排序
+          <Select
+            options={filterOptions}
+            defaultValue={filterOptions[0].value}
+            bordered={false}
+            onSelect={onFilterSelect}
+          />
+        </div>
       </div>
     </div>
   )

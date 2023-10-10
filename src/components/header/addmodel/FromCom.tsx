@@ -1,16 +1,20 @@
 import { addModel } from '@/services/addModel';
 import {
-  Button, Form, Input, message, Radio, Select, Spin,
+  Button, Form, Input, message, Radio, Spin, Select,
 } from 'antd';
+import { useModelState } from '@/store';
 import TextArea from 'antd/lib/input/TextArea';
 import AwesomeUpload from '@/components/BigFileUpload';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getMaterialCategory } from '@/services/list';
+import { exhibitionTypes, menuOptions } from '@/utils/constant';
+import * as constants from '@/components/BigFileUpload/constant';
+import { isArray } from 'lodash';
 import DraggerUpload from './DraggerUpload';
 import s from './index.less';
 import TagInput from './TagInput';
 
-const { Option } = Select;
+const { Option } = Select
 
 export interface Resources {
   resourceFileId: string;
@@ -25,8 +29,10 @@ export interface Addmodelfrom {
   resourceName?: string;
   resourceFiles?: Resources[];
   resourceTagIds?: string[];
-  resourceType?: number;
+  resourceType?: string;
   thumb?: Array<any>;
+  resourceSn?: string
+  resourcePoiType?: string
 }
 interface AddmodelFromProps {
   onAdd: Function;
@@ -37,33 +43,42 @@ interface ResourceCategory {
   categoryName: string;
 }
 const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
-  console.log(initialValue);
+  const { curCategory } = useModelState('list');
+  const uploadRef = useRef(null)
+  const [form] = Form.useForm();
+  const currResourceType = Form.useWatch('resourceCategoryId', form);
+  const currResourcePoiType = Form.useWatch('resourcePoiType', form);
   const [loading, setloading] = useState<boolean>(false);
-  const [resourceCategory, setResourceCategory] = useState<ResourceCategory[]>(
-    [],
-  );
+  const [resourceCategory, setResourceCategory] = useState<ResourceCategory[]>([]);
   const [formData, setFormData] = useState<Addmodelfrom>(null);
+  const exhibitionItem = resourceCategory.find((v) => v.categoryName === '展厅POI')
   const onAddmodelFinish = async (values: Addmodelfrom) => {
     setloading(true);
-    const sendData = {
+    let sendData = {
       ...values,
       thumb: values.thumb[0]?.fileId,
       thumbRgb: values.thumb[0]?.thumbRgb,
       resourceId: initialValue?.resourceId,
+      resourceType: menuOptions[0].key,
+      resourceFiles: isArray(values.resourceFiles) ? values.resourceFiles : [values.resourceFiles],
     };
+    if (values.resourcePoiType) {
+      const prefix = exhibitionTypes.find((v) => v.name === values.resourcePoiType)?.prefix
+      sendData = {
+        ...sendData,
+        resourceSn: `${prefix}${values.resourceSn}`,
+      }
+    }
     try {
       await addModel(sendData);
       message.success(`${initialValue?.resourceId ? '修改成功' : '发布成功'}`);
-      onAdd(formData?.resourceType);
+      onAdd(curCategory);
       setloading(false);
     } catch (error) {
-      console.log(error);
       setloading(false);
     }
   };
   const modelBeforeUploadCheck = (file, fileList) => {
-    console.log(file);
-    console.log(fileList);
     // 已有的数据
     const defalutType = formData?.resourceFiles?.map(
       (item) => item.modelType.toLocaleLowerCase(),
@@ -88,35 +103,90 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
 
     return true;
   };
+  /** 编号失焦数据变化 */
+  const handleInputBlur = () => {
+    const resourceSn = formData?.resourceSn
+    if (resourceSn && resourceSn.length < 4) {
+      const num = 4 - resourceSn.length
+      let prefix = ''
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < num; i++) {
+        prefix += '0'
+      }
+      form.setFieldsValue({ resourceSn: `${prefix}${resourceSn}` })
+    }
+  }
   useEffect(() => {
     setFormData(initialValue);
     getMaterialCategory().then((res) => {
       setResourceCategory(res);
+      /** 新增资产默认设置类型选择第一个 */
+      if (!initialValue) {
+        form.setFieldsValue({ resourceCategoryId: res[0].categoryId })
+      } else {
+        form.setFieldsValue({
+          resourcePoiType: initialValue?.resourcePoiType,
+          resourceSn: initialValue?.resourceSn.slice(-4),
+        })
+      }
     });
   }, []);
+  /** 监听类型变化 */
+  useEffect(() => {
+    if (currResourceType && currResourceType === exhibitionItem?.categoryId) {
+      form.setFieldsValue({ resourcePoiType: exhibitionTypes[0].name })
+    } else {
+      form.setFieldsValue({ resourcePoiType: null, resourceSn: null })
+    }
+  }, [currResourceType])
 
   return (
     <div className={s['upload-model']}>
       <Spin spinning={loading}>
         <Form
+          form={form}
           initialValues={initialValue}
           onFinish={onAddmodelFinish}
           style={{ width: 332 }}
           layout="vertical"
           onValuesChange={(data, datas) => {
-            console.log(datas);
             setFormData(datas);
           }}
         >
           <Form.Item
             label="类型"
-            name="resourceType"
+            name="resourceCategoryId"
             rules={[{ required: true, message: '请选择类型' }]}
           >
-            <Radio.Group>
-              <Radio value={1}> 模型 </Radio>
-              <Radio value={2}> 材质 </Radio>
+            <Radio.Group onChange={() => uploadRef?.current?.reset()}>
+              {
+                resourceCategory.map((v) => (
+                  <Radio key={v.categoryId} value={v.categoryId}>
+                    {' '}
+                    {v.categoryName}
+                    {' '}
+                  </Radio>
+                ))
+              }
             </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            name="resourceFiles"
+            label="上传文件"
+            rules={[{ required: true, message: '请上传文件' }]}
+          >
+            <AwesomeUpload
+              ref={uploadRef}
+              accepts={currResourceType === resourceCategory[0]?.categoryId
+                ? constants.DEFAULT_ACCEPTS : constants.UNITY_ACCEPTS}
+              limit={currResourceType === resourceCategory[0]?.categoryId
+                ? constants.DEFAULT_LIMIT : 1}
+              beforeUploadCheck={modelBeforeUploadCheck}
+              uploadLimitInfo={{
+                max: 200 * 1024 * 1024,
+                hintText: '单个文件最大上传200M',
+              }}
+            />
           </Form.Item>
           <Form.Item
             label="名称"
@@ -124,6 +194,58 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
             rules={[{ required: true }]}
           >
             <Input maxLength={20} placeholder="请输入" />
+          </Form.Item>
+          {/* 展厅POI 特殊显示 */}
+          {(formData?.resourceCategoryId === exhibitionItem?.categoryId) && (
+          <>
+            <Form.Item
+              label="展厅 POI 类型"
+              name="resourcePoiType"
+              rules={[{ required: true, message: '请选择展厅 POI 类型' }]}
+            >
+              <Select placeholder="请选择展厅 POI 类型">
+                {exhibitionTypes.map((item) => (
+                  <Option key={item.prefix} value={item.name}>
+                    {item.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="编号"
+              name="resourceSn"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入编号',
+                },
+                {
+                  validator(rule, value) {
+                    const pattern = /^\d+$/;
+                    if (pattern.test(value)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('请输入数字！'));
+                  },
+                },
+              ]}
+            >
+              <Input
+                maxLength={4}
+                onBlur={handleInputBlur}
+                style={{ width: '100%' }}
+                addonBefore={exhibitionTypes.find((v) => v.name === currResourcePoiType)?.prefix}
+                placeholder="请输入编号"
+              />
+            </Form.Item>
+          </>
+          )}
+          <Form.Item
+            name="resourceTagIds"
+            label="添加标签"
+            rules={[{ required: true, message: '请选择标签' }]}
+          >
+            <TagInput />
           </Form.Item>
           <Form.Item
             label="封面图"
@@ -134,44 +256,6 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
               accept="image/jpg,image/png,image/gif,image/jpeg"
               size={20}
               tips="支持格式：jpg/png/gif"
-            />
-          </Form.Item>
-          {(formData?.resourceType === 2
-            || initialValue?.resourceType === 2) && (
-            <Form.Item
-              label="材质分类"
-              name="resourceCategoryId"
-              rules={[{ required: true, message: '请选择分类' }]}
-            >
-              <Select placeholder="请选择分类">
-                {resourceCategory.map((item) => (
-                  <Option key={item.categoryId} value={item.categoryId}>
-                    {item.categoryName}
-                  </Option>
-                ))}
-                <Option> </Option>
-              </Select>
-            </Form.Item>
-          )}
-
-          <Form.Item
-            name="resourceTagIds"
-            label="添加标签"
-            rules={[{ required: true, message: '请选择标签' }]}
-          >
-            <TagInput />
-          </Form.Item>
-          <Form.Item
-            name="resourceFiles"
-            label="模型文件"
-            rules={[{ required: true, message: '请上传文件' }]}
-          >
-            <AwesomeUpload
-              beforeUploadCheck={modelBeforeUploadCheck}
-              uploadLimitInfo={{
-                max: 200 * 1024 * 1024,
-                hintText: '单个文件最大上传200M',
-              }}
             />
           </Form.Item>
           <Form.Item label="描述" name="resourceDescription">

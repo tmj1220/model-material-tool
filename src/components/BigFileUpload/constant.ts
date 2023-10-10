@@ -1,13 +1,3 @@
-/*
- * @Author: like 465420404@qq.com
- * @Date: 2022-09-06 18:02:22
- * @LastEditors: like 465420404@qq.com
- * @LastEditTime: 2022-09-28 18:56:38
- * @FilePath: /model-material-tool/src/components/BigFileUpload/constant.ts
- * @Description:
- *
- * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
- */
 import type{ Accept } from './index.d'
 
 export const EXTENSION_TO_MIME_TYPE_MAP = {
@@ -41,4 +31,5 @@ export const DEFAULT_NEED_CHECK_IMG_RATIO = true
 export const DEFAULT_NEED_SORT = false
 export const DEFAULT_IMG_RATIO = 16 / 9
 export const DEFAULT_LIMIT = 8
-export const DEFAULT_ACCEPTS: Accept[] = ['.gltf', '.glb','.fbx','.mb','.c4d', '.obj', '.max','.zip']//'.zip'
+export const DEFAULT_ACCEPTS: Accept[] = ['.gltf', '.glb','.fbx','.mb','.c4d', '.obj', '.max', '.blend', '.zip']//'.zip'
+export const UNITY_ACCEPTS: Accept[] = ['.unitypackage']

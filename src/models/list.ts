@@ -4,7 +4,7 @@ import { getMaterialCategory, getResource, getResourceByKeyword } from '@/servic
 interface DefaultState {
   requestParams: IResourceParams
   defaultRequestParams: IResourceParams
-  curCategory: 1 | 2 | 3 | null // 1:模型 2材质 3关于
+  curCategory: 2 | 3 | null // 2 资产 3关于
   materialCategory: Material[] // 材质下的分类
   searchKeyword: string // 搜索关键字
   resources: BaseSource[] // 资源列表
@@ -16,16 +16,20 @@ const defaultState: DefaultState = {
   requestParams: {
     pageNum: 1,
     pageSize: 10,
-    order: 'gmt_modified',
+    /** 创建时间 */
+    order: 'gmt_created',
+    /** 倒序 */
     direction: 'desc',
   },
   defaultRequestParams: {
     pageNum: 1,
     pageSize: 10,
-    order: 'gmt_modified',
+    /** 创建时间 */
+    order: 'gmt_created',
+    /** 倒序 */
     direction: 'desc',
   },
-  curCategory: 1, // 1:模型 2材质
+  curCategory: 2, //  2 资产
   materialCategory: [], // 材质下的分类
   searchKeyword: '', // 搜索关键字
   resources: [], // 资源列表
@@ -96,9 +100,8 @@ const stores = {
           } else {
             this.updateResources(res.rows)
           }
-          if (res.rows.length > 0) {
-            this.updateRequestParams(params)
-          } else {
+          this.updateRequestParams(params)
+          if (res.rows.length <= 0) {
             this.updateIsGetMoreResources(false)
           }
         }
@@ -116,9 +119,8 @@ const stores = {
           } else {
             this.updateResources(res.rows)
           }
-          if (res.rows.length > 0) {
-            this.updateRequestParams(params)
-          } else {
+          this.updateRequestParams(params)
+          if (res.rows.length <= 0) {
             this.updateIsGetMoreResources(false)
           }
         }
