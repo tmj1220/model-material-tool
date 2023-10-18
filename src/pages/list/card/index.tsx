@@ -1,13 +1,3 @@
-/*
- * @Author: like 465420404@qq.com
- * @Date: 2022-08-27 18:32:25
- * @LastEditors: mingjian.tang mingjian.tang@rokid.com
- * @LastEditTime: 2023-10-10 11:44:19
- * @FilePath: /model-material-tool/src/pages/list/card/index.tsx
- * @Description:
- *
- * Copyright (c) 2022 by like 465420404@qq.com, All Rights Reserved.
- */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useRef } from 'react';
 import { useModelState } from '@/store';
@@ -82,7 +72,7 @@ const SourceCard: React.FC<SourceCardProps> = ({
             <div className={s['desc-type']}>
               <span>{categoryName}</span>
               {
-                format && (
+                categoryName === '模型' && format && (
                 <Tooltip mouseEnterDelay={0.5} placement="topRight" title={format.split(',').join('/')}>
                   <span className={s['desc-format']}>{format.split(',').join('/')}</span>
                 </Tooltip>

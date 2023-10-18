@@ -3,7 +3,7 @@ import React, {
   useEffect, useRef,
 } from 'react'
 import {
-  List, Skeleton, Divider,
+  List, Skeleton, Divider, Spin,
 } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useModelDispatchers, useModelState, useModelEffectsLoading } from '@/store'
@@ -66,27 +66,29 @@ const SourceList: React.FC<ListProps> = () => {
           endMessage={<Divider plain>所有的都在这儿了🤐</Divider>}
           scrollableTarget="scrollableDiv"
         >
-          <List
-            dataSource={resources}
-            grid={{
-              gutter: 16, column: 4, xl: 4, xxl: 6,
-            }}
-            renderItem={(item) => (
-              <List.Item key={item.resourceId}>
-                <Card {...item}>
-                  <div
-                    className={s['action-box']}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      modelDownRef.current.onShowDrawer(item.resourceId);
-                    }}
-                  >
-                    <Icon component={downloadSvg} />
-                  </div>
-                </Card>
-              </List.Item>
-            )}
-          />
+          <Spin spinning={isLoading || isKeywordLoading}>
+            <List
+              dataSource={resources}
+              grid={{
+                gutter: 16, column: 4, xl: 4, xxl: 6,
+              }}
+              renderItem={(item) => (
+                <List.Item key={item.resourceId}>
+                  <Card {...item}>
+                    <div
+                      className={s['action-box']}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        modelDownRef.current.onShowDrawer(item.resourceId);
+                      }}
+                    >
+                      <Icon component={downloadSvg} />
+                    </div>
+                  </Card>
+                </List.Item>
+              )}
+            />
+          </Spin>
         </InfiniteScroll>
       </div>
       <ModelDown ref={modelDownRef} />

@@ -116,6 +116,23 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
       form.setFieldsValue({ resourceSn: `${prefix}${resourceSn}` })
     }
   }
+  /** 根据类型变化重置上传文件 */
+  const resetFile = (e) => {
+    if (formData?.resourceFiles) {
+      const files = isArray(formData?.resourceFiles)
+        ? [...formData.resourceFiles] : [formData.resourceFiles]
+      console.log(files);
+      /** 切换至模型类型,如果上传文件不在模型支持类型中，则重置 */
+      if (e.target.value === resourceCategory[0]?.categoryId) {
+        if (!constants.DEFAULT_ACCEPTS.includes(files[0]?.modelType as any)) {
+          uploadRef?.current?.reset()
+        }
+      /** 切换至模型以外类型,如果上传文件不是unity类型，则重置 */
+      } else if (!constants.UNITY_ACCEPTS.includes(files[0]?.modelType as any)) {
+        uploadRef?.current?.reset()
+      }
+    }
+  }
   useEffect(() => {
     setFormData(initialValue);
     getMaterialCategory().then((res) => {
@@ -149,7 +166,7 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
           onFinish={onAddmodelFinish}
           style={{ width: 332 }}
           layout="vertical"
-          onValuesChange={(data, datas) => {
+          onValuesChange={(_, datas) => {
             setFormData(datas);
           }}
         >
@@ -158,7 +175,7 @@ const Add = ({ onAdd, initialValue = {} }: AddmodelFromProps) => {
             name="resourceCategoryId"
             rules={[{ required: true, message: '请选择类型' }]}
           >
-            <Radio.Group onChange={() => uploadRef?.current?.reset()}>
+            <Radio.Group onChange={resetFile}>
               {
                 resourceCategory.map((v) => (
                   <Radio key={v.categoryId} value={v.categoryId}>

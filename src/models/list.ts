@@ -92,6 +92,7 @@ const stores = {
     },
     async getResourceList(params: IResourceParams) {
       try {
+        this.updateRequestParams(params)
         const res = await getResource(params)
         if (res.rows) {
           // 请求第一页数据
@@ -100,7 +101,6 @@ const stores = {
           } else {
             this.updateResources(res.rows)
           }
-          this.updateRequestParams(params)
           if (res.rows.length <= 0) {
             this.updateIsGetMoreResources(false)
           }
@@ -111,6 +111,7 @@ const stores = {
     },
     async getResourceByKeyword(params: IResourceParams) {
       try {
+        this.updateRequestParams(params)
         const res = await getResourceByKeyword(params)
         if (res.rows) {
           // 请求第一页数据
@@ -119,7 +120,6 @@ const stores = {
           } else {
             this.updateResources(res.rows)
           }
-          this.updateRequestParams(params)
           if (res.rows.length <= 0) {
             this.updateIsGetMoreResources(false)
           }

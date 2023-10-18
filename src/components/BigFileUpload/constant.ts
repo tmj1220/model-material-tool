@@ -22,7 +22,7 @@ export const MODE_TYPE  = {
   mb:'.mb'
 }
 export const DEFAULT_CONCURRENT_QUANTITY = 3
-export const DEFAULT_CHUNK_SIZE = 5 * 1024 * 1024
+export const DEFAULT_CHUNK_SIZE = 20 * 1024 * 1024
 export const DEFAULT_CALCULATE_HASH_MODE = 'all'
 export const DEFAULT_CHECK_FILE_URL = '/file/large/init'
 export const DEFAULT_UPLOAD_FILE_URL = '/file/large/upload'
