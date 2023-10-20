@@ -22,7 +22,6 @@ const Header: React.FC<HeaderProps> = () => {
   const navigate = useNavigate();
   const urlLocation = useLocation();
   const {
-    getMaterialCategory,
     updateCurCategory,
     getResourceList,
     getResourceByKeyword,
@@ -46,13 +45,6 @@ const Header: React.FC<HeaderProps> = () => {
       navigate('/about');
     } else if (key === menuOptions[0].key) {
       navigate('/list');
-      await getMaterialCategory();
-      await getResourceList({
-        ...defaultRequestParams,
-        pageSize: requestParams.pageSize,
-        resourceType: key,
-        materialCategoryId: null,
-      });
     }
     /** 在自己资源页面上传后获取新的资源列表 */
     if (!key) {

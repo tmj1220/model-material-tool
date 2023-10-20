@@ -14,11 +14,13 @@ const FilterBar: React.FC<FilterBarProps> = () => {
   const {
     materialCategory, requestParams, searchKeyword, curCategory, curSearchTag,
   } = useModelState('list')
-  const { getResourceList, getResourceByKeyword } = useModelDispatchers('list')
+  const { getResourceList, getResourceByKeyword, updateIsGetMoreResources } = useModelDispatchers('list')
 
   const onTabChange = (key) => {
     const category = materialCategory.find((v) => v.categoryId === key)
     setCurrCategoryName(category.categoryName)
+    // 更新可继续获取资源状态
+    updateIsGetMoreResources(true);
     getResourceList({
       ...requestParams,
       pageNum: 1,

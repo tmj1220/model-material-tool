@@ -38,6 +38,7 @@ const SourceList: React.FC<ListProps> = () => {
     getMaterialCategory();
     getResourceList({
       ...requestParams,
+      pageNum: 1,
       resourceType: curCategory,
     })
   }, []);

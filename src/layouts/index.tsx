@@ -28,7 +28,7 @@ const UserLayout: React.FC<UserLayoutProps> = () => {
     const lineNum = Math.round(document.body.scrollHeight / 280)
     updateRequestParams({
       ...requestParams,
-      pageSize: sizeNum * lineNum,
+      pageSize: sizeNum * lineNum + 2,
     })
   }, [])
 
