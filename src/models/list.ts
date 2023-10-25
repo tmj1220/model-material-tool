@@ -101,7 +101,8 @@ const stores = {
           } else {
             this.updateResources(res.rows)
           }
-          if (res.rows.length <= 0) {
+          /** 当前请求的数据小于页码，则是最后一页 */
+          if (res.rows.length < params.pageSize) {
             this.updateIsGetMoreResources(false)
           }
         }
@@ -120,7 +121,8 @@ const stores = {
           } else {
             this.updateResources(res.rows)
           }
-          if (res.rows.length <= 0) {
+          /** 当前请求的数据小于页码，则是最后一页 */
+          if (res.rows.length < params.pageSize) {
             this.updateIsGetMoreResources(false)
           }
         }

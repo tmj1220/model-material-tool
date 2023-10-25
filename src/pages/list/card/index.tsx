@@ -19,7 +19,6 @@ const SourceCard: React.FC<SourceCardProps> = ({
   tagInfoList,
   children,
   resourceThumbRgb,
-  modelTypes,
   resourceSn,
   format,
 }) => {
@@ -34,16 +33,18 @@ const SourceCard: React.FC<SourceCardProps> = ({
   // 搜索关键字名称高亮
   const highlightName = () => {
     if (searchKeyword) {
-      <Tooltip mouseEnterDelay={0.5} placement="topRight" title={resourceName}>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: resourceName.replace(
-              searchKeyword,
-              `<span class='${s['high-light']}'>${searchKeyword}</span>`,
-            ),
-          }}
-        />
-      </Tooltip>;
+      return (
+        <Tooltip mouseEnterDelay={0.5} placement="topRight" title={resourceName}>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: resourceName.replace(
+                searchKeyword,
+                `<span class='${s['high-light']}'>${searchKeyword}</span>`,
+              ),
+            }}
+          />
+        </Tooltip>
+      );
     }
     return (
       <Tooltip mouseEnterDelay={0.5} placement="topRight" title={resourceName}>
@@ -68,7 +69,16 @@ const SourceCard: React.FC<SourceCardProps> = ({
         </div>
         <div className={s['desc-box']}>
           <div className={s['desc-text-box']}>
-            <div className={s['desc-title']}>{highlightName()}</div>
+            <div className={s['desc-text-top']}>
+              <div className={s['desc-title']}>{highlightName()}</div>
+              <div className={s['desc-other']}>
+                {tagInfoList
+                && tagInfoList.length > 0
+                && tagInfoList.map((item) => (
+                  <Tag key={item.tagId} tagName={item.tagName} />
+                ))}
+              </div>
+            </div>
             <div className={s['desc-type']}>
               <span>{categoryName}</span>
               {
@@ -81,14 +91,6 @@ const SourceCard: React.FC<SourceCardProps> = ({
               {
                 resourceSn && <span>{resourceSn}</span>
               }
-            </div>
-            <div className={s['desc-other']}>
-              {modelTypes}
-              {tagInfoList
-                && tagInfoList.length > 0
-                && tagInfoList.map((item) => (
-                  <Tag key={item.tagId} tagName={item.tagName} />
-                ))}
             </div>
           </div>
           {children}

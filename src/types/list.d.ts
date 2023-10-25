@@ -40,7 +40,6 @@ declare interface BaseSource {
   infoForDownload:Map<string, InfoForDownload>
   children?: React.ReactNode;
   resourceThumbRgb?:string;
-  modelTypes:string;
   resourceSn?: string
   format?: string
 }
